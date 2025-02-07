@@ -1,0 +1,16 @@
+{
+    "name": "JENDO - Future of Vascular Monitoring",
+    "short_name": "JENDO",
+    "description": "Empowering healthcare with cutting-edge vascular monitoring solutions",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#1a1a1a",
+    "theme_color": "#9333EA",
+    "icons": [
+      {
+        "src": "/favicon.ico",
+        "sizes": "64x64 32x32 24x24 16x16",
+        "type": "image/x-icon"
+      }
+    ]
+  }

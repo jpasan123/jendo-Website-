@@ -1,0 +1,346 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base responsive styles */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll on animations */
+}
+
+body {
+  @apply antialiased overflow-x-hidden; /* Prevent horizontal scroll on animations */
+}
+
+/* Responsive font sizes */
+@layer base {
+  h1 {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight;
+  }
+  h2 {
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight;
+  }
+  h3 {
+    @apply text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold tracking-tight;
+  }
+  p {
+    @apply text-sm sm:text-base md:text-lg leading-relaxed;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shine {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+@keyframes tilt {
+  0%, 100% {
+    transform: rotate(-1deg);
+  }
+  50% {
+    transform: rotate(1deg);
+  }
+}
+
+/* Animation classes with mobile-first approach */
+.animate-fade-in {
+  opacity: 0;
+  animation: fadeIn 1s ease-out forwards;
+  will-change: opacity, transform;
+}
+
+.animate-slide-in {
+  opacity: 0;
+  animation: slideIn 0.8s ease-out forwards;
+  will-change: transform;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s infinite;
+  will-change: transform;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-bounce {
+  animation: bounce 1s infinite;
+  will-change: transform;
+}
+
+.animate-shine {
+  animation: shine 8s linear infinite;
+  background-size: 200% auto;
+  will-change: background-position;
+}
+
+.animate-tilt {
+  animation: tilt 10s infinite ease-in-out;
+  will-change: transform;
+}
+
+/* Container padding */
+.container-padding {
+  @apply px-4 sm:px-6 lg:px-8;
+}
+
+/* Responsive grid layouts */
+.responsive-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8;
+}
+
+/* Responsive spacing */
+.section-spacing {
+  @apply py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24;
+}
+
+/* Responsive images */
+.responsive-image {
+  @apply w-full h-auto object-cover;
+}
+
+/* Responsive buttons */
+.responsive-button {
+  @apply w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base rounded-full;
+}
+
+/* Responsive form elements */
+.responsive-input {
+  @apply w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-full;
+}
+
+/* Responsive cards */
+.responsive-card {
+  @apply p-4 sm:p-6 lg:p-8 rounded-xl;
+}
+
+/* Responsive sections */
+.responsive-section {
+  @apply py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8;
+}
+
+/* Responsive headings */
+.responsive-heading {
+  @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight;
+}
+
+/* Responsive text */
+.responsive-text {
+  @apply text-sm sm:text-base md:text-lg leading-relaxed;
+}
+
+/* Newsletter form */
+.newsletter-form {
+  @apply flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-md mx-auto w-full;
+}
+
+.newsletter-input {
+  @apply w-full px-4 py-3 rounded-full bg-white/10 border border-purple-500/30 
+         text-white placeholder-gray-400 focus:outline-none focus:border-purple-500
+         text-sm sm:text-base;
+}
+
+.newsletter-button {
+  @apply w-full sm:w-auto px-6 py-3 rounded-full bg-purple-600 text-white 
+         hover:bg-purple-700 transition-colors flex items-center justify-center 
+         space-x-2 text-sm sm:text-base font-medium;
+}
+
+/* Contact form */
+.contact-form {
+  @apply space-y-4 sm:space-y-6;
+}
+
+.contact-input {
+  @apply w-full px-4 py-3 rounded-lg border border-gray-300 
+         focus:ring-2 focus:ring-purple-500 focus:border-purple-500 
+         transition-colors text-sm sm:text-base;
+}
+
+.contact-button {
+  @apply w-full bg-purple-600 text-white px-6 py-4 rounded-lg 
+         hover:bg-purple-700 transition-colors flex items-center 
+         justify-center space-x-2 text-sm sm:text-base font-medium;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .mobile-full-height {
+    min-height: 100vh;
+  }
+  
+  .mobile-padding {
+    @apply px-4 py-6;
+  }
+  
+  .mobile-text-center {
+    text-align: center;
+  }
+  
+  .mobile-stack {
+    @apply flex flex-col gap-4;
+  }
+
+  /* Ensure animations work on mobile */
+  .animate-fade-in,
+  .animate-slide-in,
+  .animate-pulse-slow,
+  .animate-float,
+  .animate-bounce,
+  .animate-shine,
+  .animate-tilt {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    perspective: 1000px;
+    -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000px;
+  }
+}
+
+/* Background gradients */
+.bg-gradient {
+  background: linear-gradient(135deg, #6B46C1 0%, #9F7AEA 100%);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #6B46C1 0%, #9F7AEA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-overlay {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.7));
+}
+
+/* Smooth section transitions */
+section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+
+section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Header transition */
+.header-transparent {
+  background: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.header-solid {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .hover\:scale-105:hover {
+    transform: none;
+  }
+  
+  .hover\:shadow-lg:hover {
+    box-shadow: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none;
+  }
+  
+  .print-friendly {
+    background: white;
+    color: black;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .auto-dark {
+    @apply bg-gray-900 text-white;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .high-contrast {
+    @apply text-black bg-white border-2 border-black;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
