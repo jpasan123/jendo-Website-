@@ -213,7 +213,7 @@ export default function Home() {
   const developmentTeam = [
     {
       name: "Keerthi Kodithuwakku",
-      role: "Chief Executive Officer",
+      role: "R & D Engineer - Embedded Systems",
       credentials: "BSc. Eng",
       image: "https://i.ibb.co/b13kVX2/4-1.jpg",
       social: {
@@ -224,15 +224,15 @@ export default function Home() {
       },
     },
     {
-      name: "Charith Vithanage",
+      name: "Janith Kodithuwakku",
       role: "Executive Director - Operations",
       credentials: "BSc. Eng",
-      image: "https://i.ibb.co/B29cn7WB/50a3aea892ba584b37ddf89601411c91.jpg",
+      image: "https://i.ibb.co/C30nf8rx/Whats-App-Image-2025-02-08-at-10-19-31-82eaa3f7.jpg",
       social: {
-        linkedin: "https://linkedin.com/in/charith-vithanage",
-        twitter: "https://twitter.com/charithvithanage",
-        facebook: "https://facebook.com/charith.vithanage",
-        instagram: "https://instagram.com/charithvithanage",
+        linkedin: "https://www.linkedin.com/in/janith-kodithuwakku?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+        twitter: "https://twitter.com/janithkodithuwakku",
+        facebook: "https://facebook.com/janithkodithuwakku",
+        instagram: "https://instagram.com/janithkodithuwakku",
 
       },
     },
