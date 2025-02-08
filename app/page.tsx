@@ -213,7 +213,7 @@ export default function Home() {
   const developmentTeam = [
     {
       name: "Keerthi Kodithuwakku",
-      role: "R & D Engineer - Embedded Systems",
+      role: "Chief Executive Officer",
       credentials: "BSc. Eng",
       image: "https://i.ibb.co/b13kVX2/4-1.jpg",
       social: {
@@ -225,7 +225,7 @@ export default function Home() {
     },
     {
       name: "Janith Kodithuwakku",
-      role: "Executive Director - Operations",
+      role: "R & D Engineer - Embedded Systems",
       credentials: "BSc. Eng",
       image: "https://i.ibb.co/C30nf8rx/Whats-App-Image-2025-02-08-at-10-19-31-82eaa3f7.jpg",
       social: {
