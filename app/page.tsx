@@ -224,15 +224,15 @@ export default function Home() {
       },
     },
     {
-      name: "Janith Kodithuwakku",
-      role: "R & D Engineer - Embedded Systems",
+      name: "Charith Vithanage",
+      role: "Executive Director - Operations",
       credentials: "BSc. Eng",
-      image: "https://i.ibb.co/C30nf8rx/Whats-App-Image-2025-02-08-at-10-19-31-82eaa3f7.jpg",
+      image: "https://i.ibb.co/B29cn7WB/50a3aea892ba584b37ddf89601411c91.jpg",
       social: {
-        linkedin: "https://www.linkedin.com/in/janith-kodithuwakku?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
-        twitter: "https://twitter.com/janithkodithuwakku",
-        facebook: "https://facebook.com/janithkodithuwakku",
-        instagram: "https://instagram.com/janithkodithuwakku",
+        linkedin: "https://linkedin.com/in/charith-vithanage",
+        twitter: "https://twitter.com/charithvithanage",
+        facebook: "https://facebook.com/charith.vithanage",
+        instagram: "https://instagram.com/charithvithanage",
 
       },
     },
@@ -611,6 +611,161 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
           </div>
         </div>
       </section>
+
+      {/* Products Section */}
+<section id="products" className="py-24 bg-white section-scroll">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="text-center mb-16">
+      <h2 className="text-4xl font-bold text-gray-900 mb-4">Jendo Products Available Now!</h2>
+      <p className="text-xl text-gray-600">Simple steps to monitor your cardiovascular health</p>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Basic Package */}
+      <div className="relative group">
+        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+        <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
+          <div className="relative h-48 mb-6 overflow-hidden rounded-lg">
+            <Image
+              src="https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg"
+              alt="JENDO Basic Device"
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          </div>
+          <h3 className="text-2xl font-semibold text-gray-900 mb-2">Starter Package</h3>
+          <div className="text-4xl font-bold text-purple-600 mb-6">$225</div>
+          <ul className="space-y-4 mb-8">
+            <li className="flex items-center space-x-3">
+              <CheckCircle className="w-5 h-5 text-purple-600" />
+              <span>JENDO Basic Device</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <CheckCircle className="w-5 h-5 text-purple-600" />
+              <span>1 Year Software License</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <CheckCircle className="w-5 h-5 text-purple-600" />
+              <span>Basic Support</span>
+            </li>
+          </ul>
+          <button
+            onClick={() => addToCart({
+              id: 'basic-package',
+              name: 'JENDO Basic Device',
+              price: 225,
+              image_url: 'https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg',
+              description: 'Basic vascular monitoring device for home use'
+            })}
+            className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+          >
+            <ShoppingCart className="w-5 h-5" />
+            <span>Add to Cart</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Professional Package */}
+      <div className="relative group">
+        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+        <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-400 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
+          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-full text-sm">
+            Most Popular
+          </div>
+          <div className="relative h-48 mb-6 overflow-hidden rounded-lg">
+            <Image
+              src="https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg"
+              alt="JENDO Pro Device"
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          </div>
+          <h3 className="text-2xl font-semibold text-gray-900 mb-2">Standard Package</h3>
+          <div className="text-4xl font-bold text-purple-600 mb-6">$2250</div>
+          <ul className="space-y-4 mb-8">
+            <li className="flex items-center space-x-3">
+              <CheckCircle className="w-5 h-5 text-purple-600" />
+              <span>JENDO Pro Device</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <CheckCircle className="w-5 h-5 text-purple-600" />
+              <span>2 Year Software License</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <CheckCircle className="w-5 h-5 text-purple-600" />
+              <span>Priority Support</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <CheckCircle className="w-5 h-5 text-purple-600" />
+              <span>Advanced Analytics</span>
+            </li>
+          </ul>
+          <button
+            onClick={() => addToCart({
+              id: 'pro-package',
+              name: 'JENDO Pro Device',
+              price: 2250,
+              image_url: 'https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg',
+              description: 'Professional vascular monitoring system for clinics'
+            })}
+            className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+          >
+            <ShoppingCart className="w-5 h-5" />
+            <span>Add to Cart</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Enterprise Package */}
+      <div className="relative group">
+        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+        <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
+          <div className="relative h-48 mb-6 overflow-hidden rounded-lg">
+            <Image
+              src="https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg"
+              alt="JENDO Enterprise Package"
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          </div>
+          <h3 className="text-2xl font-semibold text-gray-900 mb-2">Enterprise Package</h3>
+          <div className="text-4xl font-bold text-purple-600 mb-6">Custom</div>
+          <ul className="space-y-4 mb-8">
+            <li className="flex items-center space-x-3">
+              <CheckCircle className="w-5 h-5 text-purple-600" />
+              <span>Multiple JENDO Devices</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <CheckCircle className="w-5 h-5 text-purple-600" />
+              <span>Enterprise Software License</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <CheckCircle className="w-5 h-5 text-purple-600" />
+              <span>24/7 Premium Support</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <CheckCircle className="w-5 h-5 text-purple-600" />
+              <span>Custom Integration</span>
+            </li>
+          </ul>
+          <button
+            onClick={() => addToCart({
+              id: 'enterprise-package',
+              name: 'JENDO Enterprise Package',
+              price: 4999,
+              image_url: 'https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg',
+              description: 'Enterprise-level monitoring solution for hospitals'
+            })}
+            className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+          >
+            <ShoppingCart className="w-5 h-5" />
+            <span>Add to Cart</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
       
       <section className="py-24 bg-white section-scroll">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

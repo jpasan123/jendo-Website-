@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { useCart } from '@/hooks/useCart';
 import { supabase } from '@/lib/supabase';
 import { ShoppingCart, Trash2, Plus, Minus } from 'lucide-react';
+import { PayhereForm } from '@/components/ui/payhere-form';
 
 export default function Cart() {
   const cart = useCart();
   const [loading, setLoading] = useState(false);
+  const [payment, setPayment] = useState(null);
 
   const handleCheckout = async () => {
     setLoading(true);
@@ -20,13 +22,19 @@ export default function Cart() {
         body: JSON.stringify({
           items: cart.items,
           userId: 'user-id', // Replace with actual user ID from auth
-          shippingAddress: 'shipping-address', // Add shipping address form
+          shippingAddress: {
+            firstName: 'John', // Replace with form data
+            lastName: 'Doe',
+            email: 'john@example.com',
+            phone: '1234567890',
+            address: 'shipping-address',
+            city: 'Colombo',
+          },
         }),
       });
 
-      const { sessionId } = await response.json();
-      // Redirect to Stripe checkout
-      window.location.href = sessionId;
+      const { payment } = await response.json();
+      setPayment(payment);
     } catch (error) {
       console.error('Checkout failed:', error);
     } finally {
@@ -47,6 +55,10 @@ export default function Cart() {
     (acc, item) => acc + item.products.price * item.quantity,
     0
   );
+
+  if (payment) {
+    return <PayhereForm payment={payment} />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 py-32">

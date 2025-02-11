@@ -3,13 +3,15 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ShoppingCart } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useCart } from '@/hooks/useCart';
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
+  const cart = useCart();
 
   const navigation = [
     { name: 'ABOUT & MORE', href: '#about' },
@@ -71,7 +73,7 @@ export function Header() {
     <header 
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-        isScrolled ? "bg-[#1a1a1a]/90 backdrop-blur-md border-b border-purple-900/20" : "bg-[#1a1a1a]/90"
+        isScrolled ? "bg-[#1a1a1a] backdrop-blur-md border-b border-purple-900/20" : "bg-[#1a1a1a]"
       )}
     >
       <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 to-black/10 pointer-events-none" />
@@ -96,7 +98,7 @@ export function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:block relative z-10">
+          <div className="hidden md:flex md:items-center md:space-x-6 relative z-10">
             <div className="flex items-center space-x-1">
               {navigation.map((item) => (
                 <Link
@@ -119,10 +121,45 @@ export function Header() {
                 </Link>
               ))}
             </div>
+
+            {/* Cart Icon */}
+            <Link 
+              href="/cart"
+              className={cn(
+                "relative p-2 rounded-full transition-all duration-300",
+                isScrolled 
+                  ? "text-gray-300 hover:text-purple-400 " 
+                  : "text-white hover:text-purple-300 "
+              )}
+            >
+              <ShoppingCart className="h-6 w-6" />
+              {cart.items.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-purple-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {cart.items.length}
+                </span>
+              )}
+            </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden relative z-10">
+          {/* Mobile Menu Button and Cart Icon */}
+          <div className="md:hidden flex items-center space-x-4 relative z-10">
+            <Link 
+              href="/cart"
+              className={cn(
+                "relative p-2 rounded-full transition-all duration-300",
+                isScrolled 
+                  ? "text-gray-300 hover:text-purple-400" 
+                  : "text-white hover:text-purple-300"
+              )}
+            >
+              <ShoppingCart className="h-6 w-6" />
+              {cart.items.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-purple-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {cart.items.length}
+                </span>
+              )}
+            </Link>
+
             <button
               id="mobile-menu-button"
               onClick={() => setIsOpen(!isOpen)}
@@ -155,11 +192,11 @@ export function Header() {
                   href={item.href}
                   className={cn(
                     "relative px-6 py-4 rounded-xl text-lg font-medium transition-all duration-300",
-                    "border border-purple-500 backdrop-sm",
-                    "hover:border-purple-500 hover:bg-purple-500",
+                    "border border-purple-500/20 backdrop-blur-sm",
+                    "hover:border-purple-500/50 hover:bg-purple-500/10",
                     "active:scale-[0.98] active:bg-purple-500/20",
                     activeSection === item.href.replace('#', '')
-                      ? "bg-gradient-to-r from-purple-500 to-purple-600 text-purple-300 border-purple-500/80 shadow-[inset_0_1px_0_0_rgba(147,51,234,0.1)]"
+                      ? "bg-gradient-to-r from-purple-500/20 to-purple-600/20 text-purple-300 border-purple-500/80 shadow-[inset_0_1px_0_0_rgba(147,51,234,0.1)]"
                       : "text-purple-500 bg-[#1a1a1a]"
                   )}
                   onClick={() => setIsOpen(false)}
