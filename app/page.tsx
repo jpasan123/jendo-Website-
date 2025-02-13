@@ -1512,7 +1512,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
               <div className="space-y-4">
                 <p className="flex items-center space-x-3">
                   <Users className="h-5 w-5 text-purple-600" />
-                  <span>Trace Expert City in Colombo</span>
+                  <span>Bay X, Trace Expert City</span>
                 </p>
                 <p className="flex items-center space-x-3">
                   <Activity className="h-5 w-5 text-purple-600" />
