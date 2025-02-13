@@ -69,12 +69,12 @@ export function ChatBot() {
       return 'Our JENDO devices start from $999 for the Basic Package. Would you like to know more about our pricing plans?';
     }
     
-    if (lowercaseInput.includes('how') && lowercaseInput.includes('work')) {
+    if (lowercaseInput.includes('how does the jendo device') && lowercaseInput.includes('work')) {
       return 'JENDO uses advanced non-invasive technology to monitor vascular health. It combines PPG, DTM, and ECG measurements to provide comprehensive cardiovascular analysis in just 15 minutes.';
     }
     
     if (lowercaseInput.includes('contact') || lowercaseInput.includes('support')) {
-      return 'You can reach our support team at contact@jenoo.com or call us at +1 (555) 123-4567. Would you like me to help you with anything specific?';
+      return 'You can reach our support team at info@jendoinnovations.com or call us at 0766210120. Would you like me to help you with anything specific?';
     }
     
     return 'I understand you\'re interested in JENDO. Could you please provide more details about your question so I can better assist you?';

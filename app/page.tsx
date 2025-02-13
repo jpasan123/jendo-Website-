@@ -198,13 +198,13 @@ export default function Home() {
       },
     },
     {
-      name: "Chandrien De Mel",
+      name: "Palitha Gamage",
       role: "Acting CEO - Lanka Ventures PLC",
-      image: "https://i.ibb.co/6Q44qz5/Untitled.jpg",
+      image: "https://i.ibb.co/gbq6z5s7/OIP-1.jpg",
       social: {
-        linkedin: "https://linkedin.com/in/chandrien-de-mel",
+        linkedin: "https://www.linkedin.com/in/palitha-gamage-8b47b510b/",
         twitter: "https://twitter.com/chandriendemel",
-        facebook: "https://web.facebook.com/chandriend",
+        facebook: "https://www.facebook.com/palitha.gamage.1/",
         instagram: "https://instagram.com/chandriendemel",
       },
     },
@@ -224,10 +224,10 @@ export default function Home() {
       },
     },
     {
-      name: "Charith Vithanage",
-      role: "Executive Director - Operations",
+      name: "Janith Kodithuwakku",
+      role: "Data Scientist - Operations",
       credentials: "BSc. Eng",
-      image: "https://i.ibb.co/B29cn7WB/50a3aea892ba584b37ddf89601411c91.jpg",
+      image: "https://i.ibb.co/5gttd5PJ/1635531926171.jpg",
       social: {
         linkedin: "https://linkedin.com/in/charith-vithanage",
         twitter: "https://twitter.com/charithvithanage",
@@ -260,30 +260,30 @@ export default function Home() {
         instagram: "https://instagram.com/danushihettiarachchi",
       },
     },
-    {
-      name: "Gimantha Upasena",
-      role: "R & D Engineer",
-      credentials: "BSc. Eng",
-      image: "https://i.ibb.co/ksz2JGTF/Untitled2.jpg",
-      social: {
-        linkedin: "https://www.linkedin.com/in/ravindu-gimantha-upasena-2b9017189/",
-        twitter: "https://twitter.com/gimantha-upasena",
-        facebook: "https://facebook.com/gimantha.upasena",
-        instagram: "https://instagram.com/gimantha-upasena",
-      },
-    },
-    {
-      name: "Azfa Rassaq",
-      role: "Data Scientist",
-      credentials: "BSc.Math",
-      image: "https://i.ibb.co/wFhw7125/Screenshot-2025-02-05-102620.png",
-      social: {
-        linkedin: "https://www.linkedin.com/in/azfa-razzaq/",
-        twitter: "https://twitter.com/azfa-rassaq",
-        facebook: "https://web.facebook.com/afi.razzaq",
-        instagram: "https://instagram.com/azfa-rassaq",
-      },
-    },
+    // {
+    //   name: "Gimantha Upasena",
+    //   role: "R & D Engineer",
+    //   credentials: "BSc. Eng",
+    //   image: "https://i.ibb.co/ksz2JGTF/Untitled2.jpg",
+    //   social: {
+    //     linkedin: "https://www.linkedin.com/in/ravindu-gimantha-upasena-2b9017189/",
+    //     twitter: "https://twitter.com/gimantha-upasena",
+    //     facebook: "https://facebook.com/gimantha.upasena",
+    //     instagram: "https://instagram.com/gimantha-upasena",
+    //   },
+    // },
+    // {
+    //   name: "Azfa Rassaq",
+    //   role: "Data Scientist",
+    //   credentials: "BSc.Math",
+    //   image: "https://i.ibb.co/wFhw7125/Screenshot-2025-02-05-102620.png",
+    //   social: {
+    //     linkedin: "https://www.linkedin.com/in/azfa-razzaq/",
+    //     twitter: "https://twitter.com/azfa-rassaq",
+    //     facebook: "https://web.facebook.com/afi.razzaq",
+    //     instagram: "https://instagram.com/azfa-rassaq",
+    //   },
+    // },
   ]
 
   const blogPosts = [
@@ -437,7 +437,8 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
       'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80',
       'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80',
       'https://images.unsplash.com/photo-1584362917165-526a968579e8?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80',
-      'https://i.ibb.co/3hZ1nzf/corpo-1.png'
+      'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80',
+      
     ].map((image, index) => (
       <div
         key={image}
@@ -549,20 +550,20 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                 With a seamless implementation process, Jendo is set to revolutionize preventive cardiology and reshape the future of vascular health management.
                 </p>
               </div>
-              <div className="flex flex-wrap gap-4 pt-4">
-                <div className="bg-purple-900/30 backdrop-blur-sm px-6 py-3 rounded-full border border-purple-500/30">
-                  <span className="text-purple-700">15 Minutes</span>
-                  <p className="text-sm text-red-600">Quick Results</p>
+                <div className="flex flex-wrap gap-4 pt-4">
+                  <div className="bg-purple-600 backdrop-blur-sm px-6 py-3 rounded-full border border-purple-500/30">
+                    <span className="text-white-900">15 Minutes</span>
+                    <p className="text-sm text-white">Quick Results</p>
+                  </div>
+                  <div className="bg-purple-600 backdrop-blur-sm px-6 py-3 rounded-full border border-purple-500/30">
+                    <span className="text-white-900">87%+</span>
+                    <p className="text-sm text-white">Sensitivity</p>
+                  </div>
+                  <div className="bg-purple-600 backdrop-blur-sm px-6 py-3 rounded-full border border-purple-500/30">
+                    <span className="text-white-900">Non-Invasive</span>
+                    <p className="text-sm text-white">Painless Process</p>
+                  </div>
                 </div>
-                <div className="bg-purple-900/30 backdrop-blur-sm px-6 py-3 rounded-full border border-purple-500/30">
-                  <span className="text-purple-700">80%+</span>
-                  <p className="text-sm text-red-600">Sensitivity</p>
-                </div>
-                <div className="bg-purple-900/30 backdrop-blur-sm px-6 py-3 rounded-full border border-purple-500/30">
-                  <span className="text-purple-700">Non-Invasive</span>
-                  <p className="text-sm text-red-600">Painless Process</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -604,7 +605,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
             </video>
           </div>
           <div className="mt-8 text-center">
-            <p className="text-base md:text-lg text-purple-700 max-w-2xl mx-auto">
+            <p className="text-base md:text-lg font-bold text-purple-700 mb-4-w-2xl mx-auto">
               JENDO's non-invasive technology provides accurate cardiovascular health assessments in just 15 minutes,
               revolutionizing early detection and prevention of heart diseases.
             </p>
@@ -616,7 +617,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
 <section id="products" className="py-24 bg-white section-scroll">
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div className="text-center mb-16">
-      <h2 className="text-4xl font-bold text-gray-900 mb-4">Jendo Products Available Now!</h2>
+      <h2 className="text-4xl font-bold text-purple-900 mb-4">Jendo Products Available Now!</h2>
       <p className="text-xl text-gray-600">Simple steps to monitor your cardiovascular health</p>
     </div>
 
@@ -767,15 +768,10 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
   </div>
 </section>
       
-      <section className="py-24 bg-white section-scroll">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Jendo Products Availble Now !</h2>
-            <p className="text-xl text-gray-600">Simple steps to monitor your cardiovascular health</p>
-          </div>
-
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-24">
+      {/* <section className="py-24 bg-white section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> */}
+ 
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-24">
             {/* Steps */}
             {/* <div className="space-y-8">
               {[
@@ -830,194 +826,111 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                 </div>
               ))}
             </div> */}
+        
+      </div>
+      
+      
+ {/* Detailed Test Procedure */}
+<div className="mt-32">
+  <div className="text-center mb-16">
+    <h3 className="text-3xl font-bold text-purple-900 mb-4">Step-by-Step JENDO Test Procedure</h3>
+    <p className="text-xl text-gray-600">Detailed walkthrough of the testing process</p>
+  </div>
 
-                 {/* Images Container */}
-        <div className="grid grid-cols-2 gap-6">
-          {/* First Image */}
-          <div className="flex items-center justify-center">
-            <div className="relative group perspective-1000 w-full">
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-3xl blur-lg opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow" />
-              <div className="relative bg-white p-4 rounded-3xl shadow-xl border border-purple-100 overflow-hidden transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2 group-hover:rotate-1">
-                <div className="flex items-center justify-center">
-                  <Image
-                    src="https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg"
-                    alt="JENDO Device Front View"
-                    width={400}
-                    height={300}
-                    className="rounded-2xl transform transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-purple-600/20 via-transparent to-transparent rounded-3xl" />
-                <div className="absolute top-4 right-4 bg-purple-600 text-white px-3 py-1.5 rounded-full text-sm font-semibold">
-                  Coming Soon
-                </div>
+  <div className="relative max-w-5xl mx-auto">
+    {/* Timeline Line */}
+    <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-purple-600/20 via-purple-600 to-purple-600/20"></div>
+
+    {[
+      {
+        title: "Patient Preparation",
+        steps: [
+          "Patient is placed in a supine position (lying down comfortably on their back)",
+          "Ensure a calm environment to reduce external factors influencing results"
+        ],
+        icon: BedDouble,
+        color: "from-blue-600 to-blue-900"
+      },
+      {
+        title: "Signal Extraction",
+        steps: [
+          "A pressure cuff is wrapped around the patient's arm",
+          "The cuff is inflated to maintain 30 mmHg above the systolic pressure for 5 minutes"
+        ],
+        icon: Waves,
+        color: "from-purple-600 to-purple-900"
+      },
+      {
+        title: "Data Collection",
+        steps: [
+          "PPG (Photoplethysmography): Captures pulse signals from the vascular system",
+          "DTM (Digital Thermal Monitoring): Measures temperature variations in the blood flow",
+          "ECG (Electrocardiography): Records the electrical activity of the heart"
+        ],
+        icon: LineChart,
+        color: "from-green-600 to-green-900"
+      },
+      {
+        title: "Cloud-Based Analysis",
+        steps: [
+          "The extracted data is uploaded securely to JENDO's cloud platform",
+          "AI-powered algorithms process the signals to evaluate vascular condition",
+          "Data encryption ensures secure handling of patient information"
+        ],
+        icon: Cloud,
+        color: "from-indigo-600 to-indigo-900"
+      },
+      {
+        title: "Report Generation",
+        steps: [
+          "A detailed Vascular Health Report is generated",
+          "Highlights current vascular conditions and future cardiovascular risk factors"
+        ],
+        icon: FileText,
+        color: "from-red-600 to-red-900"
+      },
+      {
+        title: "Consultation with Doctor",
+        steps: [
+          "The report can be reviewed by a physician",
+          "Recommendations for preventive measures or further treatments"
+        ],
+        icon: Stethoscope,
+        color: "from-yellow-600 to-yellow-900"
+      }
+    ].map((item, index) => (
+      <div key={index} className={`relative mb-16 ${index % 2 === 0 ? 'md:ml-auto md:pl-32 md:pr-0' : 'md:mr-auto md:pr-32 md:pl-0'} md:w-1/2 animate-fade-in`}>
+        {/* Timeline Node */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 md:translate-x-0 md:left-auto md:right-0 flex items-center justify-center w-12 h-12 rounded-full bg-white border-4 border-purple-600 shadow-lg z-10">
+          <span className="text-lg font-bold text-purple-600">0{index + 1}</span>
+        </div>
+
+        {/* Content Card */}
+        <div className="relative group">
+          <div className={`absolute -inset-1 bg-gradient-to-r ${item.color} rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow`}></div>
+          <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-gray-100 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
+            <div className="flex items-start space-x-6">
+              <div className="flex-shrink-0">
+                <item.icon className="w-12 h-12 text-purple-600" />
               </div>
-            </div>
-          </div>
-
-          {/* Second Image */}
-          <div className="flex items-center justify-center">
-            <div className="relative group perspective-1000 w-full">
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-3xl blur-lg opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow" />
-              <div className="relative bg-white p-4 rounded-3xl shadow-xl border border-purple-100 overflow-hidden transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2 group-hover:rotate-1">
-                <div className="flex items-center justify-center">
-                  <Image
-                    src="https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg"
-                    alt="JENDO Device Side View"
-                    width={400}
-                    height={300}
-                    className="rounded-2xl transform transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-purple-600/20 via-transparent to-transparent rounded-3xl" />
-                <div className="absolute top-4 right-4 bg-purple-600 text-white px-3 py-1.5 rounded-full text-sm font-semibold">
-                  Coming Soon
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Third Image */}
-          <div className="flex items-center justify-center">
-            <div className="relative group perspective-1000 w-full">
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-3xl blur-lg opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow" />
-              <div className="relative bg-white p-4 rounded-3xl shadow-xl border border-purple-100 overflow-hidden transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2 group-hover:rotate-1">
-                <div className="flex items-center justify-center">
-                  <Image
-                    src="https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg"
-                    alt="JENDO Device Angle View"
-                    width={400}
-                    height={300}
-                    className="rounded-2xl transform transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-purple-600/20 via-transparent to-transparent rounded-3xl" />
-                <div className="absolute top-4 right-4 bg-purple-600 text-white px-3 py-1.5 rounded-full text-sm font-semibold">
-                  Coming Soon
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Fourth Image */}
-          <div className="flex items-center justify-center">
-            <div className="relative group perspective-1000 w-full">
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-3xl blur-lg opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow" />
-              <div className="relative bg-white p-4 rounded-3xl shadow-xl border border-purple-100 overflow-hidden transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2 group-hover:rotate-1">
-                <div className="flex items-center justify-center">
-                  <Image
-                    src="https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg"
-                    alt="JENDO Device Back View"
-                    width={400}
-                    height={300}
-                    className="rounded-2xl transform transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-purple-600/20 via-transparent to-transparent rounded-3xl" />
-                <div className="absolute top-4 right-4 bg-purple-600 text-white px-3 py-1.5 rounded-full text-sm font-semibold">
-                  Coming Soon
-                </div>
+              <div className="flex-1">
+                <h4 className="text-xl font-semibold text-gray-900 mb-4">{item.title}</h4>
+                <ul className="space-y-3">
+                  {item.steps.map((step, stepIndex) => (
+                    <li key={stepIndex} className="flex items-start space-x-3">
+                      <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                      <span className="text-gray-600">{step}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
-
-          {/* Detailed Test Procedure */}
-          <div className="mt-32">
-            <div className="text-center mb-16">
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">Step-by-Step JENDO Test Procedure</h3>
-              <p className="text-xl text-gray-600">Detailed walkthrough of the testing process</p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-              {[
-                {
-                  title: "Patient Preparation",
-                  steps: [
-                    "Patient is placed in a supine position (lying down comfortably on their back)",
-                    "Ensure a calm environment to reduce external factors influencing results"
-                  ],
-                  icon: BedDouble,
-                  color: "from-blue-600 to-blue-900"
-                },
-                {
-                  title: "Signal Extraction",
-                  steps: [
-                    "A pressure cuff is wrapped around the patient's arm",
-                    "The cuff is inflated to maintain 30 mmHg above the systolic pressure for 5 minutes"
-                  ],
-                  icon: Waves,
-                  color: "from-purple-600 to-purple-900"
-                },
-                {
-                  title: "Data Collection",
-                  steps: [
-                    "PPG (Photoplethysmography): Captures pulse signals from the vascular system",
-                    "DTM (Digital Thermal Monitoring): Measures temperature variations in the blood flow",
-                    "ECG (Electrocardiography): Records the electrical activity of the heart to monitor heart rate, rhythm, and detect abnormalities like arrhythmias."
-
-                    // "Signals are collected for 7 minutes post cuff release"
-                  ],
-                  icon: LineChart,
-                  color: "from-green-600 to-green-900"
-                },
-                {
-                  title: "Cloud-Based Analysis",
-                  steps: [
-                    "The extracted data is uploaded securely to JENDO's cloud platform.",
-                    "AI-powered algorithms process the signals to evaluate the vascular system's condition with over 80% sensitivity.",
-                    "Data encryption ensures secure handling of patient information."
-                  ],
-                  icon: Cloud,
-                  color: "from-indigo-600 to-indigo-900"
-                },
-                {
-                  title: "Report Generation",
-                  steps: [
-                    "A detailed Vascular Health Report is generated",
-                    "Highlights current vascular conditions and future cardiovascular risk factors"
-                  ],
-                  icon: FileText,
-                  color: "from-red-600 to-red-900"
-                },
-                {
-                  title: "Consultation with Doctor",
-                  steps: [
-                    "The report can be reviewed by a physician",
-                    "Recommendations for preventive measures or further treatments"
-                  ],
-                  icon: Stethoscope,
-                  color: "from-yellow-600 to-yellow-900"
-                }
-              ].map((item, index) => (
-                <div key={index} className="relative group">
-                  <div className={`absolute -inset-1 bg-gradient-to-r ${item.color} rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow`}></div>
-                  <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-gray-100 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
-                    <div className="flex items-start space-x-6">
-                      <div className="flex-shrink-0">
-                        <item.icon className="w-12 h-12 text-purple-600" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-xl font-semibold text-gray-900 mb-4">{item.title}</h4>
-                        <ul className="space-y-3">
-                          {item.steps.map((step, stepIndex) => (
-                            <li key={stepIndex} className="flex items-start space-x-3">
-                              <CheckCircle className="w-5 h-5 text-purple-600 mt-1" />
-                              <span className="text-gray-600">{step}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+    ))}
+  </div>
+</div>
 
       {/* Statistics Section */}
       <section id="stats" className="relative py-32 bg-gradient-to-b from-gray-900 via-black to-purple-900/20 text-white overflow-hidden section-scroll">
@@ -1094,7 +1007,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
 <section id="benefits" className="py-24 bg-white section-scroll">
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div className="text-center mb-16">
-      <h2 className="text-4xl font-bold text-gray-900 mb-4">Value preposition of jendo</h2>
+      <h2 className="text-4xl font-bold text-purple-900 mb-4">Value preposition of jendo</h2>
       <p className="text-xl text-gray-600">Empowering healthcare through innovation</p>
     </div>
 
@@ -1193,7 +1106,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
      <section id="team" className="py-20 bg-gray-50 section-scroll">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Team</h2>
+            <h2 className="text-3xl font-bold text-purple-900 mb-4">Our Team</h2>
             <p className="text-lg text-gray-600">Meet the experts behind JENDO</p>
           </div>
 
@@ -1404,7 +1317,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
       <section id="blog" className="py-20 bg-white section-scroll">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Latest News</h2>
+            <h2 className="text-3xl font-bold text-purple-900 mb-4">Latest News</h2>
             <p className="text-lg text-gray-600">Stay updated with our latest developments</p>
           </div>
 
@@ -1465,7 +1378,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
       <section id="contact" className="py-20 bg-white section-scroll">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Contact Us</h2>
+            <h2 className="text-3xl font-bold text-purple-900 mb-4">Contact Us</h2>
             <p className="text-lg text-gray-600">Get in touch with our team</p>
           </div>
 
