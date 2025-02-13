@@ -1,11 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // Remove static export
   images: { 
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -14,8 +10,8 @@ const nextConfig = {
     ],
   },
   experimental: {
-    serverActions: true,
-  },
+    appDir: true,
+  }
 };
 
 module.exports = nextConfig;
