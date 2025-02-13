@@ -13,10 +13,8 @@ const nextConfig = {
       }
     ],
   },
-  // Exclude API routes from static export
-  excludeDefaultMomentLocales: true,
   experimental: {
-    appDir: true,
+    serverActions: true,
   },
 };
 
