@@ -6,6 +6,13 @@ export async function POST(req: Request) {
   try {
     const { items, userId, shippingAddress } = await req.json();
 
+    if (!items?.length || !shippingAddress) {
+      return NextResponse.json(
+        { success: false, error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
     // Calculate total amount
     const total = items.reduce((acc: number, item: any) => 
       acc + (item.products.price * item.quantity), 0
@@ -23,7 +30,10 @@ export async function POST(req: Request) {
       .select()
       .single();
 
-    if (orderError) throw orderError;
+    if (orderError) {
+      console.error('Order creation error:', orderError);
+      throw orderError;
+    }
 
     // Create order items
     const orderItems = items.map((item: any) => ({
@@ -37,7 +47,10 @@ export async function POST(req: Request) {
       .from('order_items')
       .insert(orderItems);
 
-    if (itemsError) throw itemsError;
+    if (itemsError) {
+      console.error('Order items creation error:', itemsError);
+      throw itemsError;
+    }
 
     // Create PayHere payment form data
     const payment = createPaymentForm({
@@ -58,14 +71,30 @@ export async function POST(req: Request) {
     });
 
     // Clear cart after successful order creation
-    await supabase
+    const { error: cartError } = await supabase
       .from('cart_items')
       .delete()
       .eq('user_id', userId);
 
-    return NextResponse.json({ success: true, payment });
+    if (cartError) {
+      console.error('Cart clearing error:', cartError);
+      // Don't throw here as the order is already created
+    }
+
+    return NextResponse.json({ 
+      success: true, 
+      payment 
+    });
   } catch (error) {
     console.error('Checkout error:', error);
-    return NextResponse.json({ success: false, error: 'Checkout failed' }, { status: 500 });
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Checkout failed' 
+      }, 
+      { 
+        status: 500 
+      }
+    );
   }
 }

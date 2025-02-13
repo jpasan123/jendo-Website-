@@ -7,13 +7,35 @@ export async function POST(req: Request) {
 
     const { data, error } = await supabase
       .from('pre_orders')
-      .insert([formData])
+      .insert([{
+        full_name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        package_type: formData.packageType,
+        delivery_address: formData.deliveryAddress,
+        payment_method: formData.paymentMethod,
+        status: 'pending'
+      }])
       .select();
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
-    return NextResponse.json({ success: true, data });
+    return NextResponse.json({ 
+      success: true, 
+      data 
+    });
   } catch (error) {
-    return NextResponse.json({ success: false, error: 'Failed to submit pre-order' }, { status: 500 });
+    console.error('Pre-order submission error:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Failed to submit pre-order' 
+      }, 
+      { 
+        status: 500 
+      }
+    );
   }
 }

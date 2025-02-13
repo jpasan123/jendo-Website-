@@ -4,13 +4,13 @@ import { generateHash } from '@/lib/payhere';
 
 export async function POST(req: Request) {
   try {
-    const data = await req.formData();
-    const merchant_id = data.get('merchant_id');
-    const order_id = data.get('order_id');
-    const payhere_amount = data.get('payhere_amount');
-    const payhere_currency = data.get('payhere_currency');
-    const status_code = data.get('status_code');
-    const md5sig = data.get('md5sig');
+    const formData = await req.formData();
+    const merchant_id = formData.get('merchant_id');
+    const order_id = formData.get('order_id');
+    const payhere_amount = formData.get('payhere_amount');
+    const payhere_currency = formData.get('payhere_currency');
+    const status_code = formData.get('status_code');
+    const md5sig = formData.get('md5sig');
 
     // Verify hash
     const generatedHash = generateHash(
@@ -19,7 +19,10 @@ export async function POST(req: Request) {
     );
 
     if (md5sig !== generatedHash) {
-      throw new Error('Invalid hash');
+      return NextResponse.json(
+        { success: false, error: 'Invalid hash' },
+        { status: 400 }
+      );
     }
 
     // Update order status
@@ -30,7 +33,9 @@ export async function POST(req: Request) {
       .update({ status: orderStatus })
       .eq('id', order_id);
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

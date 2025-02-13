@@ -837,9 +837,9 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
     <p className="text-xl text-gray-600">Detailed walkthrough of the testing process</p>
   </div>
 
-  <div className="relative max-w-5xl mx-auto">
+  <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
     {/* Timeline Line */}
-    <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-purple-600/20 via-purple-600 to-purple-600/20"></div>
+    <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-600/20 via-purple-600 to-purple-600/20 md:transform md:-translate-x-1/2"></div>
 
     {[
       {
@@ -899,27 +899,39 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
         color: "from-yellow-600 to-yellow-900"
       }
     ].map((item, index) => (
-      <div key={index} className={`relative mb-16 ${index % 2 === 0 ? 'md:ml-auto md:pl-32 md:pr-0' : 'md:mr-auto md:pr-32 md:pl-0'} md:w-1/2 animate-fade-in`}>
+      <div 
+        key={index} 
+        className={`relative mb-16 pl-12 md:pl-0 
+          ${index % 2 === 0 
+            ? 'md:ml-auto md:pl-32 md:pr-0' 
+            : 'md:mr-auto md:pr-32 md:pl-0'} 
+          md:w-1/2 animate-fade-in`}
+      >
         {/* Timeline Node */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 md:translate-x-0 md:left-auto md:right-0 flex items-center justify-center w-12 h-12 rounded-full bg-white border-4 border-purple-600 shadow-lg z-10">
-          <span className="text-lg font-bold text-purple-600">0{index + 1}</span>
+        <div 
+          className={`absolute top-0 left-0 md:left-1/2 transform 
+            ${index % 2 === 0 ? 'md:translate-x-[-50%]' : 'md:translate-x-[-50%]'}
+            flex items-center justify-center w-10 h-10 md:w-12 md:h-12 
+            rounded-full bg-white border-4 border-purple-600 shadow-lg z-10`}
+        >
+          <span className="text-base md:text-lg font-bold text-purple-600">0{index + 1}</span>
         </div>
 
         {/* Content Card */}
         <div className="relative group">
           <div className={`absolute -inset-1 bg-gradient-to-r ${item.color} rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow`}></div>
-          <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-gray-100 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
-            <div className="flex items-start space-x-6">
-              <div className="flex-shrink-0">
-                <item.icon className="w-12 h-12 text-purple-600" />
+          <div className="relative bg-white p-4 md:p-8 rounded-2xl shadow-xl border border-gray-100 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
+            <div className="flex flex-col md:flex-row md:items-start md:space-x-6">
+              <div className="flex-shrink-0 mb-4 md:mb-0">
+                <item.icon className="w-8 h-8 md:w-12 md:h-12 text-purple-600" />
               </div>
               <div className="flex-1">
-                <h4 className="text-xl font-semibold text-gray-900 mb-4">{item.title}</h4>
+                <h4 className="text-lg md:text-xl font-semibold text-gray-900 mb-4">{item.title}</h4>
                 <ul className="space-y-3">
                   {item.steps.map((step, stepIndex) => (
                     <li key={stepIndex} className="flex items-start space-x-3">
-                      <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
-                      <span className="text-gray-600">{step}</span>
+                      <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-purple-600 mt-1 flex-shrink-0" />
+                      <span className="text-sm md:text-base text-gray-600">{step}</span>
                     </li>
                   ))}
                 </ul>
