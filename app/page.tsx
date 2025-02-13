@@ -166,7 +166,7 @@ export default function Home() {
       role: "Consultant Physician (Cardiologist)",
       credentials: "National Hospital, Sri Lanka",
       additionalRole: "Head of Department of Clinical Medicine, University of Colombo",
-      image: "https://i.ibb.co/P1xxL07/2-1.jpg",
+      image: "https://i.ibb.co/Qv5Wf41k/Whats-App-Image-2025-02-13-at-20-44-02-649bd8d3.jpg",
       social: {
         linkedin: "https://www.linkedin.com/in/godwin-constantine-ab751a8/",
         twitter: "https://twitter.com/godwinconstantine",
@@ -188,17 +188,17 @@ export default function Home() {
         instagram: "https://instagram.com/keerthikodithuwakku",
       },
     },
-    {
-      name: "Dr. Manjula Karunaratne",
-      role: "Group CEO - Asiri Hospitals PLC",
-      image: "https://i.ibb.co/jhMkKbZ/11-1.png",
-      social: {
-        linkedin: "https://linkedin.com/in/manjula-karunaratne",
-        twitter: "https://twitter.com/manjulakarunaratne",
-        facebook: "https://facebook.com/manjula.karunaratne",
-        instagram: "https://instagram.com/manjulakarunaratne",
-      },
-    },
+    // {
+    //   name: "Dr. Manjula Karunaratne",
+    //   role: "Group CEO - Asiri Hospitals PLC",
+    //   image: "https://i.ibb.co/jhMkKbZ/11-1.png",
+    //   social: {
+    //     linkedin: "https://linkedin.com/in/manjula-karunaratne",
+    //     twitter: "https://twitter.com/manjulakarunaratne",
+    //     facebook: "https://facebook.com/manjula.karunaratne",
+    //     instagram: "https://instagram.com/manjulakarunaratne",
+    //   },
+    // },
     {
       name: "Vinod Samarawickrama",
       role: "Manager Connectivity Program Meta Inc.",
@@ -234,8 +234,8 @@ export default function Home() {
     },
     {
       name: "Palitha Gamage",
-      role: "Acting CEO - Lanka Ventures PLC",
-      image: "https://i.ibb.co/gbq6z5s7/OIP-1.jpg",
+      role: "CEO - Lanka Ventures PLC",
+      image: "https://i.ibb.co/4nL9gMST/2cea9ab7-faea-476c-8bf5-5a0f3b4825cd-thumb-1.jpg",
       social: {
         linkedin: "https://www.linkedin.com/in/palitha-gamage-8b47b510b/",
         twitter: "https://twitter.com/chandriendemel",
@@ -345,6 +345,46 @@ export default function Home() {
       author: "Andre Howson",
       image: "https://i.ibb.co/bMqByFXT/JKX-3-1024x425.jpg",
       url: "http://bizenglish.adaderana.lk/john-keells-x-announces-winners-of-the-open-innovation-challenge/",
+    },
+    {
+      title: "John Keells X rewards winners of Innovation Challenge",
+      excerpt: "Early detection and prevention of cardiovascular diseases.",
+      date: "March 20, 2024",
+      author: "Sunday Oberver",
+      image: "https://i.ibb.co/bMqByFXT/JKX-3-1024x425.jpg",
+      url: "https://archives1.sundayobserver.lk/2016/11/13/business/john-keells-x-rewards-winners-innovation-challenge",
+    },
+    {
+      title: "Sri Lankan team in early major breakthrough on early detection of NCDs",
+      excerpt: "The ‘Jendo’ hardware device that is clipped to the patient and to the computer",
+      date: "August 5, 2018",
+      author: " Quintus Perera",
+      image: "https://i.ibb.co/6RDDJyL7/img.webp",
+      url: "http://bizenglish.adaderana.lk/john-keells-x-announces-winners-of-the-open-innovation-challenge/",
+    },
+    {
+      title: "A Hybrid Approach for Screening Endothelial Dysfunction using Photoplethysmography",
+      excerpt: "A Hybrid Approach for Screening Endothelial Dysfunction using Photoplethysmography and Digital Thermal Monitoring",
+      date: "March 20, 2024",
+      author: "Vendys",
+      image: "https://i.ibb.co/fdCnj2Qt/dac531-73bbe4c4b6594048bd41440f335212c2-mv2.jpg",
+      url: "https://www.vendys2.com/post/a-hybrid-approach-for-screening-endothelial-dysfunction-using-photoplethysmography",
+    },
+    {
+      title: "Srilanka Patent for Jendo",
+      excerpt: "In addition to the home country Sri Lanka, we managed to expand our presence to Japan at the moment and the discussions are in progress with potential partners in Malaysia, UK, US, Jordan and india.",
+      date: "March 20, 2024",
+      author: "Vendys",
+      image: "https://i.ibb.co/MxLrpccS/Screen-Shot-2022-12-22-at-00-01-06-1.png",
+      url: "https://www.wipo.int/ipadvantage/en/details.jsp?id=12463",
+    },
+    {
+      title: "Non-invasive assessment of endothelial dysfunction",
+      excerpt: "The COVID-19 pandemic caused by the SARS-CoV-2 virus has infected millions and overburdened the healthcare infrastructure globally.",
+      date: "May 20, 2021",
+      author: "Pub Med",
+      image: "https://i.ibb.co/Zzqmty9N/unnamed-1.png",
+      url: "https://pubmed.ncbi.nlm.nih.gov/33254535/#article-details",
     },
   ]
   
@@ -678,7 +718,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
             </li>
             <li className="flex items-center space-x-3">
               <CheckCircle className="w-5 h-5 text-purple-600" />
-              <span>1 Year Software License</span>
+              <span>1 Month Software License</span>
             </li>
             <li className="flex items-center space-x-3">
               <CheckCircle className="w-5 h-5 text-purple-600" />
