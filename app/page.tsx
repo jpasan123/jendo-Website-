@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState , useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { Heart, Shield, ArrowRight, Users, Activity, Download, MapPin, Mail, Clock, User, LineChart, FlaskRound as Flask, Building2, Stethoscope, FileHeart, ChartBar, Brain, Microscope, BarChart3, ShieldCheck, PieChart, HandHeart, Facebook, Twitter, Linkedin, CreditCard, Package, CheckCircle, ShoppingCart, X, Calendar, FileText, BedDouble, Waves, Cloud, Instagram, FacebookIcon } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
@@ -23,6 +23,40 @@ export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const videoSectionRef = useRef<HTMLElement>(null)
 
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    const sectionElement = videoSectionRef.current;
+
+    const options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && videoElement) {
+          setIsVideoPlaying(true);
+          videoElement.play().catch(error => {
+            console.log("Video autoplay failed:", error);
+          });
+        } else if (videoElement) {
+          setIsVideoPlaying(false);
+          videoElement.pause();
+        }
+      });
+    }, options);
+
+    if (sectionElement) {
+      observer.observe(sectionElement);
+    }
+
+    return () => {
+      if (sectionElement) {
+        observer.unobserve(sectionElement);
+      }
+    };
+  }, []);
   
 
   useEffect(() => {
@@ -76,13 +110,14 @@ export default function Home() {
       })
     }, options)
 
-    if (videoSectionRef.current) {
-      observer.observe(videoSectionRef.current)
+    const currentVideoSectionRef = videoSectionRef.current;
+    if (currentVideoSectionRef) {
+      observer.observe(currentVideoSectionRef)
     }
 
     return () => {
-      if (videoSectionRef.current) {
-        observer.unobserve(videoSectionRef.current)
+      if (currentVideoSectionRef) {
+        observer.unobserve(currentVideoSectionRef)
       }
     }
   }, [])
@@ -606,7 +641,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
           </div>
           <div className="mt-8 text-center">
             <p className="text-base md:text-lg font-bold text-purple-700 mb-4-w-2xl mx-auto">
-              JENDO's non-invasive technology provides accurate cardiovascular health assessments in just 15 minutes,
+              JENDO&apos;s non-invasive technology provides accurate cardiovascular health assessments in just 15 minutes,
               revolutionizing early detection and prevention of heart diseases.
             </p>
           </div>
@@ -967,17 +1002,19 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20 animate-fade-in">
-            <h2 className="text-6xl font-bold mb-8 relative inline-block">
-              <span className="relative z-10 bg-gradient-to-r from-purple-300 via-purple-400 to-purple-300 bg-clip-text text-transparent animate-shine">
-                Cardiovascular Disease Impact
-              </span>
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-purple-900/20 blur-lg -z-10 animate-pulse-slow" />
-            </h2>
-            <p className="text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              War is not the number one killer in the world, but cardiovascular diseases.
-            </p>
-          </div>
+        <div className="text-center mb-20 animate-fade-in">
+        <h2 className="text-6xl font-bold mb-8 relative inline-block">
+          <span className="relative z-10 bg-gradient-to-r from-purple-300 via-purple-400 to-purple-300 bg-clip-text text-transparent animate-shine">
+            Cardiovascular Disease Impact
+          </span>
+          <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-purple-900/20 blur-lg -z-10 animate-pulse-slow" />
+        </h2>
+        <p className="text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          War is not the number one killer in the world, but cardiovascular diseases.
+        </p>
+      </div>
+
+      <p className="text-gray-600">Don&apos;t miss out on the future of vascular health monitoring.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
             <div className="relative group perspective-1000">

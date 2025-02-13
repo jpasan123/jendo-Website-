@@ -61,7 +61,7 @@ export default function TermsOfService() {
                   <h2 className="text-3xl font-bold text-gray-900">Agreement to Terms</h2>
                 </div>
                 <p className="text-gray-600 mb-4">
-                  By accessing or using JENDO's services, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing our services.
+                  By accessing or using JENDO&apos;s services, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing our services.
                 </p>
               </div>
             </div>
@@ -94,7 +94,7 @@ export default function TermsOfService() {
                   <h2 className="text-3xl font-bold text-gray-900">Disclaimer</h2>
                 </div>
                 <p className="text-gray-600 mb-4">
-                  Our services are provided "as is". JENDO makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation:
+                  Our services are provided &quot;as is&quot;. JENDO makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation:
                 </p>
                 <ul className="list-disc pl-6 text-gray-600 mb-8 space-y-2">
                   <li>Warranties or merchantability</li>

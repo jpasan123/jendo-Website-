@@ -1,45 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
-import { supabase } from '@/lib/supabase';
 import { ShoppingCart, Trash2, Plus, Minus } from 'lucide-react';
-import { PayhereForm } from '@/components/ui/payhere-form';
+import Image from 'next/image';
 
 export default function Cart() {
+  const router = useRouter();
   const cart = useCart();
   const [loading, setLoading] = useState(false);
-  const [payment, setPayment] = useState(null);
 
-  const handleCheckout = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          items: cart.items,
-          userId: 'user-id', // Replace with actual user ID from auth
-          shippingAddress: {
-            firstName: 'John', // Replace with form data
-            lastName: 'Doe',
-            email: 'john@example.com',
-            phone: '1234567890',
-            address: 'shipping-address',
-            city: 'Colombo',
-          },
-        }),
-      });
-
-      const { payment } = await response.json();
-      setPayment(payment);
-    } catch (error) {
-      console.error('Checkout failed:', error);
-    } finally {
-      setLoading(false);
-    }
+  const handleCheckout = () => {
+    router.push('/checkout');
   };
 
   const updateQuantity = (productId: string, newQuantity: number) => {
@@ -55,10 +28,6 @@ export default function Cart() {
     (acc, item) => acc + item.products.price * item.quantity,
     0
   );
-
-  if (payment) {
-    return <PayhereForm payment={payment} />;
-  }
 
   return (
     <div className="min-h-screen bg-gray-100 py-32">
@@ -80,11 +49,14 @@ export default function Cart() {
                     className="flex items-center justify-between border-b border-gray-200 pb-6"
                   >
                     <div className="flex items-center space-x-4">
-                      <img
-                        src={item.products.image_url}
-                        alt={item.products.name}
-                        className="w-24 h-24 object-cover rounded-lg"
-                      />
+                      <div className="relative w-24 h-24">
+                        <Image
+                          src={item.products.image_url}
+                          alt={item.products.name}
+                          fill
+                          className="object-cover rounded-lg"
+                        />
+                      </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
                           {item.products.name}
@@ -134,7 +106,7 @@ export default function Cart() {
                   disabled={loading}
                   className="mt-8 w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors disabled:opacity-50"
                 >
-                  {loading ? 'Processing...' : 'Proceed to Checkout'}
+                  Proceed to Checkout
                 </button>
               </div>
             </>

@@ -98,9 +98,9 @@ export default function Contact() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             <div className="relative">
               <div className="sticky top-32">
-                <h2 className="text-4xl font-bold text-gray-900 mb-6">Let's Start a Conversation</h2>
+                <h2 className="text-4xl font-bold text-gray-900 mb-6">Let&apos;s Start a Conversation</h2>
                 <p className="text-lg text-gray-600 mb-8">
-                  We'd love to hear from you. Please fill out this form and we'll get back to you as soon as possible.
+                  We&apos;d love to hear from you. Please fill out this form and we&apos;ll get back to you as soon as possible.
                 </p>
                 <div className="space-y-6">
                   <div className="flex items-center space-x-4 text-gray-600">
@@ -117,7 +117,7 @@ export default function Contact() {
 
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
-              <form className="relative bg-white p-8 rounded-2xl shadow-xl border border border-purple-100">
+              <form className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100">
                 <div className="space-y-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
