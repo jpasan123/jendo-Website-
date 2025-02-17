@@ -1024,70 +1024,68 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.1),transparent_50%)] animate-pulse-slow" />
           <div className="absolute inset-0">
-            {[...Array(20)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute rounded-full bg-purple-600/10"
-                style={{
-                  width: Math.random() * 300 + 50 + 'px',
-                  height: Math.random() * 300 + 50 + 'px',
-                  top: Math.random() * 100 + '%',
-                  left: Math.random() * 100 + '%',
-                  animation: `float ${Math.random() * 10 + 5}s infinite ease-in-out`,
-                  animationDelay: `-${Math.random() * 10}s`,
-                }}
-              />
-            ))}
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full bg-purple-600/10"
+            style={{
+          width: Math.random() * 300 + 50 + 'px',
+          height: Math.random() * 300 + 50 + 'px',
+          top: Math.random() * 100 + '%',
+          left: Math.random() * 100 + '%',
+          animation: `float ${Math.random() * 10 + 5}s infinite ease-in-out`,
+          animationDelay: `-${Math.random() * 10}s`,
+            }}
+          />
+        ))}
           </div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-20 animate-fade-in">
-        <h2 className="text-6xl font-bold mb-8 relative inline-block">
+          <div className="text-center mb-20 animate-fade-in">
+        <h2 className="text-4xl sm:text-5xl font-bold mb-8 relative inline-block">
           <span className="relative z-10 bg-gradient-to-r from-purple-300 via-purple-400 to-purple-300 bg-clip-text text-transparent animate-shine">
             Cardiovascular Disease Impact
           </span>
           <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-purple-900/20 blur-lg -z-10 animate-pulse-slow" />
         </h2>
-        <p className="text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-lg sm:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
           War is not the number one killer in the world, but cardiovascular diseases.
         </p>
-      </div>
-
-      <p className="text-gray-600">Don&apos;t miss out on the future of vascular health monitoring.</p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-            <div className="relative group perspective-1000">
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur-lg opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow" />
-              <div className="relative bg-black/50 backdrop-blur-xl p-12 rounded-2xl border border-purple-900/20 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2 group-hover:rotate-1">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-purple-900/5 rounded-2xl" />
-                <div className="relative flex flex-col items-center space-y-6">
-                  <div className="text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-purple-300 animate-float animate-shine">
-                    17.7M+
-                  </div>
-                  <div className="h-0.5 w-24 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-pulse-slow" />
-                  <p className="text-2xl text-gray-300 text-center">
-                    People die every year from CVD
-                  </p>
-                </div>
-              </div>
+        <div className="relative group perspective-1000">
+          <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur-lg opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow" />
+          <div className="relative bg-black/50 backdrop-blur-xl p-12 rounded-2xl border border-purple-900/20 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2 group-hover:rotate-1">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-purple-900/5 rounded-2xl" />
+            <div className="relative flex flex-col items-center space-y-6">
+          <div className="text-6xl sm:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-purple-300 animate-float animate-shine">
+            17.7M+
+          </div>
+          <div className="h-0.5 w-24 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-pulse-slow" />
+          <p className="text-lg sm:text-2xl text-gray-300 text-center">
+            People die every year from CVD
+          </p>
             </div>
+          </div>
+        </div>
 
-            <div className="relative group perspective-1000">
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur-lg opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow" />
-              <div className="relative bg-black/50 backdrop-blur-xl p-12 rounded-2xl border border-purple-900/20 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2 group-hover:rotate-1">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-purple-900/5 rounded-2xl" />
-                <div className="relative flex flex-col items-center space-y-6">
-                  <div className="text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-purple-300 animate-float animate-shine" style={{ animationDelay: '0.2s' }}>
-                    50%
-                  </div>
-                  <div className="h-0.5 w-24 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-pulse-slow" />
-                  <p className="text-2xl text-gray-300 text-center">
-                    Of CVD deaths can be prevented with early diagnosis
-                  </p>
-                </div>
-              </div>
+        <div className="relative group perspective-1000">
+          <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur-lg opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow" />
+          <div className="relative bg-black/50 backdrop-blur-xl p-12 rounded-2xl border border-purple-900/20 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2 group-hover:rotate-1">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-purple-900/5 rounded-2xl" />
+            <div className="relative flex flex-col items-center space-y-6">
+          <div className="text-6xl sm:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-purple-300 animate-float animate-shine" style={{ animationDelay: '0.2s' }}>
+            50%
+          </div>
+          <div className="h-0.5 w-24 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-pulse-slow" />
+          <p className="text-lg sm:text-2xl text-gray-300 text-center">
+            Of CVD deaths can be prevented with early diagnosis
+          </p>
             </div>
+          </div>
+        </div>
           </div>
         </div>
       </section>

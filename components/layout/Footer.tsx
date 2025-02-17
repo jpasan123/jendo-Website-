@@ -73,7 +73,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li className="flex items-center space-x-2">
                 <MapPin className="h-4 w-4 text-purple-400" />
-                <span>Trace Expert City, Colombo 10</span>
+                <span>Bay X, Trace Expert City</span>
               </li>
               <li className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-purple-400" />
