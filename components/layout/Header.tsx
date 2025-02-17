@@ -6,12 +6,14 @@ import Image from 'next/image';
 import { Menu, X, ShoppingCart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/hooks/useCart';
+import { usePathname } from 'next/navigation';
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
   const cart = useCart();
+  const pathname = usePathname();
 
   const navigation = [
     { name: 'ABOUT & MORE', href: '#about' },
@@ -26,22 +28,24 @@ export function Header() {
       const scrollPosition = window.scrollY + window.innerHeight / 2;
       setIsScrolled(scrollPosition > 50);
 
-      const sections = document.querySelectorAll("section[id]");
-      sections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        const sectionTop = rect.top + window.scrollY;
-        const sectionHeight = rect.height;
-        const sectionId = section.getAttribute("id");
+      if (pathname === '/') {
+        const sections = document.querySelectorAll("section[id]");
+        sections.forEach((section) => {
+          const rect = section.getBoundingClientRect();
+          const sectionTop = rect.top + window.scrollY;
+          const sectionHeight = rect.height;
+          const sectionId = section.getAttribute("id");
 
-        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-          setActiveSection(sectionId || "");
-        }
-      });
+          if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+            setActiveSection(sectionId || "");
+          }
+        });
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [pathname]);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -69,11 +73,24 @@ export function Header() {
     };
   }, [isOpen]);
 
+  const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (pathname !== '/') {
+      e.preventDefault();
+      window.location.href = `/${href}`;
+    } else {
+      const section = document.querySelector(href);
+      if (section) {
+        e.preventDefault();
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <header 
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-        isScrolled ? "bg-[#1a1a1a] backdrop-blur-md border-b border-purple-900/20" : "bg-[#1a1a1a]"
+        isScrolled ? "bg-[#1a1a1a]/95 backdrop-blur-md border-b border-purple-900/20" : "bg-[#1a1a1a]/95"
       )}
     >
       <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 to-black/10 pointer-events-none" />
@@ -104,6 +121,7 @@ export function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
+                  onClick={(e) => handleNavigation(e, item.href)}
                   className={cn(
                     "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
                     isScrolled 
@@ -129,7 +147,7 @@ export function Header() {
                 "relative p-2 rounded-full transition-all duration-300",
                 isScrolled 
                   ? "text-gray-300 hover:text-purple-400 " 
-                  : "text-white hover:text-purple-300 "
+                  : "text-white hover:text-purple-300"
               )}
             >
               <ShoppingCart className="h-6 w-6" />
@@ -190,16 +208,19 @@ export function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
+                  onClick={(e) => {
+                    handleNavigation(e, item.href);
+                    setIsOpen(false);
+                  }}
                   className={cn(
                     "relative px-6 py-4 rounded-xl text-lg font-medium transition-all duration-300",
                     "border border-purple-500/20 backdrop-blur-sm",
                     "hover:border-purple-500/50 hover:bg-purple-500/10",
                     "active:scale-[0.98] active:bg-purple-500/20",
                     activeSection === item.href.replace('#', '')
-                      ? "bg-gradient-to-r from-purple-500/20 to-purple-600/20 text-purple-300 border-purple-500/80 shadow-[inset_0_1px_0_0_rgba(147,51,234,0.1)]"
-                      : "text-purple-500 bg-[#1a1a1a]"
+                      ? "bg-gradient-to-r from-purple-500/20 to-purple-600/20 text-purple-300 border-purple-500/50 shadow-[inset_0_1px_0_0_rgba(147,51,234,0.1)]"
+                      :  "text-purple-500 bg-[#1a1a1a]"
                   )}
-                  onClick={() => setIsOpen(false)}
                 >
                   <span className="relative z-10">{item.name}</span>
                   <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-600/20 to-purple-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
