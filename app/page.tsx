@@ -905,16 +905,15 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
       </div>
       
       
- {/* Detailed Test Procedure */}
-<div className="mt-32">
+      <div className="mt-32">
   <div className="text-center mb-16">
     <h3 className="text-3xl font-bold text-purple-900 mb-4">Step-by-Step JENDO Test Procedure</h3>
     <p className="text-xl text-gray-600">Detailed walkthrough of the testing process</p>
   </div>
 
   <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-    {/* Timeline Line */}
-    <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-600/20 via-purple-600 to-purple-600/20 md:transform md:-translate-x-1/2"></div>
+    {/* Timeline Line with Numbers */}
+    <div className="absolute left-10 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-600/20 via-purple-600 to-purple-600/20 transform md:-translate-x-1/2"></div>
 
     {[
       {
@@ -976,24 +975,30 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
     ].map((item, index) => (
       <div 
         key={index} 
-        className={`relative mb-16 pl-12 md:pl-0 
+        className={`relative mb-16 pl-16 md:pl-0 
           ${index % 2 === 0 
-            ? 'md:ml-auto md:pl-32 md:pr-0' 
-            : 'md:mr-auto md:pr-32 md:pl-0'} 
-          md:w-1/2 animate-fade-in`}
+            ? 'md:ml-[calc(50%+2rem)] md:pr-8' 
+            : 'md:mr-[calc(50%+2rem)] md:pl-8 md:text-right'} 
+          md:w-[calc(50%-4rem)] animate-fade-in`}
       >
-        {/* Timeline Node */}
+        {/* Number directly on the timeline */}
         <div 
-          className={`absolute top-0 left-0 md:left-1/2 transform 
-            ${index % 2 === 0 ? 'md:translate-x-[-50%]' : 'md:translate-x-[-50%]'}
-            flex items-center justify-center w-10 h-10 md:w-12 md:h-12 
-            rounded-full bg-white border-4 border-purple-600 shadow-lg z-10`}
+          className="absolute top-0 left-10 md:left-1/2 transform md:-translate-x-1/2 z-10"
         >
-          <span className="text-base md:text-lg font-bold text-purple-600">0{index + 1}</span>
+          <div className="bg-purple-600 text-white font-bold rounded-full w-8 h-8 md:w-10 md:h-10 flex items-center justify-center">
+            0{index + 1}
+          </div>
+        </div>
+
+        {/* Timeline Node - Empty circle, no number */}
+        <div 
+          className={`absolute top-0 left-10 md:left-1/2 transform md:-translate-x-1/2
+            w-3 h-3 md:w-4 md:h-4 rounded-full bg-white border-2 border-purple-600 z-5 mt-16`}
+        >
         </div>
 
         {/* Content Card */}
-        <div className="relative group">
+        <div className="relative group mt-12 md:mt-0">
           <div className={`absolute -inset-1 bg-gradient-to-r ${item.color} rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow`}></div>
           <div className="relative bg-white p-4 md:p-8 rounded-2xl shadow-xl border border-gray-100 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
             <div className="flex flex-col md:flex-row md:items-start md:space-x-6">
