@@ -211,19 +211,19 @@ export default function Home() {
       },
     },
     {
-      name: "Niloo Jayatilake",
+      name: "Dilan Christostom",
       role: "Head of Investment - Softlogic Holdings PLC",
-      image: "https://i.ibb.co/WDvZyKW/12-1.png",
+      image: "https://i.ibb.co/hxStrttQ/image-7bc6206568.jpg",
       social: {
-        linkedin: "https://linkedin.com/in/niloo-jayatilake",
-        twitter: "https://twitter.com/niloojayatilake",
-        facebook: "https://facebook.com/niloo.jayatilake",
-        instagram: "https://instagram.com/niloojayatilake",
+        linkedin: "https://www.linkedin.com/in/dilan-christostom-b18a1854/",
+        // twitter: "https://twitter.com/niloojayatilake",
+        // facebook: "https://facebook.com/niloo.jayatilake",
+        // instagram: "https://instagram.com/niloojayatilake",
       },
     },
     {
       name: "Heminda Jayaweera",
-      role: "Director Operations - Sri Lanka Technology Campus",
+      role: "Executive Director - TRACE Expert City",
       image: "https://i.ibb.co/W5g1BHQ/3-1.jpg",
       social: {
         linkedin: "https://www.linkedin.com/in/heminda/",
@@ -765,7 +765,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
             </li>
             <li className="flex items-center space-x-3">
               <CheckCircle className="w-5 h-5 text-purple-600" />
-              <span>2 Year Software License</span>
+              <span>1 Year Software License</span>
             </li>
             <li className="flex items-center space-x-3">
               <CheckCircle className="w-5 h-5 text-purple-600" />

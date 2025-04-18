@@ -189,7 +189,7 @@ export default function Products() {
                   </li>
                   <li className="flex items-center space-x-3">
                     <CheckCircle className="w-5 h-5 text-purple-600" />
-                    <span>2 Year Software License</span>
+                    <span>1 Year Software License</span>
                   </li>
                   <li className="flex items-center space-x-3">
                     <CheckCircle className="w-5 h-5 text-purple-600" />
