@@ -1476,37 +1476,85 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-gray-900">Send us a message</h3>
-              <form className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                  />
+              <h3 className="text-xl font-semibold text-gray-900">Book an appointment</h3>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target as HTMLFormElement);
+                
+                try {
+                  const response = await fetch('/api/send-appointment', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      name: formData.get('name'),
+                      email: formData.get('email'),
+                      message: formData.get('message'),
+                    }),
+                  });
+
+                  if (response.ok) {
+                    toast.success('Appointment request sent successfully!');
+                    (e.target as HTMLFormElement).reset();
+                  } else {
+                    throw new Error('Failed to send appointment request');
+                  }
+                } catch (error) {
+                  toast.error('Failed to send appointment request');
+                  console.error('Appointment submission error:', error);
+                }
+              }} className="space-y-6">
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+                  <div className="relative">
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      className="block w-full px-4 py-3 rounded-xl border-0 bg-white/80 backdrop-blur-sm shadow-lg focus:ring-2 focus:ring-purple-500 transition-all duration-300 hover:bg-white"
+                      required
+                      placeholder="Enter your name"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                  />
+
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+                  <div className="relative">
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      className="block w-full px-4 py-3 rounded-xl border-0 bg-white/80 backdrop-blur-sm shadow-lg focus:ring-2 focus:ring-purple-500 transition-all duration-300 hover:bg-white"
+                      required
+                      placeholder="Enter your email"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                  ></textarea>
+
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+                  <div className="relative">
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows={4}
+                      className="block w-full px-4 py-3 rounded-xl border-0 bg-white/80 backdrop-blur-sm shadow-lg focus:ring-2 focus:ring-purple-500 transition-all duration-300 hover:bg-white resize-none"
+                      required
+                      placeholder="Enter your message"
+                    ></textarea>
+                  </div>
                 </div>
+
                 <button
                   type="submit"
-                  className="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors"
+                  className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2 group"
                 >
-                  Send Message
+                  <span className="group-hover:translate-x-1 transition-transform">Book Appointment</span>
                 </button>
               </form>
             </div>
@@ -1519,7 +1567,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                 </p>
                 <p className="flex items-center space-x-3">
                   <Activity className="h-5 w-5 text-purple-600" />
-                  <span>info@jendoinnovations.com</span>
+                  <span>keerthi@jendoinnovations.com</span>
                 </p>
                 <p className="flex items-center space-x-3">
                   <Download className="h-5 w-5 text-purple-600" />
@@ -1824,4 +1872,3 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
     </>
   );
 }
-        
