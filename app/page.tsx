@@ -323,6 +323,14 @@ export default function Home() {
 
   const blogPosts = [
     {
+      title: "Jendo CEO Speaks at IEEE EMBS AXON Workshop on AI in Healthcare",
+      excerpt: "Mr. Keerthi Kodithuwakku highlights Jendo's innovation in AI-powered vascular health monitoring and preventive healthcare.",
+      date: "April 12, 2024",
+      author: "IEEE EMBS",
+      image: "https://i.ibb.co/b13kVX2/4-1.jpg",
+      url: "https://docs.google.com/document/d/1JKBsun40koXUQVNlIIzibPbXGScFxp1DngaUcoGZOlM/edit?usp=sharing",
+    },
+    {
       title: "SL start-up in healthcare breakthrough",
       excerpt: "Latest developments in non-invasive cardiovascular monitoring technologies.",
       date: "March 15, 2024",
@@ -356,7 +364,7 @@ export default function Home() {
     },
     {
       title: "Sri Lankan team in early major breakthrough on early detection of NCDs",
-      excerpt: "The ‘Jendo’ hardware device that is clipped to the patient and to the computer",
+      excerpt: "The 'Jendo' hardware device that is clipped to the patient and to the computer",
       date: "August 5, 2018",
       author: " Quintus Perera",
       image: "https://i.ibb.co/6RDDJyL7/img.webp",
