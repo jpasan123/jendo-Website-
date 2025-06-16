@@ -327,7 +327,7 @@ export default function Home() {
       excerpt: "Mr. Keerthi Kodithuwakku highlights Jendo's innovation in AI-powered vascular health monitoring and preventive healthcare.",
       date: "April 12, 2024",
       author: "IEEE EMBS",
-      image: "https://i.ibb.co/b13kVX2/4-1.jpg",
+      image: "https://i.ibb.co/Zb72PxJ/IEEE-2.png",
       url: "https://docs.google.com/document/d/1JKBsun40koXUQVNlIIzibPbXGScFxp1DngaUcoGZOlM/edit?usp=sharing",
     },
     {
@@ -1425,23 +1425,36 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
             {blogPosts.map((post, index) => (
               <div
                 key={index}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col"
               >
-                <a href={post.url} target="_blank" rel="noopener noreferrer" className="block">
-                  <div className="relative h-48">
-                    <Image src={post.image || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
+                <a href={post.url} target="_blank" rel="noopener noreferrer" className="block h-full">
+                  <div className="relative h-[250px] w-full"> {/* Increased height from 200px to 250px */}
+                    <Image 
+                      src={post.image} 
+                      alt={post.title} 
+                      fill
+                      className="object-contain" /* Changed from object-cover to object-contain */
+                      priority={index === 0}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw"
+                      quality={100}
+                      loading="eager"
+                    />
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">{post.title}</h3>
-                    <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center">
-                        <User className="h-4 w-4 mr-2" />
-                        {post.author}
+                  <div className="p-6 flex-1 flex flex-col">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2 hover:text-purple-600 transition-colors">
+                      {post.title}
+                    </h3>
+                    <p className="text-gray-600 mb-4 line-clamp-3 flex-1">
+                      {post.excerpt}
+                    </p>
+                    <div className="flex items-center justify-between text-sm text-gray-500 mt-auto">
+                      <div className="flex items-center space-x-2">
+                        <User className="h-4 w-4" />
+                        <span className="truncate max-w-[120px]">{post.author}</span>
                       </div>
-                      <div className="flex items-center">
-                        <Clock className="h-4 w-4 mr-2" />
-                        {post.date}
+                      <div className="flex items-center space-x-2">
+                        <Clock className="h-4 w-4" />
+                        <span>{post.date}</span>
                       </div>
                     </div>
                   </div>
