@@ -5,15 +5,15 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'JENDO - Future of Vascular Monitoring',
+  title: 'JENDO INNOVATIONS INC',
   description: 'Empowering healthcare with cutting-edge vascular monitoring solutions.',
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/favicon.ico',
+    icon: 'https://i.ibb.co/8DmPV6GS/OIP.webp',
+    shortcut: 'https://i.ibb.co/8DmPV6GS/OIP.webp',
+    apple: 'https://i.ibb.co/8DmPV6GS/OIP.webp',
     other: {
       rel: 'apple-touch-icon-precomposed',
-      url: '/favicon.ico',
+      url: 'https://i.ibb.co/8DmPV6GS/OIP.webp',
     },
   },
   manifest: '/manifest.json',
