@@ -28,6 +28,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        <title>JENDO INNOVATIONS INC</title>
+        <link rel="icon" href="https://i.ibb.co/8DmPV6GS/OIP.webp" type="image/webp" />
+        <meta property="og:title" content="JENDO INNOVATIONS INC" />
+        <meta name="twitter:title" content="JENDO INNOVATIONS INC" />
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   );
