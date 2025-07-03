@@ -8,17 +8,27 @@ export const metadata: Metadata = {
   title: 'JENDO INNOVATIONS INC',
   description: 'Empowering healthcare with cutting-edge vascular monitoring solutions.',
   icons: {
-    icon: 'https://i.ibb.co/8DmPV6GS/OIP.webp',
-    shortcut: 'https://i.ibb.co/8DmPV6GS/OIP.webp',
-    apple: 'https://i.ibb.co/8DmPV6GS/OIP.webp',
+    icon: '/jendo.jpeg',
+    shortcut: '/jendo.jpeg',
+    apple: '/jendo.jpeg',
     other: {
       rel: 'apple-touch-icon-precomposed',
-      url: 'https://i.ibb.co/8DmPV6GS/OIP.webp',
+      url: '/jendo.jpeg',
     },
   },
   manifest: '/manifest.json',
   themeColor: '#9333EA',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
+  openGraph: {
+    title: 'JENDO INNOVATIONS INC',
+    description: 'Empowering healthcare with cutting-edge vascular monitoring solutions.',
+    images: [{ url: '/jendo.jpeg' }],
+  },
+  twitter: {
+    title: 'JENDO INNOVATIONS INC',
+    card: 'summary_large_image',
+    images: [{ url: '/jendo.jpeg' }],
+  },
 };
 
 export default function RootLayout({
@@ -28,12 +38,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <head>
-        <title>JENDO INNOVATIONS INC</title>
-        <link rel="icon" href="https://i.ibb.co/8DmPV6GS/OIP.webp" type="image/webp" />
-        <meta property="og:title" content="JENDO INNOVATIONS INC" />
-        <meta name="twitter:title" content="JENDO INNOVATIONS INC" />
-      </head>
       <body className={inter.className}>{children}</body>
     </html>
   );
