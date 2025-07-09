@@ -1,115 +1,140 @@
+// app/contact/page.tsx
 'use client';
 
-import { useEffect } from 'react';
-import { Mail, Phone, MapPin, Clock, MessageSquare, Send } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Mail, Phone, MapPin, Clock, MessageSquare, Send, Calendar } from 'lucide-react';
+import { Toaster, toast } from 'react-hot-toast';
+import { AppointmentSuccess } from '@/components/ui/appointment-success';
+import emailjs from '@emailjs/browser';
 
 export default function Contact() {
-  useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.1,
-    };
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, observerOptions);
+  const handleAppointmentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-    document.querySelectorAll('section').forEach((section) => {
-      observer.observe(section);
-    });
+    if (!formRef.current) return;
 
-    return () => observer.disconnect();
-  }, []);
+    try {
+      // Format the current time for the template
+      const now = new Date();
+      const timeString = now.toLocaleString();
+
+      // Create template parameters with all needed variables
+      const templateParams = {
+        name: formRef.current.user_name.value,
+        email: formRef.current.user_email.value,
+        phone: formRef.current.user_phone.value,
+        date: formRef.current.appointment_date.value,
+        message: formRef.current.message.value,
+        time: timeString, // Add current time for the template
+        to_email: 'keerthi@effectivesolutions.lk, keerthi.office1990@gmail.com' // Add recipient emails
+      };
+
+      const result = await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '',
+        templateParams,
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || ''
+      );
+
+      if (result.text === 'OK') {
+        // Show success modal
+        setShowSuccess(true);
+        formRef.current.reset();
+      } else {
+        throw new Error('Failed to send appointment request');
+      }
+    } catch (error) {
+      toast.error('Failed to submit appointment request');
+      console.error('Error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen">
+      <Toaster position="top-center" />
+      
+      {/* Show success modal if appointment was successful */}
+      {showSuccess && (
+        <AppointmentSuccess onClose={() => setShowSuccess(false)} />
+      )}
+      
       {/* Hero Section */}
-      <section className="relative py-32 bg-gradient-to-b from-gray-900 via-black to-purple-900/20 text-white overflow-hidden section-scroll">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.1),transparent_50%)] animate-pulse-slow" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center animate-fade-in">
-            <h1 className="text-6xl font-bold mb-8 relative inline-block">
-              <span className="relative z-10 bg-gradient-to-r from-purple-300 via-purple-400 to-purple-300 bg-clip-text text-transparent animate-shine">
-                Contact Us
-              </span>
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-purple-900/20 blur-lg -z-10 animate-pulse-slow" />
-            </h1>
-            <p className="text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Get in touch with our team for any inquiries or support
+      <section className="relative py-32 bg-gradient-to-b from-gray-900 via-black to-purple-900/20 text-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">Contact Us</h1>
+            <p className="text-xl max-w-3xl mx-auto opacity-90">
+              Have questions or need assistance? We're here to help. Reach out to us today.
             </p>
           </div>
         </div>
+        <div className="absolute inset-0 bg-gradient-radial from-purple-500/20 to-transparent z-0"></div>
       </section>
 
       {/* Contact Information */}
-      <section className="py-24 bg-white section-scroll">
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                icon: Mail,
-                title: "Email Us",
-                description: "contact@jenoo.com",
-                details: "24/7 support available"
-              },
-              {
-                icon: Phone,
-                title: "Call Us",
-                description: "+1 (555) 123-4567",
-                details: "Mon-Fri, 9AM-6PM"
-              },
-              {
-                icon: MapPin,
-                title: "Visit Us",
-                description: "Trace Expert City",
-                details: "Colombo 10, Sri Lanka"
-              },
-              {
-                icon: Clock,
-                title: "Business Hours",
-                description: "Monday - Friday",
-                details: "9:00 AM - 6:00 PM"
-              }
-            ].map((item, index) => (
-              <div key={index} className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
-                <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
-                  <item.icon className="w-12 h-12 text-purple-600 mb-6" />
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
-                  <p className="text-purple-600 font-medium mb-1">{item.description}</p>
-                  <p className="text-gray-500 text-sm">{item.details}</p>
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+            <div className="p-6 bg-gray-50 rounded-xl transition-transform hover:scale-105">
+              <div className="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center mb-5">
+                <Phone className="w-6 h-6 text-purple-600" />
               </div>
-            ))}
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Phone</h3>
+              <p className="text-gray-600">+94 71 303 0233</p>
+            </div>
+            
+            <div className="p-6 bg-gray-50 rounded-xl transition-transform hover:scale-105">
+              <div className="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center mb-5">
+                <Mail className="w-6 h-6 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Email</h3>
+              <p className="text-gray-600">info@jendoinnovations.com</p>
+            </div>
+            
+            <div className="p-6 bg-gray-50 rounded-xl transition-transform hover:scale-105">
+              <div className="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center mb-5">
+                <MapPin className="w-6 h-6 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Location</h3>
+              <p className="text-gray-600">Colombo, Sri Lanka</p>
+            </div>
+            
+            <div className="p-6 bg-gray-50 rounded-xl transition-transform hover:scale-105">
+              <div className="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center mb-5">
+                <Clock className="w-6 h-6 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Hours</h3>
+              <p className="text-gray-600">Mon-Fri: 9 AM - 5 PM</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Contact Form */}
-      <section className="py-24 bg-gray-50 section-scroll">
+      {/* Appointment Form */}
+      <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             <div className="relative">
               <div className="sticky top-32">
-                <h2 className="text-4xl font-bold text-gray-900 mb-6">Let&apos;s Start a Conversation</h2>
+                <h2 className="text-4xl font-bold text-gray-900 mb-6">Book Your Appointment</h2>
                 <p className="text-lg text-gray-600 mb-8">
-                  We&apos;d love to hear from you. Please fill out this form and we&apos;ll get back to you as soon as possible.
+                  Schedule a consultation with our healthcare professionals. Fill out the form and we'll contact you to confirm your appointment.
                 </p>
                 <div className="space-y-6">
                   <div className="flex items-center space-x-4 text-gray-600">
-                    <MessageSquare className="w-6 h-6 text-purple-600" />
-                    <span>Quick response within 24 hours</span>
+                    <Calendar className="w-6 h-6 text-purple-600" />
+                    <span>Available appointment slots within 7 days</span>
                   </div>
                   <div className="flex items-center space-x-4 text-gray-600">
-                    <Send className="w-6 h-6 text-purple-600" />
-                    <span>Direct communication with our team</span>
+                    <MessageSquare className="w-6 h-6 text-purple-600" />
+                    <span>Quick confirmation via email</span>
                   </div>
                 </div>
               </div>
@@ -117,50 +142,78 @@ export default function Contact() {
 
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
-              <form className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100">
+              <form 
+                ref={formRef}
+                onSubmit={handleAppointmentSubmit}
+                className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100"
+              >
                 <div className="space-y-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <label htmlFor="user_name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                     <input
                       type="text"
-                      id="name"
+                      id="user_name"
+                      name="user_name"
+                      required
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                       placeholder="John Doe"
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                    <label htmlFor="user_email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                     <input
                       type="email"
-                      id="email"
+                      id="user_email"
+                      name="user_email"
+                      required
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                       placeholder="john@example.com"
                     />
                   </div>
                   <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                    <label htmlFor="user_phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
                     <input
-                      type="text"
-                      id="subject"
+                      type="tel"
+                      id="user_phone"
+                      name="user_phone"
+                      required
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
-                      placeholder="How can we help?"
+                      placeholder="+1 (555) 123-4567"
                     />
                   </div>
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                    <label htmlFor="appointment_date" className="block text-sm font-medium text-gray-700 mb-1">Preferred Date</label>
+                    <input
+                      type="date"
+                      id="appointment_date"
+                      name="appointment_date"
+                      required
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Additional Information</label>
                     <textarea
                       id="message"
-                      rows={6}
+                      name="message"
+                      rows={4}
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
-                      placeholder="Your message..."
+                      placeholder="Please share any specific concerns or questions you have..."
                     ></textarea>
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-purple-600 text-white px-8 py-4 rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+                    disabled={isSubmitting}
+                    className="w-full bg-purple-600 text-white px-8 py-4 rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2 disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    <Send className="w-5 h-5" />
-                    <span>Send Message</span>
+                    {isSubmitting ? (
+                      <span>Processing...</span>
+                    ) : (
+                      <>
+                        <Calendar className="w-5 h-5" />
+                        <span>Book Appointment</span>
+                      </>
+                    )}
                   </button>
                 </div>
               </form>
@@ -170,44 +223,19 @@ export default function Contact() {
       </section>
 
       {/* Map Section */}
-      <section className="py-24 bg-white section-scroll">
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Our Location</h2>
-            <p className="mt-4 text-lg text-gray-600">Visit us at our headquarters in Trace Expert City</p>
-          </div>
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
-            <div className="relative bg-white rounded-2xl shadow-xl border border-purple-100 overflow-hidden">
-              <div className="aspect-[21/9] w-full">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.8661325756734!2d79.85888677489614!3d6.930059893067721!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2591076e625a3%3A0xad34e9e40449036b!2sTrace%20Expert%20City!5e0!3m2!1sen!2sus!4v1706579876041!5m2!1sen!2sus"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="w-full h-full"
-                ></iframe>
-              </div>
-              <div className="p-8 bg-white">
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                  <div className="flex items-center space-x-3">
-                    <MapPin className="h-6 w-6 text-purple-600" />
-                    <span className="text-lg text-gray-900">Trace Expert City, Colombo 10, Sri Lanka</span>
-                  </div>
-                  <a 
-                    href="https://www.google.com/maps/place/Trace+Expert+City/@6.9300599,79.8588868,17z/data=!3m1!4b1!4m6!3m5!1s0x3ae2591076e625a3:0xad34e9e40449036b!8m2!3d6.9300599!4d79.8614617!16s%2Fg%2F1q6j8f3r1"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-purple-600 hover:bg-purple-700 transition-colors"
-                  >
-                    Get Directions
-                  </a>
-                </div>
-              </div>
-            </div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Find Us</h2>
+          <div className="h-96 w-full rounded-xl overflow-hidden shadow-lg">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63371.81123163851!2d79.8234288!3d6.9218374!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae253d10f7a7003%3A0x320b2e4d32d3838d!2sColombo%2C%20Sri%20Lanka!5e0!3m2!1sen!2sus!4v1653865322259!5m2!1sen!2sus" 
+              width="100%" 
+              height="100%" 
+              style={{ border: 0 }} 
+              allowFullScreen 
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
           </div>
         </div>
       </section>

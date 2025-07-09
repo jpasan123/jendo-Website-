@@ -7,6 +7,8 @@ import { useCart } from '@/hooks/useCart';
 import { toast } from 'sonner';
 import { FormNotification } from '@/components/ui/form-notification';
 import { Play, Pause } from "lucide-react"
+import emailjs from '@emailjs/browser';
+import { AppointmentSuccess } from '@/components/ui/appointment-success';
 
 
 export default function Home() {
@@ -22,6 +24,9 @@ export default function Home() {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const videoSectionRef = useRef<HTMLElement>(null)
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -394,6 +399,15 @@ export default function Home() {
       image: "https://i.ibb.co/Zzqmty9N/unnamed-1.png",
       url: "https://pubmed.ncbi.nlm.nih.gov/33254535/#article-details",
     },
+    {
+      title: "Jendo – Heart Disease Prediction using Machine Learning",
+      excerpt: "AI in cardiology – A Steppingstone for Jendo Innovations.",
+      date: "April 21, 2022",
+      author: "WIPO",
+      image: "https://i.ibb.co/rfQQqBgr/Screenshot-2025-07-09-155342.png",
+      url: "https://www.wipo.int/en/web/ip-advantage/w/stories/jendo-heart-disease-prediction-using-machine-learning",
+    },
+
   ]
   
 
@@ -410,18 +424,20 @@ export default function Home() {
   };
 
   const handlePreOrderSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const formData = new FormData(e.currentTarget);
-  const data = {
-    full_name: formData.get('full_name'),
-    email: formData.get('email'),
-    phone: formData.get('phone'),
-    package_type: formData.get('package_type'),
-    delivery_address: formData.get('delivery_address'),
-    payment_method: formData.get('payment_method')
-  };
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      full_name: formData.get('full_name'),
+      email: formData.get('email'),
+      phone: formData.get('phone'),
+      package_type: formData.get('package_type'),
+      delivery_address: formData.get('delivery_address'),
+      payment_method: formData.get('payment_method')
+    };
 
+    // In handlePreOrderSubmit function:
   try {
+    // Original API call
     const response = await fetch('/api/pre-order', {
       method: 'POST',
       headers: {
@@ -430,40 +446,80 @@ export default function Home() {
       body: JSON.stringify(data),
     });
 
-    if (response.ok) {
-      setIsPreOrderModalOpen(false);
-      // Add success notification here
-    } else {
-      // Add error notification here
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Pre-order API error:', errorData);
+      throw new Error(`Failed with status: ${response.status}`);
     }
+
+    // Excel export API call
+    const excelResponse = await fetch('/api/export-to-excel', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        formType: 'preorder',
+        formData: data
+      }),
+    });
+
+    if (!excelResponse.ok) {
+      const errorData = await excelResponse.json();
+      console.error('Excel API error:', errorData);
+      throw new Error(`Excel export failed with status: ${excelResponse.status}`);
+    }
+
+    const result = await excelResponse.json();
+    console.log('Excel export result:', result);
+
+    toast.success('Pre-order submitted successfully!');
+    setIsPreOrderModalOpen(false);
+    e.currentTarget.reset();
   } catch (error) {
+    toast.error('Failed to submit pre-order');
     console.error('Error submitting pre-order:', error);
-    // Add error notification here
   }
-};
+  };
 
 const handleLabPartnerSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
-  const form = e.target as HTMLFormElement
-  const formData = new FormData(form)
+  e.preventDefault();
+  const form = e.target as HTMLFormElement;
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
 
   try {
+    // Original API call - keep this for backend integration
     const response = await fetch("/api/book-checkup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(Object.fromEntries(formData)),
-    })
+      body: JSON.stringify(data),
+    });
 
-    if (!response.ok) throw new Error("Failed to book check up")
+    // New API call to export to Excel
+    const excelResponse = await fetch('/api/export-to-excel', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        formType: 'checkup',
+        formData: data
+      }),
+    });
 
-    toast.success("Check up booked successfully!")
-    setIsLabPartnerModalOpen(false)
-    form.reset()
+    if (response.ok && excelResponse.ok) {
+      toast.success("Check up booked successfully!");
+      setIsLabPartnerModalOpen(false);
+      form.reset();
+    } else {
+      throw new Error("Failed to book check up");
+    }
   } catch (error) {
-    toast.error("Failed to book check up")
-    console.error("Book check up error:", error)
+    toast.error("Failed to book check up");
+    console.error("Book check up error:", error);
   }
 }
 
@@ -471,8 +527,10 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
     
     try {
+      // Original API call - keep this for backend integration
       const response = await fetch('/api/partners', {
         method: 'POST',
         headers: {
@@ -480,15 +538,29 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
         },
         body: JSON.stringify({
           type: 'insurance',
-          formData: Object.fromEntries(formData),
+          formData: data,
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to submit insurance partner application');
+      // New API call to export to Excel
+      const excelResponse = await fetch('/api/export-to-excel', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          formType: 'insurance',
+          formData: data
+        }),
+      });
 
-      toast.success('Insurance partner application submitted successfully!');
-      setIsInsuranceModalOpen(false);
-      form.reset();
+      if (response.ok && excelResponse.ok) {
+        toast.success('Insurance partner application submitted successfully!');
+        setIsInsuranceModalOpen(false);
+        form.reset();
+      } else {
+        throw new Error('Failed to submit insurance partner application');
+      }
     } catch (error) {
       toast.error('Failed to submit insurance partner application');
       console.error('Insurance partner error:', error);
@@ -509,6 +581,11 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
     }
   };
 
+  useEffect(() => {
+    // Initialize EmailJS with your public key
+    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '');
+  }, []);
+
   return (
     <>
 
@@ -520,11 +597,10 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
       'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80',
       'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80',
       'https://images.unsplash.com/photo-1584362917165-526a968579e8?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80',
-      'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80',
-      
+      'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80&t=2',
     ].map((image, index) => (
       <div
-        key={image}
+        key={`slide-${index}`} // Changed key from image to a unique string
         className={`absolute inset-0 transition-opacity duration-1000 ${
           index === currentImage ? 'opacity-100' : 'opacity-0'
         }`}
@@ -1471,7 +1547,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(129, 13, 238, 0.68),)] animate-pulse-slow" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Subscribe to Our Newsletter</h2>
+                                                                                                                                                                                                                                                                                 <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Subscribe to Our Newsletter</h2>
           <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto">
             Get the latest articles and news about cardiovascular health delivered to your inbox.
           </p>
@@ -1481,10 +1557,10 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
               placeholder="Enter your email"
               className="newsletter-input"
             />
-            <button type="submit" className="newsletter-button">
-              Subscribe
-            </button>
-          </form>
+              <button type="submit" className="newsletter-button">
+                Subscribe
+              </button>
+            </form>
         </div>
       </section>
       {/* Contact Section */}
@@ -1500,30 +1576,45 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
               <h3 className="text-xl font-semibold text-gray-900">Book an appointment</h3>
               <form onSubmit={async (e) => {
                 e.preventDefault();
+                setIsSubmitting(true);
+
                 const formData = new FormData(e.target as HTMLFormElement);
                 
                 try {
-                  const response = await fetch('/api/send-appointment', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      name: formData.get('name'),
-                      email: formData.get('email'),
-                      message: formData.get('message'),
-                    }),
-                  });
+                  // Format the current time for the template
+                  const now = new Date();
+                  const timeString = now.toLocaleString();
 
-                  if (response.ok) {
-                    toast.success('Appointment request sent successfully!');
+                  // Create template parameters to match your template variables
+                  const templateParams = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    message: formData.get('message'),
+                    time: timeString,
+                    // These will be empty but included to match the template
+                    phone: '',
+                    date: '',
+                    to_email: 'keerthi@effectivesolutions.lk, keerthi.office1990@gmail.com'
+                  };
+
+                  const result = await emailjs.send(
+                    process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
+                    process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '',
+                    templateParams,
+                    process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || ''
+                  );
+
+                  if (result.text === 'OK') {
+                    setShowSuccess(true);  // Show the success modal instead of just toast
                     (e.target as HTMLFormElement).reset();
                   } else {
-                    throw new Error('Failed to send appointment request');
+                    throw new Error('Failed to send message');
                   }
                 } catch (error) {
-                  toast.error('Failed to send appointment request');
-                  console.error('Appointment submission error:', error);
+                  toast.error('Failed to send message');
+                  console.error('Error:', error);
+                } finally {
+                  setIsSubmitting(false);
                 }
               }} className="space-y-6">
                 <div className="relative group">
@@ -1559,6 +1650,20 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                 <div className="relative group">
                   <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
                   <div className="relative">
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">Phone (Optional)</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      className="block w-full px-4 py-3 rounded-xl border-0 bg-white/80 backdrop-blur-sm shadow-lg focus:ring-2 focus:ring-purple-500 transition-all duration-300 hover:bg-white"
+                      placeholder="Enter your phone number"
+                    />
+                  </div>
+                </div>
+
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+                  <div className="relative">
                     <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Message</label>
                     <textarea
                       id="message"
@@ -1573,9 +1678,14 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
 
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2 group"
                 >
-                  <span className="group-hover:translate-x-1 transition-transform">Book Appointment</span>
+                  {isSubmitting ? (
+                    <span>Sending...</span>
+                  ) : (
+                    <span className="group-hover:translate-x-1 transition-transform">Book Appointment</span>
+                  )}
                 </button>
               </form>
             </div>
@@ -1846,13 +1956,15 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                 <X className="h-6 w-6" />
               </button>
             </div>
-            <form className="space-y-4">
+            <form onSubmit={handleInsuranceSubmit} className="space-y-4">
               <div>
                 <label htmlFor="companyName" className="block text-sm font-medium text-gray-700">Company Name</label>
                 <input
                   type="text"
                   id="companyName"
+                  name="company_name"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                  required
                 />
               </div>
               <div>
@@ -1860,7 +1972,9 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                 <input
                   type="text"
                   id="contactPerson"
+                  name="contact_person"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                  required
                 />
               </div>
               <div>
@@ -1868,7 +1982,9 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                 <input
                   type="email"
                   id="insuranceEmail"
+                  name="email"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                  required
                 />
               </div>
               <div>
@@ -1876,7 +1992,9 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                 <input
                   type="tel"
                   id="insurancePhone"
+                  name="phone"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                  required
                 />
               </div>
               <button
@@ -1889,6 +2007,10 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
             </form>
           </div>
         </div>
+      )}
+
+      {showSuccess && (
+        <AppointmentSuccess onClose={() => setShowSuccess(false)} />
       )}
     </>
   );

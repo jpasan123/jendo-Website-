@@ -1,40 +1,25 @@
+// app/api/send-appointment/route.ts
 import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
 
 export async function POST(req: Request) {
   try {
-    const { name, email, message } = await req.json();
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: 'keerthi@jendoinnovations.com',
-      subject: 'New Appointment Request',
-      html: `
-        <h1>New Appointment Request</h1>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Message:</strong> ${message}</p>
-      `,
-    };
-
-    await transporter.sendMail(mailOptions);
-
+    const data = await req.json();
+    
+    // Here you would normally:
+    // 1. Save to a database
+    // 2. Send an email notification
+    // 3. Or any other processing
+    
+    console.log('Appointment request received:', data);
+    
     return NextResponse.json(
-      { message: 'Appointment request sent successfully!' },
+      { success: true, message: 'Appointment request received successfully' },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Appointment email error:', error);
+    console.error('Error processing appointment request:', error);
     return NextResponse.json(
-      { message: 'Failed to send appointment request' },
+      { success: false, message: 'Failed to process appointment request' },
       { status: 500 }
     );
   }
