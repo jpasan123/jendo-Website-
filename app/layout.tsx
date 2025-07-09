@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.jendo.health.com'), // Add this line
   title: 'JENDO INNOVATIONS INC',
   description: 'Empowering healthcare with cutting-edge vascular monitoring solutions.',
   icons: {
