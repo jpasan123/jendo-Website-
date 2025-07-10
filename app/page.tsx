@@ -759,7 +759,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                 muted
                 loop
               >
-                <source src="/Jendo_device.mp4" type="video/mp4" />
+                <source src="/jendo_device.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>
