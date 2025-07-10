@@ -22,14 +22,16 @@ export default function Home() {
 
   //Add the vide section here
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const videoRef1 = useRef<HTMLVideoElement>(null)
+  const videoRef2 = useRef<HTMLVideoElement>(null)
   const videoSectionRef = useRef<HTMLElement>(null)
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
-    const videoElement = videoRef.current;
+    const videoElement1 = videoRef1.current;
+    const videoElement2 = videoRef2.current;
     const sectionElement = videoSectionRef.current;
 
     const options = {
@@ -40,14 +42,14 @@ export default function Home() {
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && videoElement) {
+        if (entry.isIntersecting) {
           setIsVideoPlaying(true);
-          videoElement.play().catch(error => {
-            console.log("Video autoplay failed:", error);
-          });
-        } else if (videoElement) {
+          videoElement1?.play().catch(error => console.log("Video 1 autoplay failed:", error));
+          videoElement2?.play().catch(error => console.log("Video 2 autoplay failed:", error));
+        } else {
           setIsVideoPlaying(false);
-          videoElement.pause();
+          videoElement1?.pause();
+          videoElement2?.pause();
         }
       });
     }, options);
@@ -107,10 +109,12 @@ export default function Home() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           setIsVideoPlaying(true)
-          videoRef.current?.play()
+          videoRef1.current?.play()
+          videoRef2.current?.play()
         } else {
           setIsVideoPlaying(false)
-          videoRef.current?.pause()
+          videoRef1.current?.pause()
+          videoRef2.current?.pause()
         }
       })
     }, options)
@@ -128,11 +132,15 @@ export default function Home() {
   }, [])
 
   const toggleVideo = () => {
-    if (videoRef.current) {
+    const video1 = videoRef1.current;
+    const video2 = videoRef2.current;
+    if (video1 && video2) {
       if (isVideoPlaying) {
-        videoRef.current.pause()
+        video1.pause()
+        video2.pause()
       } else {
-        videoRef.current.play()
+        video1.play()
+        video2.play()
       }
       setIsVideoPlaying(!isVideoPlaying)
     }
@@ -734,34 +742,60 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
         className="relative py-16 bg-gradient-to-b from-white-900 to-black overflow-hidden"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.1),transparent_50%)] animate-pulse-slow"></div>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-purple-900 mb-4">Experience JENDO in Action</h2>
-            <p className="text-lg md:text-xl text-black-200">
-              Watch how our revolutionary technology is changing cardiovascular health monitoring
+            <p className="text-lg md:text-xl text-black-200 max-w-3xl mx-auto">
+              Watch how our revolutionary technology is changing cardiovascular health monitoring.
             </p>
           </div>
-          <div className="relative aspect-video rounded-md overflow-hidden shadow-md group">
-            <div className="absolute inset-0 bg-purple-900/5 group-hover:bg-purple-900/0 transition-all duration-300"></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <button
-                onClick={toggleVideo}
-                className="bg-white/80 text-purple-900 rounded-full p-2 shadow-md hover:bg-white transition-all duration-300 transform hover:scale-110 z-10"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Video 1 */}
+            <div className="relative aspect-video rounded-md overflow-hidden shadow-md group">
+              <div className="absolute inset-0 bg-purple-900/5 group-hover:bg-purple-900/0 transition-all duration-300"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <button
+                  onClick={toggleVideo}
+                  className="bg-white/80 text-purple-900 rounded-full p-2 shadow-md hover:bg-white transition-all duration-300 transform hover:scale-110 z-10"
+                >
+                  {isVideoPlaying ? <Pause size={32} /> : <Play size={32} />}
+                </button>
+              </div>
+              <video
+                ref={videoRef1}
+                className="w-full h-full object-cover"
+                poster="/video-thumbnail.jpg"
+                playsInline
+                muted
+                loop
               >
-                {isVideoPlaying ? <Pause size={32} /> : <Play size={32} />}
-              </button>
+                <source src="/jendo-showcase.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </div>
-            <video
-              ref={videoRef}
-              className="w-full h-full object-cover"
-              poster="/video-thumbnail.jpg"
-              playsInline
-              muted
-              loop
-            >
-              <source src="/jendo-showcase.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            {/* Video 2 */}
+            <div className="relative aspect-video rounded-md overflow-hidden shadow-md group">
+              <div className="absolute inset-0 bg-purple-900/5 group-hover:bg-purple-900/0 transition-all duration-300"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <button
+                  onClick={toggleVideo}
+                  className="bg-white/80 text-purple-900 rounded-full p-2 shadow-md hover:bg-white transition-all duration-300 transform hover:scale-110 z-10"
+                >
+                  {isVideoPlaying ? <Pause size={32} /> : <Play size={32} />}
+                </button>
+              </div>
+              <video
+                ref={videoRef2}
+                className="w-full h-full object-cover"
+                poster="/video_thumbnail2.png"
+                playsInline
+                muted
+                loop
+              >
+                <source src="/Jendo_device.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
           </div>
           <div className="mt-8 text-center">
             <p className="text-base md:text-lg font-bold text-purple-700 mb-4-w-2xl mx-auto">
@@ -992,7 +1026,9 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
       <div className="mt-32">
   <div className="text-center mb-16">
     <h3 className="text-3xl font-bold text-purple-900 mb-4">Step-by-Step JENDO Test Procedure</h3>
-    <p className="text-xl text-gray-600">Detailed walkthrough of the testing process</p>
+    <p className="text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto">
+      Detailed walkthrough of the testing process
+    </p>
   </div>
 
   <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
