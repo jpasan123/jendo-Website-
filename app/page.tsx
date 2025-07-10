@@ -98,39 +98,6 @@ export default function Home() {
     return () => observer.disconnect();
   }, [])
 
-  useEffect(() => {
-    const options = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.5,
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setIsVideoPlaying(true)
-          videoRef1.current?.play()
-          videoRef2.current?.play()
-        } else {
-          setIsVideoPlaying(false)
-          videoRef1.current?.pause()
-          videoRef2.current?.pause()
-        }
-      })
-    }, options)
-
-    const currentVideoSectionRef = videoSectionRef.current;
-    if (currentVideoSectionRef) {
-      observer.observe(currentVideoSectionRef)
-    }
-
-    return () => {
-      if (currentVideoSectionRef) {
-        observer.unobserve(currentVideoSectionRef)
-      }
-    }
-  }, [])
-
   const toggleVideo = () => {
     const video1 = videoRef1.current;
     const video2 = videoRef2.current;
