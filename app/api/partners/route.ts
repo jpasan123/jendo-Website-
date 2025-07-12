@@ -1,9 +1,24 @@
 import { NextResponse } from 'next/server';
+import { addToSheet } from '@/lib/googleSheets';
 
 export async function POST(req: Request) {
   try {
-    const data = await req.json();
-    console.log('Partner application received:', data);
+    const { type, formData } = await req.json();
+    const { company_name, contact_person, email, phone } = formData;
+    
+    // Save to Google Sheets
+    const success = await addToSheet('InsurancePartners', {
+      timestamp: new Date().toISOString(),
+      company_name,
+      contact_person,
+      email,
+      phone,
+      partner_type: type
+    });
+    
+    if (!success) {
+      throw new Error('Failed to save to Google Sheets');
+    }
     
     return NextResponse.json({ 
       success: true, 

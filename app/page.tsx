@@ -240,7 +240,7 @@ export default function Home() {
     },
     {
       name: "Janith Kodithuwakku",
-      role: "Data Scientist - Operations",
+      role: "Chief Technology Officer",
       credentials: "BSc. Eng",
       image: "https://i.ibb.co/5gttd5PJ/1635531926171.jpg",
       social: {
@@ -251,21 +251,21 @@ export default function Home() {
 
       },
     },
-    {
-      name: "Shashika Chamod Munasinghe",
-      role: "Chief Technical Officer",
-      credentials: "BSc. Eng, MSc. Eng",
-      image: "https://i.ibb.co/fzS4dJSV/1535565006985.jpg",
-      social: {
-        linkedin: "https://www.linkedin.com/in/shashika-chamod-munasingha-685b3482/",
-        twitter: "https://twitter.com/shashikachamod",
-        facebook: "https://web.facebook.com/shashika.chamodmunasingha",
-        instagram: "https://instagram.com/shashikachamod",
-      },
-    },
+    // {
+    //   name: "Shashika Chamod Munasinghe",
+    //   role: "Chief Technical Officer",
+    //   credentials: "BSc. Eng, MSc. Eng",
+    //   image: "https://i.ibb.co/fzS4dJSV/1535565006985.jpg",
+    //   social: {
+    //     linkedin: "https://www.linkedin.com/in/shashika-chamod-munasingha-685b3482/",
+    //     twitter: "https://twitter.com/shashikachamod",
+    //     facebook: "https://web.facebook.com/shashika.chamodmunasingha",
+    //     instagram: "https://instagram.com/shashikachamod",
+    //   },
+    // },
     {
       name: "Dr.Danushi Hettiarachchi",
-      role: "Doctor",
+      role: "Chief Medical Officer",
       credentials: "MBBS",
       image: "https://i.ibb.co/WQFm1hg/1707784294034.jpg",
       social: {
@@ -399,72 +399,70 @@ export default function Home() {
   };
 
   const handlePreOrderSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      full_name: formData.get('full_name'),
-      email: formData.get('email'),
-      phone: formData.get('phone'),
-      package_type: formData.get('package_type'),
-      delivery_address: formData.get('delivery_address'),
-      payment_method: formData.get('payment_method')
-    };
+  e.preventDefault();
+  const form = e.currentTarget; // Store form reference early
+  const formData = new FormData(form);
+  setIsSubmitting(true);
 
-    // In handlePreOrderSubmit function:
   try {
-    // Original API call
     const response = await fetch('/api/pre-order', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Pre-order API error:', errorData);
-      throw new Error(`Failed with status: ${response.status}`);
-    }
-
-    // Excel export API call
-    const excelResponse = await fetch('/api/export-to-excel', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({
-        formType: 'preorder',
-        formData: data
+        full_name: formData.get('full_name'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        package_type: formData.get('package_type'),
+        delivery_address: formData.get('delivery_address'),
+        payment_method: formData.get('payment_method'),
       }),
     });
 
-    if (!excelResponse.ok) {
-      const errorData = await excelResponse.json();
-      console.error('Excel API error:', errorData);
-      throw new Error(`Excel export failed with status: ${excelResponse.status}`);
+    // Handle non-JSON responses
+    const contentType = response.headers.get('content-type');
+    if (!contentType?.includes('application/json')) {
+      const text = await response.text();
+      console.error('Non-JSON response:', text);
+      throw new Error('Server returned an invalid response');
     }
 
-    const result = await excelResponse.json();
-    console.log('Excel export result:', result);
+    const result = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(result.error || 'Submission failed');
+    }
 
-    toast.success('Pre-order submitted successfully!');
+    // Show success message
+    toast.success(result.message || 'Pre-order submitted successfully!');
+    
+    // Reset form and close modal
+    form.reset();
     setIsPreOrderModalOpen(false);
-    e.currentTarget.reset();
+    
   } catch (error) {
-    toast.error('Failed to submit pre-order');
-    console.error('Error submitting pre-order:', error);
+    console.error('Submission Error:', error);
+    toast.error(error instanceof Error ? error.message : 'Failed to submit');
+  } finally {
+    setIsSubmitting(false);
   }
-  };
+};
 
 const handleLabPartnerSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   const form = e.target as HTMLFormElement;
   const formData = new FormData(form);
-  const data = Object.fromEntries(formData);
+  const data = {
+    full_name: formData.get('full_name'),
+    email: formData.get('email'),
+    phone: formData.get('phone'),
+    checkup_type: formData.get('checkup_type'),
+    payment_method: formData.get('payment_method'),
+    message: formData.get('message')
+  };
 
   try {
-    // Original API call - keep this for backend integration
     const response = await fetch("/api/book-checkup", {
       method: "POST",
       headers: {
@@ -473,74 +471,53 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
       body: JSON.stringify(data),
     });
 
-    // New API call to export to Excel
-    const excelResponse = await fetch('/api/export-to-excel', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        formType: 'checkup',
-        formData: data
-      }),
-    });
-
-    if (response.ok && excelResponse.ok) {
-      toast.success("Check up booked successfully!");
-      setIsLabPartnerModalOpen(false);
-      form.reset();
-    } else {
+    if (!response.ok) {
       throw new Error("Failed to book check up");
     }
+
+    toast.success("Check up booked successfully!");
+    setIsLabPartnerModalOpen(false);
+    form.reset();
   } catch (error) {
     toast.error("Failed to book check up");
     console.error("Book check up error:", error);
   }
 }
-
-  const handleInsuranceSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
-    
-    try {
-      // Original API call - keep this for backend integration
-      const response = await fetch('/api/partners', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 'insurance',
-          formData: data,
-        }),
-      });
-
-      // New API call to export to Excel
-      const excelResponse = await fetch('/api/export-to-excel', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          formType: 'insurance',
-          formData: data
-        }),
-      });
-
-      if (response.ok && excelResponse.ok) {
-        toast.success('Insurance partner application submitted successfully!');
-        setIsInsuranceModalOpen(false);
-        form.reset();
-      } else {
-        throw new Error('Failed to submit insurance partner application');
-      }
-    } catch (error) {
-      toast.error('Failed to submit insurance partner application');
-      console.error('Insurance partner error:', error);
-    }
+ const handleInsuranceSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  const form = e.target as HTMLFormElement;
+  const formData = new FormData(form);
+  const data = {
+    company_name: formData.get('company_name'),
+    contact_person: formData.get('contact_person'),
+    email: formData.get('email'),
+    phone: formData.get('phone')
   };
+
+  try {
+    const response = await fetch('/api/partners', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        type: 'insurance',
+        formData: data,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to submit insurance partner application');
+    }
+
+    toast.success('Insurance partner application submitted successfully!');
+    setIsInsuranceModalOpen(false);
+    form.reset();
+  } catch (error) {
+    toast.error('Failed to submit insurance partner application');
+    console.error('Insurance partner error:', error);
+  }
+};
 
   const addToCart = async (product: any) => {
     try {
