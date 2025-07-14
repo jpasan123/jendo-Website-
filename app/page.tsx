@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import Image from 'next/image';
 import { Heart, Shield, ArrowRight, Users, Activity, Download, MapPin, Mail, Clock, User, LineChart, FlaskRound as Flask, Building2, Stethoscope, FileHeart, ChartBar, Brain, Microscope, BarChart3, ShieldCheck, PieChart, HandHeart, Facebook, Twitter, Linkedin, CreditCard, Package, CheckCircle, ShoppingCart, X, Calendar, FileText, BedDouble, Waves, Cloud, Instagram, FacebookIcon } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
@@ -9,6 +9,8 @@ import { FormNotification } from '@/components/ui/form-notification';
 import { Play, Pause } from "lucide-react"
 import emailjs from '@emailjs/browser';
 import { AppointmentSuccess } from '@/components/ui/appointment-success';
+import { SuccessModal } from '@/components/SuccessModal';
+import gsap from 'gsap';
 
 
 export default function Home() {
@@ -16,6 +18,7 @@ export default function Home() {
   const [isLabPartnerModalOpen, setIsLabPartnerModalOpen] = useState(false);
   const [isInsuranceModalOpen, setIsInsuranceModalOpen] = useState(false);
   const cart = useCart();
+  
 
   // Add these lines here
   const [currentImage, setCurrentImage] = useState(0);
@@ -398,56 +401,50 @@ export default function Home() {
     setIsInsuranceModalOpen(true);
   };
 
-  const handlePreOrderSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+// For Pre-order Form
+const [showPreOrderSuccess, setShowPreOrderSuccess] = useState(false);
+
+const handlePreOrderSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
-  const form = e.currentTarget; // Store form reference early
-  const formData = new FormData(form);
+  const form = e.currentTarget;
   setIsSubmitting(true);
 
   try {
+    const formData = new FormData(form);
     const response = await fetch('/api/pre-order', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        full_name: formData.get('full_name'),
-        email: formData.get('email'),
-        phone: formData.get('phone'),
-        package_type: formData.get('package_type'),
-        delivery_address: formData.get('delivery_address'),
-        payment_method: formData.get('payment_method'),
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(formData)),
     });
 
-    // Handle non-JSON responses
-    const contentType = response.headers.get('content-type');
-    if (!contentType?.includes('application/json')) {
-      const text = await response.text();
-      console.error('Non-JSON response:', text);
-      throw new Error('Server returned an invalid response');
-    }
-
-    const result = await response.json();
+    if (!response.ok) throw new Error('Submission failed');
     
-    if (!response.ok) {
-      throw new Error(result.error || 'Submission failed');
-    }
-
-    // Show success message
-    toast.success(result.message || 'Pre-order submitted successfully!');
-    
-    // Reset form and close modal
-    form.reset();
-    setIsPreOrderModalOpen(false);
-    
+    // Show success modal and close form after delay
+    setShowPreOrderSuccess(true);
+    setTimeout(() => {
+      setIsPreOrderModalOpen(false);
+      form.reset();
+    }, 2000); // Keep form open for 2 seconds before closing
   } catch (error) {
-    console.error('Submission Error:', error);
     toast.error(error instanceof Error ? error.message : 'Failed to submit');
   } finally {
     setIsSubmitting(false);
   }
 };
+
+// In your component JSX:
+{isPreOrderModalOpen && (
+  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+    {/* Your existing form */}
+  </div>
+)}
+
+<SuccessModal
+  isOpen={showPreOrderSuccess}
+  onClose={() => setShowPreOrderSuccess(false)}
+  title="Pre-order Submitted!"
+  message="Thank you for your pre-order! We'll contact you within 24 hours to confirm details."
+/>
 
 const handleLabPartnerSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -536,6 +533,26 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
   useEffect(() => {
     // Initialize EmailJS with your public key
     emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '');
+  }, []);
+
+  // Emma Gallery GSAP animation
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+    const ctx = gsap.context(() => {
+      gsap.from(".emma-gallery-img", {
+        opacity: 0,
+        y: 60,
+        scale: 0.95,
+        stagger: 0.15,
+        duration: 1.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#emma-gallery",
+          start: "top 80%",
+        },
+      });
+    });
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -1088,6 +1105,53 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
   </div>
 </div>
 
+{/* Emma Gallery Section */}
+<section id="emma-gallery" className="py-20 bg-white section-scroll">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="text-center mb-12">
+      <h2 className="text-3xl font-bold text-purple-900 mb-4">Jendo Gallery</h2>
+     <p className="text-lg text-gray-600">
+  Explore memorable moments and milestones from Jendo’s journey in transforming cardiovascular health.
+</p>
+    </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8" id="emma-gallery-images">
+      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+        <img src="https://i.ibb.co/1tSm4mkJ/Whats-App-Image-2025-07-14-at-13-51-07-40106ee2.jpg" alt="Emma 1" className="w-full h-64 object-cover emma-gallery-img" />
+      </div>
+      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+        <img src="https://i.ibb.co/ymS4bvYM/Whats-App-Image-2025-07-14-at-13-51-07-72813403.jpg" alt="Emma 2" className="w-full h-64 object-cover emma-gallery-img" />
+      </div>
+      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+        <img src="https://i.ibb.co/fz8hvcwW/Whats-App-Image-2025-07-14-at-13-51-07-d33c7810.jpg" alt="Emma 3" className="w-full h-64 object-cover emma-gallery-img" />
+      </div>
+      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+        <img src="https://i.ibb.co/hJ7TcWZx/Whats-App-Image-2025-07-14-at-13-51-08-2c551ce7.jpg" alt="Emma 4" className="w-full h-64 object-cover emma-gallery-img" />
+      </div>
+      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+        <img src="https://i.ibb.co/dwfnDPDT/Whats-App-Image-2025-07-14-at-13-51-08-38e09f3b.jpg" alt="Emma 5" className="w-full h-64 object-cover emma-gallery-img" />
+      </div>
+      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+        <img src="https://i.ibb.co/G4wDD4xS/Whats-App-Image-2025-07-14-at-13-51-36-160dfb2a.jpg" alt="Emma 6" className="w-full h-64 object-cover emma-gallery-img" />
+      </div>
+      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+        <img src="https://i.ibb.co/zYn5mwS/Whats-App-Image-2025-07-14-at-13-51-38-1604ef8d.jpg" alt="Emma 7" className="w-full h-64 object-cover emma-gallery-img" />
+      </div>
+      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+        <img src="https://i.ibb.co/Y4tJ9dvK/Whats-App-Image-2025-07-14-at-13-51-36-5255e477.jpg" alt="Emma 8" className="w-full h-64 object-cover emma-gallery-img" />
+      </div>
+      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+        <img src="https://i.ibb.co/39kCjbJw/Whats-App-Image-2025-07-14-at-13-51-35-6ef53381.jpg" alt="Emma 9" className="w-full h-64 object-cover emma-gallery-img" />
+      </div>
+      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+        <img src="https://i.ibb.co/5XWpWYSZ/Whats-App-Image-2025-07-14-at-13-51-38-780c184c.jpg" alt="Emma 10" className="w-full h-64 object-cover emma-gallery-img" />
+      </div>
+      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+        <img src="https://i.ibb.co/rf0RzYvm/Whats-App-Image-2025-07-14-at-14-22-26-621a4f6a.jpg" />
+      </div>
+    </div>
+  </div>
+</section>
+
       {/* Statistics Section */}
       <section id="stats" className="relative py-32 bg-gradient-to-b from-gray-900 via-black to-purple-900/20 text-white overflow-hidden section-scroll">
         <div className="absolute inset-0">
@@ -1257,8 +1321,8 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
     </div>
   </div>
 </section>
-
-     {/* Team Section */}
+      
+      {/* Team Section */}
      <section id="team" className="py-20 bg-gray-50 section-scroll">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
