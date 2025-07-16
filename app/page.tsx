@@ -314,13 +314,13 @@ export default function Home() {
       url: "https://docs.google.com/document/d/1JKBsun40koXUQVNlIIzibPbXGScFxp1DngaUcoGZOlM/edit?usp=sharing",
     },
     {
-      title: "SL start-up in healthcare breakthrough",
-      excerpt: "Latest developments in non-invasive cardiovascular monitoring technologies.",
-      date: "March 15, 2024",
-      author: "Dr. Duruthu Edirimuni Chandrasekera",
-      image: "https://i.ibb.co/whCSMgMQ/Whats-App-Image-2025-01-15-at-19-56-35-3b4cc881.jpg",
-      url: "https://roar.media/english/tech/events/the-jkx-open-innovation-challenge-finale",
-    },
+    title: "John Keells X Open Innovation Challenge – Grand Finale Recap",
+    excerpt: "Jendo wins the JKX Open Innovation Challenge for their noninvasive cardiovascular health platform. Read the full story of the event, the teams, and the winners.",
+    date: "November 2, 2023",
+    author: "JKX Team",
+    image: "https://i.ibb.co/whCSMgMQ/Whats-App-Image-2025-01-15-at-19-56-35-3b4cc881.jpg", // or your external image link
+    url: "/blog/jkx-open-innovation-challenge", // <-- internal link
+  },
     {
       title: "John Keells X announces winners of the Open Innovation Challenge",
       excerpt: "How AI and machine learning are transforming cardiac care.",
@@ -1547,13 +1547,13 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                 key={index}
                 className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col"
               >
-                <a href={post.url} target="_blank" rel="noopener noreferrer" className="block h-full">
-                  <div className="relative h-[250px] w-full"> {/* Increased height from 200px to 250px */}
+                <div className="block h-full">
+                  <div className="relative h-[250px] w-full">
                     <Image 
                       src={post.image} 
                       alt={post.title} 
                       fill
-                      className="object-contain" /* Changed from object-cover to object-contain */
+                      className="object-contain"
                       priority={index === 0}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw"
                       quality={100}
@@ -1577,8 +1577,21 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                         <span>{post.date}</span>
                       </div>
                     </div>
+                    {/* Read More Button */}
+                    <a
+                      href={
+                        index === 0
+                          ? '/blog/ieee-embs-axon-workshop'
+                          : post.url
+                      }
+                      className="mt-6 inline-block bg-purple-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-purple-700 transition-colors text-center"
+                      target={index === 0 ? undefined : "_blank"}
+                      rel={index === 0 ? undefined : "noopener noreferrer"}
+                    >
+                      Read More
+                    </a>
                   </div>
-                </a>
+                </div>
               </div>
             ))}
           </div>

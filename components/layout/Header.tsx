@@ -18,6 +18,7 @@ export function Header() {
   const navigation = [
     { name: 'ABOUT & MORE', href: '#about' },
     { name: 'PRE ORDER', href: '#preorder' },
+    { name: 'GALLERY', href: '#emma-gallery' },
     { name: 'BLOG', href: '#blog' },
     { name: 'OUR TEAM', href: '#team' },
     { name: 'CONTACT US', href: '#contact' },

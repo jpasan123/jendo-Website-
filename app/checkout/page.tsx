@@ -3,11 +3,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
+import { PayhereForm } from '@/components/ui/payhere-form';
+import type { PayherePayment } from '@/lib/payhere';
+import { ShoppingCart, CreditCard, User, Mail, Phone, MapPin, Building2, ArrowLeft } from 'lucide-react';
 
 export default function Checkout() {
   const router = useRouter();
   const cart = useCart();
-  const [loading, setLoading] = useState(false);
+  const [showPayhere, setShowPayhere] = useState(false);
+  const [payment, setPayment] = useState<PayherePayment | null>(null);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -17,39 +21,6 @@ export default function Checkout() {
     city: ''
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          items: cart.items,
-          userId: 'test-user', // Replace with actual user ID when auth is implemented
-          shippingAddress: formData
-        }),
-      });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        // For now, just redirect to a success page
-        router.push('/checkout/success');
-      } else {
-        throw new Error('Checkout failed');
-      }
-    } catch (error) {
-      console.error('Checkout error:', error);
-      // Handle error appropriately
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -57,120 +28,200 @@ export default function Checkout() {
     });
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.address ||
+      !formData.city
+    ) {
+      alert('Please fill out all fields.');
+      return;
+    }
+
+    const payherePayment: PayherePayment = {
+      merchant_id: process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID!,
+      return_url: window.location.origin + '/checkout/success',
+      cancel_url: window.location.origin + '/checkout/cancel',
+      notify_url: window.location.origin + '/api/payhere-notify',
+      order_id: 'ORDER_' + Date.now(),
+      items: cart.items.map(i => i.products.name).join(', '),
+      currency: 'LKR',
+      amount: cart.items.reduce((acc, item) => acc + item.products.price * item.quantity, 0),
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      address: formData.address,
+      city: formData.city,
+      country: 'Sri Lanka',
+      hash: '', // If required by your PayHere config
+    };
+    setPayment(payherePayment);
+    setShowPayhere(true);
+  };
+
+  if (showPayhere && payment) {
+    return <PayhereForm payment={payment} />;
+  }
+
   return (
-    <div className="min-h-screen bg-gray-100 py-32">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                />
-              </div>
-
-              <div className="md:col-span-2">
-                <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                  Address
-                </label>
-                <input
-                  type="text"
-                  id="address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                />
-              </div>
-
-              <div className="md:col-span-2">
-                <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-                  City
-                </label>
-                <input
-                  type="text"
-                  id="city"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                />
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-white to-purple-200 py-24">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Back Button */}
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="mb-6 flex items-center gap-2 text-purple-700 hover:text-purple-900 font-medium transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          Back to Cart
+        </button>
+        <div className="bg-white rounded-3xl shadow-2xl p-10 md:p-16 flex flex-col md:flex-row gap-12">
+          {/* Left: Order Summary */}
+          <div className="md:w-2/5 w-full">
+            <div className="mb-8 flex items-center gap-3">
+              <ShoppingCart className="w-7 h-7 text-purple-600" />
+              <h2 className="text-2xl font-bold text-gray-900">Order Summary</h2>
+            </div>
+            <div className="space-y-6">
+              {cart.items.length === 0 ? (
+                <div className="text-gray-400 text-center py-12">Your cart is empty.</div>
+              ) : (
+                cart.items.map((item, idx) => (
+                  <div key={item.product_id || idx} className="flex items-center gap-4 border-b pb-4">
+                    <img
+                      src={item.products.image_url}
+                      alt={item.products.name}
+                      className="w-16 h-16 rounded-xl object-cover border"
+                    />
+                    <div className="flex-1">
+                      <div className="font-semibold text-gray-800">{item.products.name}</div>
+                      <div className="text-gray-500 text-sm">Qty: {item.quantity}</div>
+                    </div>
+                    <div className="font-bold text-purple-700 text-lg">
+                      ${(item.products.price * item.quantity).toFixed(2)}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+            <div className="mt-8 border-t pt-6">
+              <div className="flex justify-between text-xl font-semibold text-gray-900">
+                <span>Total</span>
+                <span>
+                  ${cart.items.reduce((acc, item) => acc + item.products.price * item.quantity, 0).toFixed(2)}
+                </span>
               </div>
             </div>
+          </div>
 
-            <div className="border-t border-gray-200 pt-6">
-              <div className="flex justify-between text-xl font-semibold text-gray-900 mb-6">
-                <span>Total</span>
-                <span>${cart.items.reduce((acc, item) => acc + item.products.price * item.quantity, 0).toFixed(2)}</span>
+          {/* Right: Checkout Form */}
+          <div className="md:w-3/5 w-full">
+            <div className="mb-8 flex items-center gap-3">
+              <CreditCard className="w-7 h-7 text-purple-600" />
+              <h2 className="text-2xl font-bold text-gray-900">Checkout Details</h2>
+            </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                    <User className="w-4 h-4 text-purple-400" /> First Name
+                  </label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-purple-50/40"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                    <User className="w-4 h-4 text-purple-400" /> Last Name
+                  </label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-purple-50/40"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                    <Mail className="w-4 h-4 text-purple-400" /> Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-purple-50/40"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                    <Phone className="w-4 h-4 text-purple-400" /> Phone
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-purple-50/40"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label htmlFor="address" className="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                    <MapPin className="w-4 h-4 text-purple-400" /> Address
+                  </label>
+                  <input
+                    type="text"
+                    id="address"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-purple-50/40"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label htmlFor="city" className="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                    <Building2 className="w-4 h-4 text-purple-400" /> City
+                  </label>
+                  <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-purple-50/40"
+                  />
+                </div>
               </div>
-
               <button
                 type="submit"
-                disabled={loading}
-                className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors disabled:opacity-50"
+                className="w-full bg-gradient-to-r from-purple-600 to-purple-500 text-white px-8 py-4 rounded-xl font-semibold hover:from-purple-700 hover:to-purple-600 transition-all shadow-lg mt-4 text-lg flex items-center justify-center gap-2"
               >
-                {loading ? 'Processing...' : 'Confirm Order'}
+                <CreditCard className="w-5 h-5" />
+                Proceed to PayHere
               </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>
