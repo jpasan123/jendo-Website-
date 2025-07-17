@@ -367,7 +367,7 @@ export default function Home() {
       date: "March 20, 2024",
       author: "Vendys",
       image: "https://i.ibb.co/MxLrpccS/Screen-Shot-2022-12-22-at-00-01-06-1.png",
-      url: "https://www.wipo.int/ipadvantage/en/details.jsp?id=12463",
+      url: "/blog/jendo-patents",
     },
     {
       title: "Non-invasive assessment of endothelial dysfunction",
@@ -704,6 +704,111 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.1),transparent_50%)] animate-pulse-slow"></div>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            {/* Jendo Patents Section */}
+            <section id="jendo-patents" className="py-24 bg-white section-scroll">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-14">
+                <div className="flex flex-col items-center justify-center mb-4">
+                <span className="text-5xl md:text-6xl mb-2 animate-bounce">🏆</span>
+                <h2
+                  className="text-4xl md:text-5xl font-extrabold mb-2 bg-gradient-to-r from-purple-700 via-purple-500 to-purple-700 bg-clip-text text-transparent"
+                  style={{
+                    WebkitTextStroke: '2px #a855f7',
+                    lineHeight: '1.1',
+                    padding: '0.1em 0',
+                    letterSpacing: '0.01em',
+                    wordBreak: 'break-word',
+                    overflowWrap: 'break-word',
+                    textShadow: '0 2px 8px #c4b5fd, 0 1px 0 #fff'
+                  }}
+                >
+                  Jendo Patents: A Legacy of Global Innovation
+                </h2>
+                </div>
+                  <p className="text-lg md:text-xl text-purple-700 font-semibold mb-2 flex items-center justify-center gap-2">
+                    <span className="text-2xl">🌐</span>
+                    Discover our worldwide recognition in non-invasive vascular health diagnostics
+                  </p>
+                  <p className="text-base md:text-lg text-gray-700 max-w-2xl mx-auto mt-4">
+                    At Jendo, our pursuit of excellence in cardiovascular innovation has earned us prestigious patents across the globe. From the cutting-edge labs of the United States to the high-tech hubs of Japan and the vibrant healthcare landscape of Sri Lanka, our patented technology is transforming preventive care.
+                  </p>
+                  <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto mt-2">
+                    These recognitions are more than accolades—they are a testament to our vision, precision, and global impact in redefining how vascular health is monitored and managed.
+                  </p>
+                </div>
+                <div className="flex justify-center">
+                  <div
+                    className="relative group perspective-1000"
+                    style={{ width: 540, height: 380, maxWidth: '100%' }}
+                  >
+                    {/* Enhanced animated purple glow border (thicker) */}
+                    <div
+                      className="absolute -inset-5 rounded-3xl pointer-events-none z-10"
+                      style={{
+                        boxShadow: '0 0 120px 40px #a78bfa, 0 0 0 24px #fff',
+                        filter: 'blur(6px)',
+                        opacity: 0.9,
+                        animation: 'patent-glow 3s ease-in-out infinite alternate',
+                        transition: 'opacity 0.3s'
+                      }}
+                    />
+                    {/* Device image with 3D tilt and shadow, larger */}
+                    <div
+                      tabIndex={0}
+                      role="button"
+                      aria-label="Read more about Jendo Patents"
+                      onClick={() => window.location.href = "/blog/jendo-patents"}
+                      className="relative bg-black/50 backdrop-blur-xl p-0 rounded-3xl border-4 border-purple-300/60 overflow-hidden shadow-2xl cursor-pointer transition-transform duration-700 group-hover:scale-[1.06] group-hover:-translate-y-4 group-hover:rotate-2"
+                      style={{
+                        width: 520,
+                        height: 360,
+                        maxWidth: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        perspective: 1200,
+                      }}
+                    >
+                      <img
+                        src="https://i.ibb.co/g85CZcp/unnamed-1.png"
+                        alt="Jendo Patent"
+                        className="object-contain rounded-2xl shadow-xl border-8 border-white bg-white transition-transform duration-700"
+                        style={{
+                          width: 480,
+                          height: 320,
+                          objectFit: 'contain',
+                          transform: 'rotateY(-10deg) rotateX(4deg) scale(1.04)',
+                          boxShadow: '0 16px 64px 0 rgba(139,92,246,0.22), 0 8px 32px 0 rgba(0,0,0,0.12)',
+                        }}
+                      />
+                      {/* Overlay for hover effect */}
+                      <div className="absolute inset-0 rounded-3xl bg-purple-100/40 opacity-0 group-hover:opacity-100 transition duration-300 z-10"></div>
+                      {/* Read More Button */}
+                      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-purple-800 text-white px-10 py-4 rounded-full font-semibold shadow-lg opacity-0 group-hover:opacity-100 transition duration-300 z-20 text-lg">
+                        Read More
+                      </div>
+                    </div>
+                    {/* Custom keyframes for enhanced glow */}
+                    <style jsx>{`
+                      @keyframes patent-glow {
+                        0% {
+                          box-shadow: 0 0 120px 40px #a78bfa, 0 0 0 24px #fff;
+                          opacity: 0.9;
+                        }
+                        50% {
+                          box-shadow: 0 0 180px 60px #c4b5fd, 0 0 0 32px #ede9fe;
+                          opacity: 1;
+                        }
+                        100% {
+                          box-shadow: 0 0 120px 40px #a78bfa, 0 0 0 24px #fff;
+                          opacity: 0.9;
+                        }
+                      }
+                    `}</style>
+                  </div>
+                </div>
+              </div>
+            </section>
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-purple-900 mb-4">Experience JENDO in Action</h2>
             <p className="text-lg md:text-xl text-black-200 max-w-3xl mx-auto">
