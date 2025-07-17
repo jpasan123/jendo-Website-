@@ -784,7 +784,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                       {/* Overlay for hover effect */}
                       <div className="absolute inset-0 rounded-3xl bg-purple-100/40 opacity-0 group-hover:opacity-100 transition duration-300 z-10"></div>
                       {/* Read More Button */}
-                      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-purple-800 text-white px-10 py-4 rounded-full font-semibold shadow-lg opacity-0 group-hover:opacity-100 transition duration-300 z-20 text-lg">
+                      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-purple-800 text-white px-14 py-3 rounded-full font-semibold shadow-lg opacity-0 group-hover:opacity-100 transition duration-300 z-20 text-base min-w-[180px] text-center">
                         Read More
                       </div>
                     </div>
