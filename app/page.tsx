@@ -11,6 +11,10 @@ import emailjs from '@emailjs/browser';
 import { AppointmentSuccess } from '@/components/ui/appointment-success';
 import { SuccessModal } from '@/components/SuccessModal';
 import gsap from 'gsap';
+import { PayhereForm } from "@/components/ui/payhere-form";
+import type { PayherePayment } from "@/lib/payhere";
+import { createPaymentForm } from "@/lib/payhere";
+
 
 
 export default function Home() {
@@ -18,6 +22,11 @@ export default function Home() {
   const [isLabPartnerModalOpen, setIsLabPartnerModalOpen] = useState(false);
   const [isInsuranceModalOpen, setIsInsuranceModalOpen] = useState(false);
   const cart = useCart();
+
+
+  // show the payhere connect
+  const [showPayhere, setShowPayhere] = useState(false);
+  const [payment, setPayment] = useState<PayherePayment | null>(null);
   
 
   // Add these lines here
@@ -401,36 +410,67 @@ export default function Home() {
     setIsInsuranceModalOpen(true);
   };
 
-// For Pre-order Form
-const [showPreOrderSuccess, setShowPreOrderSuccess] = useState(false);
+  // For Pre-order Form
+  const [showPreOrderSuccess, setShowPreOrderSuccess] = useState(false);
 
-const handlePreOrderSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const form = e.currentTarget;
-  setIsSubmitting(true);
+  type PreOrderPackageType = 'starter' | 'professional' | 'enterprise';
 
-  try {
-    const formData = new FormData(form);
-    const response = await fetch('/api/pre-order', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(Object.fromEntries(formData)),
-    });
+  const handlePreOrderSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    setIsSubmitting(true);
 
-    if (!response.ok) throw new Error('Submission failed');
-    
-    // Show success modal and close form after delay
-    setShowPreOrderSuccess(true);
-    setTimeout(() => {
-      setIsPreOrderModalOpen(false);
-      form.reset();
-    }, 2000); // Keep form open for 2 seconds before closing
-  } catch (error) {
-    toast.error(error instanceof Error ? error.message : 'Failed to submit');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+    try {
+      const formData = new FormData(form);
+      const packageType = formData.get("package_type") as PreOrderPackageType;
+      const { amount, currency } = preOrderPrices[packageType] || { amount: 0, currency: "USD" };
+
+      // Save to Google Sheets
+      const response = await fetch('/api/pre-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(formData)),
+      });
+
+      if (!response.ok) throw new Error('Submission failed');
+
+      // Only trigger PayHere if not enterprise (custom)
+      if (amount > 0) {
+        // Call backend to get PayHere payment object
+        const payhereRes = await fetch('/api/book-checkup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            full_name: formData.get('full_name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            checkup_type: 'preorder',
+            payment_method: 'payhere',
+            amount,
+            currency,
+          }),
+        });
+        const payhereData = await payhereRes.json();
+        if (payhereData.success && payhereData.payherePayment) {
+          setPayment(payhereData.payherePayment);
+          setShowPayhere(true);
+        } else {
+          toast.error('Payment initiation failed.');
+        }
+      }
+
+      setShowSuccess(true);
+      setShowPreOrderSuccess(true);
+      setTimeout(() => {
+        setIsPreOrderModalOpen(false);
+        form.reset();
+      }, 1000);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to submit');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
 // In your component JSX:
 {isPreOrderModalOpen && (
@@ -450,36 +490,60 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   const form = e.target as HTMLFormElement;
   const formData = new FormData(form);
+
+  const checkupType = formData.get("checkup_type") as CheckupType;
+  const amount = checkupPrices[checkupType];
+  const currency = checkupType === 'trial' ? 'USD' : 'LKR';
+
   const data = {
-    full_name: formData.get('full_name'),
-    email: formData.get('email'),
-    phone: formData.get('phone'),
-    checkup_type: formData.get('checkup_type'),
-    payment_method: formData.get('payment_method'),
-    message: formData.get('message')
+    full_name: formData.get("full_name"),
+    email: formData.get("email"),
+    phone: formData.get("phone"),
+    checkup_type: checkupType,
+    payment_method: formData.get("payment_method"),
+    message: formData.get("message"),
   };
 
   try {
+    // 1. Save to Google Sheets
     const response = await fetch("/api/book-checkup", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
 
-    if (!response.ok) {
-      throw new Error("Failed to book check up");
-    }
+    if (!response.ok) throw new Error("Failed to book check up");
 
-    toast.success("Check up booked successfully!");
+    // 2. Prepare PayHere payment
+    const payherePayment: PayherePayment = {
+      merchant_id: process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID!,
+      return_url: window.location.origin + "/checkout/success",
+      cancel_url: window.location.origin + "/checkout/cancel",
+      notify_url: window.location.origin + "/api/payhere-notify",
+      order_id: "CHECKUP_" + Date.now(),
+      items: `Jendo ${checkupType}`,
+      currency: "USD",
+      amount,
+      first_name: data.full_name as string,
+      last_name: "",
+      email: data.email as string,
+      phone: data.phone as string,
+      address: "",
+      city: "",
+      country: "Sri Lanka",
+      hash: "", // If required by your PayHere config
+    };
+
+    setPayment(payherePayment);
+    setShowPayhere(true);
+    setShowSuccess(true);
     setIsLabPartnerModalOpen(false);
     form.reset();
   } catch (error) {
     toast.error("Failed to book check up");
     console.error("Book check up error:", error);
   }
-}
+};
  const handleInsuranceSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   const form = e.target as HTMLFormElement;
@@ -508,6 +572,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
     }
 
     toast.success('Insurance partner application submitted successfully!');
+    setShowSuccess(true);
     setIsInsuranceModalOpen(false);
     form.reset();
   } catch (error) {
@@ -554,6 +619,19 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
     });
     return () => ctx.revert();
   }, []);
+  type CheckupType = 'consultation' | 'full' | 'trial';
+
+  const checkupPrices: Record<CheckupType, number> = {
+    consultation: 5000, // LKR
+    full: 8000,         // LKR
+    trial: 17.5         // USD
+  };
+
+  const preOrderPrices = {
+  starter: { amount: 225, currency: "USD" },
+  professional: { amount: 2250, currency: "USD" },
+  enterprise: { amount: 0, currency: "USD" }, // Custom, handle as needed
+};
 
   return (
     <>
@@ -2061,8 +2139,9 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                   required
                 >
                   <option value="">Select a check up type</option>
-                  <option value="consultation">Jendo Consultation Patient Checkup (Rs. 5000)</option>
-                  <option value="full">Jendo Full Check Up (Rs. 8000)</option>
+                  {/* <option value="consultation">Jendo Consultation Patient Checkup (Rs. 5000)</option> */}
+                  {/* <option value="full">Jendo Full Check Up (Rs. 8000)</option> */}
+                  <option value="trial">Test trial + Consultation (USD 17.5)</option>
                 </select>
               </div>
               <div>
@@ -2173,6 +2252,10 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
 
       {showSuccess && (
         <AppointmentSuccess onClose={() => setShowSuccess(false)} />
+      )}
+
+      {showPayhere && payment && (
+        <PayhereForm payment={payment} />
       )}
     </>
   );

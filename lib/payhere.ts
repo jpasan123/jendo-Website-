@@ -3,9 +3,9 @@ import crypto from 'crypto';
 // PayHere API configuration
 const PAYHERE_MERCHANT_ID = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID!;
 const PAYHERE_SECRET = process.env.PAYHERE_SECRET!;
-const PAYHERE_BASE_URL = process.env.NODE_ENV === 'production' 
+export const PAYHERE_BASE_URL = process.env.NODE_ENV === 'production' 
   ? 'https://www.payhere.lk/pay/checkout'
-  : 'https://sandbox.payhere.lk/pay/checkout';
+  : 'https://www.payhere.lk/pay/checkout';
 
 export interface PayherePayment {
   merchant_id: string;
@@ -26,14 +26,13 @@ export interface PayherePayment {
   hash: string;
 }
 
-export function generateHash(orderId: string, amount: number): string {
-  const data = `${PAYHERE_MERCHANT_ID}${orderId}${amount.toFixed(2)}LKR${PAYHERE_SECRET}`;
+export function generateHash(orderId: string, amount: number, currency: string): string {
+  const data = `${PAYHERE_MERCHANT_ID}${orderId}${amount.toFixed(2)}${currency}${PAYHERE_SECRET}`;
   return crypto.createHash('md5').update(data).digest('hex').toUpperCase();
 }
 
 export function createPaymentForm(payment: Omit<PayherePayment, 'merchant_id' | 'hash'>): PayherePayment {
-  const hash = generateHash(payment.order_id, payment.amount);
-  
+  const hash = generateHash(payment.order_id, payment.amount, payment.currency);
   return {
     ...payment,
     merchant_id: PAYHERE_MERCHANT_ID,

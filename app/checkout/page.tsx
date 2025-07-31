@@ -43,26 +43,30 @@ export default function Checkout() {
       return;
     }
 
-    const payherePayment: PayherePayment = {
-      merchant_id: process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID!,
-      return_url: window.location.origin + '/checkout/success',
-      cancel_url: window.location.origin + '/checkout/cancel',
-      notify_url: window.location.origin + '/api/payhere-notify',
-      order_id: 'ORDER_' + Date.now(),
-      items: cart.items.map(i => i.products.name).join(', '),
-      currency: 'LKR',
-      amount: cart.items.reduce((acc, item) => acc + item.products.price * item.quantity, 0),
-      first_name: formData.firstName,
-      last_name: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      address: formData.address,
-      city: formData.city,
-      country: 'Sri Lanka',
-      hash: '', // If required by your PayHere config
-    };
-    setPayment(payherePayment);
-    setShowPayhere(true);
+    // Call backend to get PayHere payment object
+    fetch('/api/book-checkup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        full_name: formData.firstName + ' ' + formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        checkup_type: 'checkout',
+        payment_method: 'payhere',
+        amount: cart.items.reduce((acc, item) => acc + item.products.price * item.quantity, 0),
+        currency: 'LKR',
+      }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.payherePayment) {
+          setPayment(data.payherePayment);
+          setShowPayhere(true);
+        } else {
+          alert('Payment initiation failed.');
+        }
+      })
+      .catch(() => alert('Payment initiation failed.'));
   };
 
   if (showPayhere && payment) {

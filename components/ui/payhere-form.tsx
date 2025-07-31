@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import type { PayherePayment } from '@/lib/payhere';
 import { PAYHERE_FORM_FIELDS } from '@/lib/payhere';
+import { PAYHERE_BASE_URL } from '@/lib/payhere';
 
 interface PayhereFormProps {
   payment: PayherePayment;
@@ -28,7 +29,7 @@ export function PayhereForm({ payment }: PayhereFormProps) {
         <form
           id="payhere-form"
           method="post"
-          action="https://sandbox.payhere.lk/pay/checkout"
+          action={PAYHERE_BASE_URL}
           className="hidden"
         >
           {PAYHERE_FORM_FIELDS.map((field) => (
