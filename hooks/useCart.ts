@@ -3,9 +3,23 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image_url: string;
+  description?: string;
+}
+
+export interface CartItem {
+  product_id: string;
+  quantity: number;
+  products: Product;
+}
+
 interface CartStore {
-  items: any[];
-  addItem: (item: any) => void;
+  items: CartItem[];
+  addItem: (item: CartItem) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;

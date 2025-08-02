@@ -11,9 +11,10 @@ import emailjs from '@emailjs/browser';
 import { AppointmentSuccess } from '@/components/ui/appointment-success';
 import { SuccessModal } from '@/components/SuccessModal';
 import gsap from 'gsap';
-import { PayhereForm } from "@/components/ui/payhere-form";
+import PayhereForm from "@/components/PayhereCheckout";
 import type { PayherePayment } from "@/lib/payhere";
 import { createPaymentForm } from "@/lib/payhere";
+import PayhereCheckout from '@/components/PayhereCheckout';
 
 
 
@@ -416,61 +417,64 @@ export default function Home() {
   type PreOrderPackageType = 'starter' | 'professional' | 'enterprise';
 
   const handlePreOrderSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    setIsSubmitting(true);
+  e.preventDefault();
+  const form = e.currentTarget;
+  setIsSubmitting(true);
 
-    try {
-      const formData = new FormData(form);
-      const packageType = formData.get("package_type") as PreOrderPackageType;
-      const { amount, currency } = preOrderPrices[packageType] || { amount: 0, currency: "USD" };
+  try {
+    const formData = new FormData(form);
+    const packageType = formData.get("package_type") as PreOrderPackageType;
+    const { amount, currency } = preOrderPrices[packageType] || { amount: 0, currency: "USD" };
 
-      // Save to Google Sheets
-      const response = await fetch('/api/pre-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(formData)),
-      });
+    // Create payment object
+    const payherePayment: PayherePayment = {
+      merchant_id: process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID!,
+      return_url: `${window.location.origin}/checkout/success`,
+      cancel_url: `${window.location.origin}/checkout/cancel`,
+      notify_url: `${window.location.origin}/api/payhere-notify`,
+      order_id: `JENDO_${Date.now()}`,
+      items: `JENDO ${packageType} Package`,
+      currency: currency,
+      amount: amount,
+      first_name: formData.get('full_name') as string,
+      last_name: '', // Add if you collect last name
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+      address: formData.get('delivery_address') as string || '',
+      city: '', // Add if you collect city
+      country: 'Sri Lanka',
+      custom_1: packageType,
+      hash: '' // You'll need to generate this server-side
+    };
 
-      if (!response.ok) throw new Error('Submission failed');
+    // For security, you should generate the hash server-side
+    // Here's a client-side example (not recommended for production):
+    // const hash = CryptoJS.MD5(/* concatenated string */).toString();
+    // payherePayment.hash = hash;
 
-      // Only trigger PayHere if not enterprise (custom)
-      if (amount > 0) {
-        // Call backend to get PayHere payment object
-        const payhereRes = await fetch('/api/book-checkup', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            full_name: formData.get('full_name'),
-            email: formData.get('email'),
-            phone: formData.get('phone'),
-            checkup_type: 'preorder',
-            payment_method: 'payhere',
-            amount,
-            currency,
-          }),
-        });
-        const payhereData = await payhereRes.json();
-        if (payhereData.success && payhereData.payherePayment) {
-          setPayment(payhereData.payherePayment);
-          setShowPayhere(true);
-        } else {
-          toast.error('Payment initiation failed.');
-        }
-      }
+    setPayment(payherePayment);
+    setShowPayhere(true);
+    
+    // Optionally save to your database
+    const response = await fetch('/api/pre-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...Object.fromEntries(formData),
+        payment_amount: amount,
+        payment_currency: currency,
+        payment_status: 'pending'
+      }),
+    });
 
-      setShowSuccess(true);
-      setShowPreOrderSuccess(true);
-      setTimeout(() => {
-        setIsPreOrderModalOpen(false);
-        form.reset();
-      }, 1000);
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to submit');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    if (!response.ok) throw new Error('Submission failed');
+
+  } catch (error) {
+    toast.error(error instanceof Error ? error.message : 'Failed to submit');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
 // In your component JSX:
 {isPreOrderModalOpen && (
@@ -2255,7 +2259,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
       )}
 
       {showPayhere && payment && (
-        <PayhereForm payment={payment} />
+        <PayhereCheckout payment={payment} />
       )}
     </>
   );
