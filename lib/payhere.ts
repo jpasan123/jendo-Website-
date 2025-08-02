@@ -60,25 +60,16 @@ export function generateHash(payment: Omit<PayherePayment, 'merchant_id' | 'hash
   return crypto.createHash('md5').update(data).digest('hex').toUpperCase();
 }
 
-export function createPaymentForm(payment: Omit<PayherePayment, 'merchant_id' | 'hash'>): PayherePayment {
+export function createPaymentForm(payment: PayherePayment): PayherePayment {
   const formattedAmount = typeof payment.amount === 'number'
     ? payment.amount.toFixed(2)
     : parseFloat(payment.amount as string).toFixed(2);
 
   const paymentWithDefaults = {
-    ...payment,
-    amount: Number(formattedAmount), 
-    currency: payment.currency || 'LKR',
-    address: payment.address || 'Not Provided',
-    city: payment.city || 'Colombo',
-    country: payment.country || 'Sri Lanka'
+    ...payment
   };
 
-  return {
-    ...paymentWithDefaults,
-    merchant_id: PAYHERE_MERCHANT_ID,
-    hash: generateHash(paymentWithDefaults)
-  };
+  return payment;
 }
 
 export const PAYHERE_REQUIRED_FIELDS = [

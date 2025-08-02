@@ -81,7 +81,9 @@ export async function POST(req: Request) {
       phone: data.phone,
       address: data.delivery_address,
       city: 'Colombo',
-      country: 'Sri Lanka'
+      country: 'Sri Lanka',
+      hash: '', // Hash will be generated in createPaymentForm
+      merchant_id: process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || ''
     });
 
     return NextResponse.json(
