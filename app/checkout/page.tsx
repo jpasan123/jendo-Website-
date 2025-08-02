@@ -67,6 +67,7 @@ export default function CheckoutPage() {
       });
 
       const result = await response.json();
+      console.log('Checkout response:', result);
       if (result.success && result.payherePayment) {
         setPayment(result.payherePayment);
       } else {

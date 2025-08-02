@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     console.log('Checkout request data:', data);
 
     let merchantSecret = process.env.PAYHERE_SECRET;
-    let merchantId = process.env.PAYHERE_MERCHANT_ID;
+    let merchantId = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID;
     let orderId = '12345';
     let amount = data.amount; // Default amount if not provided
     let hashedSecret = md5(merchantSecret!).toString().toUpperCase();
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
         );
       }
     }
-
+    console.log('Checkout request data:', merchantId);
     // Create PayHere payment object
     const payherePayment = createPaymentForm({
       return_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/checkout/success`,

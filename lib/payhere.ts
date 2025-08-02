@@ -32,10 +32,6 @@ export interface PayherePayment {
   return_url: string;
   cancel_url: string;
   notify_url: string;
-  order_id: string;
-  items: string;
-  currency: string;
-  amount:  number;
   first_name: string;
   last_name: string;
   email: string;
@@ -43,6 +39,10 @@ export interface PayherePayment {
   address: string;
   city: string;
   country: string;
+  order_id: string;
+  items: string;
+  currency: string;
+  amount:  number;
   hash: string;
   custom_1?: string;
   custom_2?: string;
