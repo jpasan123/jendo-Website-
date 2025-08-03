@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
 import { PayhereForm } from '@/components/ui/payhere-form';
@@ -30,6 +30,19 @@ export default function CheckoutPage() {
     city: 'Colombo',
     country: 'Sri Lanka'
   });
+  
+  // Reset payment state when user returns from PayHere
+  useEffect(() => {
+    // This ensures the form is reset if the user navigates back
+    const handleRouteChange = () => {
+      setPayment(null);
+    };
+    
+    window.addEventListener('popstate', handleRouteChange);
+    return () => {
+      window.removeEventListener('popstate', handleRouteChange);
+    };
+  }, []);
 
   const total = cart.items.reduce(
     (acc, item) => acc + item.products.price * item.quantity,
@@ -68,6 +81,20 @@ export default function CheckoutPage() {
       const result = await response.json();
       console.log('Checkout response:', result);
       if (result.success && result.payherePayment) {
+        // Reset form state before setting payment
+        const form = e.target as HTMLFormElement;
+        form.reset();
+        setFormData({
+          first_name: '',
+          last_name: '',
+          email: '',
+          phone: '',
+          address: '',
+          city: 'Colombo',
+          country: 'Sri Lanka'
+        });
+        
+        // Show PayHere form
         setPayment(result.payherePayment);
       } else {
         alert('Payment initiation failed. Please try again.');

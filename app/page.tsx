@@ -490,7 +490,9 @@ export default function Home() {
         setPayment(result.payherePayment);
         setShowPayhere(true);
         setShowSuccess(true);
-        setIsLabPartnerModalOpen(false);
+        setIsPreOrderModalOpen(false);
+        // Reset form after successful submission
+        form.reset();
       } else {
         alert('Payment initiation failed. Please try again.');
       }
@@ -591,17 +593,32 @@ export default function Home() {
       const result = await response2.json();
       console.log('Checkout response:', result);
       if (result.success && result.payherePayment) {
+        // Save data to Google Sheets directly as well for redundancy
+        try {
+          await fetch("/api/book-checkup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ...data,
+              amount,
+              currency
+            }),
+          });
+        } catch (sheetError) {
+          console.error("Failed to save to Google Sheets:", sheetError);
+          // Continue with payment flow even if sheet saving fails
+        }
+        
         setPayment(result.payherePayment);
         setShowPayhere(true);
         setShowSuccess(true);
         setIsLabPartnerModalOpen(false);
+        
+        // Reset form
+        form.reset();
       } else {
         alert('Payment initiation failed. Please try again.');
       }
-
-      // setPayment(payherePayment);
-      
-      form.reset();
     } catch (error) {
       toast.error("Failed to book check up");
       console.error("Book check up error:", error);

@@ -15,9 +15,14 @@ export function PayhereForm({ payment }: PayhereFormProps) {
     const form = document.getElementById('payhere-form') as HTMLFormElement;
     if (form) {
       // Add a small delay for better UX
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         form.submit();
       }, 2000);
+      
+      // Cleanup function to handle if user navigates back before form submission
+      return () => {
+        clearTimeout(timer);
+      };
     }
   }, []);
 
