@@ -32,7 +32,8 @@ export function SuccessModal({ isOpen, onClose, title, message }: SuccessModalPr
           <button
             onClick={() => {
               setIsVisible(false);
-              setTimeout(onClose, 300); // Match animation duration
+              // Call onClose immediately without delay
+              onClose();
             }}
             className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors"
           >

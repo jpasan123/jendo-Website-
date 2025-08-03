@@ -777,12 +777,16 @@ export default function Home() {
         {/* Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
           <div className="animate-fade-in">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Unlock the Future of Cardiovascular Health Today!
-            </h1>
-            <p className="text-xl text-gray-200 max-w-2xl mb-8">
+            <div className="relative mb-8">
+              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white mb-8 text-center">
+              <span className="bg-gradient-to-r from-purple-100 via-white to-purple-100 bg-clip-text text-transparent animate-shine">
+                Unlock the Future of Cardiovascular Health Today!
+              </span>
+              </h1>
+              <p className="text-xl sm:text-2xl text-gray-200 max-w-3xl mx-auto mb-10 text-center leading-relaxed">
               JENDO offers a revolutionary, non-invasive solution for early cardiovascular disease detection, delivering AI-powered health reports in 15 minutes. Perfect for patients, labs, and insurance partners seeking proactive heart health solutions.
-            </p>
+              </p>
+            </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={handlePreOrderClick}
@@ -798,13 +802,13 @@ export default function Home() {
                 <Flask className="h-5 w-5" />
                 <span>Book a Check Up</span>
               </button>
-              <button
+              {/* <button
                 onClick={handleInsuranceClick}
                 className="bg-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-purple-700 transition-colors inline-flex items-center justify-center space-x-2 animate-pulse-slow"
               >
                 <Shield className="h-5 w-5" />
                 <span>Insurance Partnership</span>
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
