@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     let merchantSecret = 'MjE4NzIyMjA4NDMxMzE4NzQ5MDQ2NTQyNTA1NTExODE3MTk0ODYz';
     let merchantId = '239581';
     let orderId = '12345';
-    let amount = '1000.00';
+    let amount = '10.00';
     let hashedSecret = md5(merchantSecret).toString().toUpperCase();
     let amountFormated = parseFloat(amount).toLocaleString('en-us', { minimumFractionDigits: 2 }).replaceAll(',', '');
     console.log('Formatted amount:', amountFormated);
