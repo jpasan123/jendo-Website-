@@ -452,22 +452,51 @@ export default function Home() {
       // const hash = CryptoJS.MD5(/* concatenated string */).toString();
       // payherePayment.hash = hash;
 
-      setPayment(payherePayment);
-      setShowPayhere(true);
+      // setPayment(payherePayment);
+      // setShowPayhere(true);
 
       // Optionally save to your database
-      const response = await fetch('/api/pre-order', {
+      // const response = await fetch('/api/pre-order', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({
+      //     ...Object.fromEntries(formData),
+      //     payment_amount: amount,
+      //     payment_currency: currency,
+      //     payment_status: 'pending'
+      //   }),
+      // });
+       const parts = (formData.get('full_name') as string).trim().split(/\s+/); // Splits by any whitespace
+
+      const firstName = parts[0];
+      const lastName = parts.slice(1).join(" ");  // Joins everything after the first word
+
+      const response2 = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...Object.fromEntries(formData),
-          payment_amount: amount,
-          payment_currency: currency,
-          payment_status: 'pending'
-        }),
+          ...formData,
+          amount: amount,
+          items: `JENDO ${packageType} Package`,
+          first_name: firstName,
+          last_name: lastName,
+          email: formData.get('email') as string,
+          phone: formData.get('phone') as string,
+          address: 'dont know',
+        })
       });
+      const result = await response2.json();
+      if (result.success && result.payherePayment) {
+        setPayment(result.payherePayment);
+        setShowPayhere(true);
+        setShowSuccess(true);
+        setIsLabPartnerModalOpen(false);
+      } else {
+        alert('Payment initiation failed. Please try again.');
+      }
 
-      if (!response.ok) throw new Error('Submission failed');
+      // console.log('Pre-order response:', response);
+      // if (!response.ok) throw new Error('Submission failed');
 
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to submit');
