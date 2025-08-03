@@ -59,7 +59,9 @@ export default function CheckoutPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          amount: total.toFixed(2),
           items: itemsDescription,
+          
         })
       });
       console.log(response,"response");
