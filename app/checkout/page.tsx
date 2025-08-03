@@ -61,6 +61,10 @@ export default function CheckoutPage() {
       return;
     }
 
+    // Reset form state immediately for better UX
+    const form = e.target as HTMLFormElement;
+    form.reset();
+    
     setLoading(true);
     try {
       const itemsDescription = cart.items
@@ -81,9 +85,7 @@ export default function CheckoutPage() {
       const result = await response.json();
       console.log('Checkout response:', result);
       if (result.success && result.payherePayment) {
-        // Reset form state before setting payment
-        const form = e.target as HTMLFormElement;
-        form.reset();
+        // Form already reset above for immediate feedback
         setFormData({
           first_name: '',
           last_name: '',

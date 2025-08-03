@@ -11,18 +11,11 @@ interface PayhereFormProps {
 
 export function PayhereForm({ payment }: PayhereFormProps) {
   useEffect(() => {
-    // Automatically submit the form when component mounts
+    // Automatically submit the form immediately when component mounts
     const form = document.getElementById('payhere-form') as HTMLFormElement;
     if (form) {
-      // Add a small delay for better UX
-      const timer = setTimeout(() => {
-        form.submit();
-      }, 2000);
-      
-      // Cleanup function to handle if user navigates back before form submission
-      return () => {
-        clearTimeout(timer);
-      };
+      // Submit immediately without delay
+      form.submit();
     }
   }, []);
 

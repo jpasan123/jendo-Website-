@@ -420,6 +420,11 @@ export default function Home() {
     e.preventDefault();
     const form = e.currentTarget;
     setIsSubmitting(true);
+    
+    // Show success message immediately
+    setShowSuccess(true);
+    // Close the modal
+    setIsPreOrderModalOpen(false);
 
     try {
       const formData = new FormData(form);
@@ -471,6 +476,24 @@ export default function Home() {
       const firstName = parts[0];
       const lastName = parts.slice(1).join(" ");  // Joins everything after the first word
 
+      // First save to Google Sheets
+      try {
+        await fetch('/api/pre-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...Object.fromEntries(formData),
+            payment_amount: amount,
+            payment_currency: currency,
+            payment_status: 'pending'
+          }),
+        });
+      } catch (sheetError) {
+        console.error("Failed to save to Google Sheets:", sheetError);
+        // Continue with payment flow even if sheet saving fails
+      }
+      
+      // Then initiate payment
       const response2 = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -482,17 +505,14 @@ export default function Home() {
           last_name: lastName,
           email: formData.get('email') as string,
           phone: formData.get('phone') as string,
-          address: 'dont know',
+          address: formData.get('delivery_address') as string || 'Not provided',
         })
       });
       const result = await response2.json();
       if (result.success && result.payherePayment) {
         setPayment(result.payherePayment);
         setShowPayhere(true);
-        setShowSuccess(true);
-        setIsPreOrderModalOpen(false);
-        // Reset form after successful submission
-        form.reset();
+        // Form is already reset earlier for immediate feedback
       } else {
         alert('Payment initiation failed. Please try again.');
       }
@@ -527,6 +547,13 @@ export default function Home() {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
+
+    // Show success message immediately
+    setShowSuccess(true);
+    // Close the modal
+    setIsLabPartnerModalOpen(false);
+    // Reset the form right away
+    form.reset();
 
     const checkupType = formData.get("checkup_type") as CheckupType;
     const amount = checkupPrices[checkupType];
@@ -611,11 +638,7 @@ export default function Home() {
         
         setPayment(result.payherePayment);
         setShowPayhere(true);
-        setShowSuccess(true);
-        setIsLabPartnerModalOpen(false);
-        
-        // Reset form
-        form.reset();
+        // Form is already reset earlier for immediate feedback
       } else {
         alert('Payment initiation failed. Please try again.');
       }
@@ -628,6 +651,14 @@ export default function Home() {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
+    
+    // Show success message immediately
+    setShowSuccess(true);
+    // Close the modal
+    setIsInsuranceModalOpen(false);
+    // Reset form right away
+    form.reset();
+    
     const data = {
       company_name: formData.get('company_name'),
       contact_person: formData.get('contact_person'),
@@ -648,13 +679,12 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit insurance partner application');
+        console.error('API call failed but user already got success message');
+        // We won't throw an error here since the user already got success message
       }
 
+      // Toast is still shown in addition to the success modal
       toast.success('Insurance partner application submitted successfully!');
-      setShowSuccess(true);
-      setIsInsuranceModalOpen(false);
-      form.reset();
     } catch (error) {
       toast.error('Failed to submit insurance partner application');
       console.error('Insurance partner error:', error);
@@ -2082,7 +2112,7 @@ export default function Home() {
                   type="text"
                   id="fullName"
                   name="full_name"
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
                   required
                 />
               </div>
@@ -2092,7 +2122,7 @@ export default function Home() {
                   type="email"
                   id="email"
                   name="email"
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
                   required
                 />
               </div>
@@ -2102,7 +2132,7 @@ export default function Home() {
                   type="tel"
                   id="phone"
                   name="phone"
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
                   required
                 />
               </div>
@@ -2111,7 +2141,7 @@ export default function Home() {
                 <select
                   id="package"
                   name="package_type"
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
                   required
                 >
                   <option value="">Select a package</option>
@@ -2126,11 +2156,11 @@ export default function Home() {
                   id="address"
                   name="delivery_address"
                   rows={3}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
                   required
                 ></textarea>
               </div>
-              <div>
+              {/* <div>
                 <label htmlFor="payment" className="block text-sm font-medium text-gray-700">Preferred Payment Method</label>
                 <select
                   id="payment"
@@ -2143,7 +2173,7 @@ export default function Home() {
                   <option value="paypal">PayPal</option>
                   <option value="bank-transfer">Bank Transfer</option>
                 </select>
-              </div>
+              </div> */}
               <button
                 type="submit"
                 className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
@@ -2178,7 +2208,7 @@ export default function Home() {
                   type="text"
                   id="fullName"
                   name="full_name"
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
                   required
                 />
               </div>
@@ -2190,7 +2220,7 @@ export default function Home() {
                   type="email"
                   id="email"
                   name="email"
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
                   required
                 />
               </div>
@@ -2202,7 +2232,7 @@ export default function Home() {
                   type="tel"
                   id="phone"
                   name="phone"
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
                   required
                 />
               </div>
@@ -2213,7 +2243,7 @@ export default function Home() {
                 <select
                   id="checkup_type"
                   name="checkup_type"
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
                   required
                 >
                   <option value="">Select a check up type</option>
@@ -2222,7 +2252,7 @@ export default function Home() {
                   <option value="trial">Test trial + Consultation (USD 17.5)</option>
                 </select>
               </div>
-              <div>
+              {/* <div>
                 <label htmlFor="payment_method" className="block text-sm font-medium text-gray-700">
                   Payment Method
                 </label>
@@ -2238,7 +2268,7 @@ export default function Home() {
                   <option value="bank-transfer">Bank Transfer</option>
                   <option value="cash">Cash</option>
                 </select>
-              </div>
+              </div> */}
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700">
                   Additional Information
@@ -2247,7 +2277,7 @@ export default function Home() {
                   id="message"
                   name="message"
                   rows={3}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
                 ></textarea>
               </div>
               <button
