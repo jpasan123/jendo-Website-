@@ -7,9 +7,9 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
     console.log('Checkout request joooo data:', data);
-    let merchantSecret = 'MjE4NzIyMjA4NDMxMzE4NzQ5MDQ2NTQyNTA1NTExODE3MTk0ODYz';
-    let merchantId = '239581';
-    let orderId = '12345';
+    let merchantSecret = process.env.PAYHERE_SECRET!;
+    let merchantId = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID!;
+    let orderId = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     let amount = String(data.amount);
     let hashedSecret = md5(merchantSecret).toString().toUpperCase();
     let amountFormated = parseFloat(amount).toLocaleString('en-us', { minimumFractionDigits: 2 }).replaceAll(',', '');
