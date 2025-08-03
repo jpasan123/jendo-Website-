@@ -11,10 +11,10 @@ import emailjs from '@emailjs/browser';
 import { AppointmentSuccess } from '@/components/ui/appointment-success';
 import { SuccessModal } from '@/components/SuccessModal';
 import gsap from 'gsap';
-import PayhereForm from "@/components/PayhereCheckout";
 import type { PayherePayment } from "@/lib/payhere";
 import { createPaymentForm } from "@/lib/payhere";
-import PayhereCheckout from '@/components/PayhereCheckout';
+import { PayhereForm } from '@/components/ui/payhere-form';
+
 
 
 
@@ -28,7 +28,7 @@ export default function Home() {
   // show the payhere connect
   const [showPayhere, setShowPayhere] = useState(false);
   const [payment, setPayment] = useState<PayherePayment | null>(null);
-  
+
 
   // Add these lines here
   const [currentImage, setCurrentImage] = useState(0);
@@ -77,7 +77,7 @@ export default function Home() {
       }
     };
   }, []);
-  
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -102,7 +102,7 @@ export default function Home() {
       });
     }, observerOptions);
 
-    
+
 
     document.querySelectorAll('section').forEach((section) => {
       observer.observe(section);
@@ -168,7 +168,7 @@ export default function Home() {
       },
     },
   ]
-  
+
   const boardMembers = [
     {
       name: "Keerthi Kodithuwakku",
@@ -237,7 +237,7 @@ export default function Home() {
       },
     },
   ]
-  
+
   const developmentTeam = [
     {
       name: "Keerthi Kodithuwakku",
@@ -324,13 +324,13 @@ export default function Home() {
       url: "https://docs.google.com/document/d/1JKBsun40koXUQVNlIIzibPbXGScFxp1DngaUcoGZOlM/edit?usp=sharing",
     },
     {
-    title: "John Keells X Open Innovation Challenge – Grand Finale Recap",
-    excerpt: "Jendo wins the JKX Open Innovation Challenge for their noninvasive cardiovascular health platform. Read the full story of the event, the teams, and the winners.",
-    date: "November 2, 2023",
-    author: "JKX Team",
-    image: "https://i.ibb.co/whCSMgMQ/Whats-App-Image-2025-01-15-at-19-56-35-3b4cc881.jpg", // or your external image link
-    url: "/blog/jkx-open-innovation-challenge", // <-- internal link
-  },
+      title: "John Keells X Open Innovation Challenge – Grand Finale Recap",
+      excerpt: "Jendo wins the JKX Open Innovation Challenge for their noninvasive cardiovascular health platform. Read the full story of the event, the teams, and the winners.",
+      date: "November 2, 2023",
+      author: "JKX Team",
+      image: "https://i.ibb.co/whCSMgMQ/Whats-App-Image-2025-01-15-at-19-56-35-3b4cc881.jpg", // or your external image link
+      url: "/blog/jkx-open-innovation-challenge", // <-- internal link
+    },
     {
       title: "John Keells X announces winners of the Open Innovation Challenge",
       excerpt: "How AI and machine learning are transforming cardiac care.",
@@ -397,7 +397,7 @@ export default function Home() {
     },
 
   ]
-  
+
 
   const handlePreOrderClick = () => {
     setIsPreOrderModalOpen(true);
@@ -417,173 +417,203 @@ export default function Home() {
   type PreOrderPackageType = 'starter' | 'professional' | 'enterprise';
 
   const handlePreOrderSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const form = e.currentTarget;
-  setIsSubmitting(true);
+    e.preventDefault();
+    const form = e.currentTarget;
+    setIsSubmitting(true);
 
-  try {
-    const formData = new FormData(form);
-    const packageType = formData.get("package_type") as PreOrderPackageType;
-    const { amount, currency } = preOrderPrices[packageType] || { amount: 0, currency: "USD" };
+    try {
+      const formData = new FormData(form);
+      const packageType = formData.get("package_type") as PreOrderPackageType;
+      const { amount, currency } = preOrderPrices[packageType] || { amount: 0, currency: "USD" };
 
-    // Create payment object
-    const payherePayment: PayherePayment = {
-      merchant_id: process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID!,
-      return_url: `${window.location.origin}/checkout/success`,
-      cancel_url: `${window.location.origin}/checkout/cancel`,
-      notify_url: `${window.location.origin}/api/payhere-notify`,
-      order_id: `JENDO_${Date.now()}`,
-      items: `JENDO ${packageType} Package`,
-      currency: currency,
-      amount: amount,
-      first_name: formData.get('full_name') as string,
-      last_name: '', // Add if you collect last name
-      email: formData.get('email') as string,
-      phone: formData.get('phone') as string,
-      address: formData.get('delivery_address') as string || '',
-      city: '', // Add if you collect city
-      country: 'Sri Lanka',
-      custom_1: packageType,
-      hash: '' // You'll need to generate this server-side
-    };
+      // Create payment object
+      const payherePayment: PayherePayment = {
+        merchant_id: process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID!,
+        return_url: `${window.location.origin}/checkout/success`,
+        cancel_url: `${window.location.origin}/checkout/cancel`,
+        notify_url: `${window.location.origin}/api/payhere-notify`,
+        order_id: `JENDO_${Date.now()}`,
+        items: `JENDO ${packageType} Package`,
+        currency: currency,
+        amount: amount,
+        first_name: formData.get('full_name') as string,
+        last_name: '', // Add if you collect last name
+        email: formData.get('email') as string,
+        phone: formData.get('phone') as string,
+        address: formData.get('delivery_address') as string || '',
+        city: '', // Add if you collect city
+        country: 'Sri Lanka',
+        custom_1: packageType,
+        hash: '' // You'll need to generate this server-side
+      };
 
-    // For security, you should generate the hash server-side
-    // Here's a client-side example (not recommended for production):
-    // const hash = CryptoJS.MD5(/* concatenated string */).toString();
-    // payherePayment.hash = hash;
+      // For security, you should generate the hash server-side
+      // Here's a client-side example (not recommended for production):
+      // const hash = CryptoJS.MD5(/* concatenated string */).toString();
+      // payherePayment.hash = hash;
 
-    setPayment(payherePayment);
-    setShowPayhere(true);
-    
-    // Optionally save to your database
-    const response = await fetch('/api/pre-order', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...Object.fromEntries(formData),
-        payment_amount: amount,
-        payment_currency: currency,
-        payment_status: 'pending'
-      }),
-    });
+      setPayment(payherePayment);
+      setShowPayhere(true);
 
-    if (!response.ok) throw new Error('Submission failed');
+      // Optionally save to your database
+      const response = await fetch('/api/pre-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...Object.fromEntries(formData),
+          payment_amount: amount,
+          payment_currency: currency,
+          payment_status: 'pending'
+        }),
+      });
 
-  } catch (error) {
-    toast.error(error instanceof Error ? error.message : 'Failed to submit');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+      if (!response.ok) throw new Error('Submission failed');
 
-// In your component JSX:
-{isPreOrderModalOpen && (
-  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-    {/* Your existing form */}
-  </div>
-)}
-
-<SuccessModal
-  isOpen={showPreOrderSuccess}
-  onClose={() => setShowPreOrderSuccess(false)}
-  title="Pre-order Submitted!"
-  message="Thank you for your pre-order! We'll contact you within 24 hours to confirm details."
-/>
-
-const handleLabPartnerSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  const form = e.target as HTMLFormElement;
-  const formData = new FormData(form);
-
-  const checkupType = formData.get("checkup_type") as CheckupType;
-  const amount = checkupPrices[checkupType];
-  const currency = checkupType === 'trial' ? 'USD' : 'LKR';
-
-  const data = {
-    full_name: formData.get("full_name"),
-    email: formData.get("email"),
-    phone: formData.get("phone"),
-    checkup_type: checkupType,
-    payment_method: formData.get("payment_method"),
-    message: formData.get("message"),
-  };
-
-  try {
-    // 1. Save to Google Sheets
-    const response = await fetch("/api/book-checkup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) throw new Error("Failed to book check up");
-
-    // 2. Prepare PayHere payment
-    const payherePayment: PayherePayment = {
-      merchant_id: process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID!,
-      return_url: window.location.origin + "/checkout/success",
-      cancel_url: window.location.origin + "/checkout/cancel",
-      notify_url: window.location.origin + "/api/payhere-notify",
-      order_id: "CHECKUP_" + Date.now(),
-      items: `Jendo ${checkupType}`,
-      currency: "USD",
-      amount,
-      first_name: data.full_name as string,
-      last_name: "",
-      email: data.email as string,
-      phone: data.phone as string,
-      address: "",
-      city: "",
-      country: "Sri Lanka",
-      hash: "", // If required by your PayHere config
-    };
-
-    setPayment(payherePayment);
-    setShowPayhere(true);
-    setShowSuccess(true);
-    setIsLabPartnerModalOpen(false);
-    form.reset();
-  } catch (error) {
-    toast.error("Failed to book check up");
-    console.error("Book check up error:", error);
-  }
-};
- const handleInsuranceSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  const form = e.target as HTMLFormElement;
-  const formData = new FormData(form);
-  const data = {
-    company_name: formData.get('company_name'),
-    contact_person: formData.get('contact_person'),
-    email: formData.get('email'),
-    phone: formData.get('phone')
-  };
-
-  try {
-    const response = await fetch('/api/partners', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        type: 'insurance',
-        formData: data,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to submit insurance partner application');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to submit');
+    } finally {
+      setIsSubmitting(false);
     }
+  };
 
-    toast.success('Insurance partner application submitted successfully!');
-    setShowSuccess(true);
-    setIsInsuranceModalOpen(false);
-    form.reset();
-  } catch (error) {
-    toast.error('Failed to submit insurance partner application');
-    console.error('Insurance partner error:', error);
+  // In your component JSX:
+  {
+    isPreOrderModalOpen && (
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+        {/* Your existing form */}
+      </div>
+    )
   }
-};
+
+  <SuccessModal
+    isOpen={showPreOrderSuccess}
+    onClose={() => setShowPreOrderSuccess(false)}
+    title="Pre-order Submitted!"
+    message="Thank you for your pre-order! We'll contact you within 24 hours to confirm details."
+  />
+
+  const handleLabPartnerSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const checkupType = formData.get("checkup_type") as CheckupType;
+    const amount = checkupPrices[checkupType];
+    const currency = checkupType === 'trial' ? 'USD' : 'LKR';
+
+    const data = {
+      full_name: formData.get("full_name"),
+      email: formData.get("email"),
+      phone: formData.get("phone"),
+      checkup_type: checkupType,
+      payment_method: formData.get("payment_method"),
+      message: formData.get("message"),
+    };
+
+    try {
+      const parts = (data.full_name as string).trim().split(/\s+/); // Splits by any whitespace
+
+      const firstName = parts[0];
+      const lastName = parts.slice(1).join(" ");  // Joins everything after the first word
+
+      // 1. Save to Google Sheets
+      // const response = await fetch("/api/book-checkup", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify(data),
+      // });
+      const response2 = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          amount: 17.5,
+          items: 'Test trial + Consultation',
+          first_name: firstName,
+          last_name: lastName,
+          email: data.email,
+          phone: data.phone,
+          address: 'dont know',
+        })
+      });
+
+      // if (!response.ok) throw new Error("Failed to book check up");
+
+      // // 2. Prepare PayHere payment
+      // const payherePayment: PayherePayment = {
+      //   merchant_id: process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID!,
+      //   return_url: window.location.origin + "/checkout/success",
+      //   cancel_url: window.location.origin + "/checkout/cancel",
+      //   notify_url: window.location.origin + "/api/payhere-notify",
+      //   order_id: "CHECKUP_" + Date.now(),
+      //   items: `Jendo ${checkupType}`,
+      //   currency: "USD",
+      //   amount,
+      //   first_name: data.full_name as string,
+      //   last_name: "",
+      //   email: data.email as string,
+      //   phone: data.phone as string,
+      //   address: "",
+      //   city: "",
+      //   country: "Sri Lanka",
+      //   hash: "", // If required by your PayHere config
+      // };
+
+      const result = await response2.json();
+      console.log('Checkout response:', result);
+      if (result.success && result.payherePayment) {
+        setPayment(result.payherePayment);
+        setShowPayhere(true);
+        setShowSuccess(true);
+        setIsLabPartnerModalOpen(false);
+      } else {
+        alert('Payment initiation failed. Please try again.');
+      }
+
+      // setPayment(payherePayment);
+      
+      form.reset();
+    } catch (error) {
+      toast.error("Failed to book check up");
+      console.error("Book check up error:", error);
+    }
+  };
+  const handleInsuranceSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const data = {
+      company_name: formData.get('company_name'),
+      contact_person: formData.get('contact_person'),
+      email: formData.get('email'),
+      phone: formData.get('phone')
+    };
+
+    try {
+      const response = await fetch('/api/partners', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'insurance',
+          formData: data,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit insurance partner application');
+      }
+
+      toast.success('Insurance partner application submitted successfully!');
+      setShowSuccess(true);
+      setIsInsuranceModalOpen(false);
+      form.reset();
+    } catch (error) {
+      toast.error('Failed to submit insurance partner application');
+      console.error('Insurance partner error:', error);
+    }
+  };
 
   const addToCart = async (product: any) => {
     try {
@@ -632,94 +662,92 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
   };
 
   const preOrderPrices = {
-  starter: { amount: 225, currency: "USD" },
-  professional: { amount: 2250, currency: "USD" },
-  enterprise: { amount: 0, currency: "USD" }, // Custom, handle as needed
-};
+    starter: { amount: 225, currency: "USD" },
+    professional: { amount: 2250, currency: "USD" },
+    enterprise: { amount: 0, currency: "USD" }, // Custom, handle as needed
+  };
 
   return (
     <>
 
       {/* Hero Section */}
-<section id="home" className="relative min-h-screen flex items-center section-scroll">
-  {/* Image Carousel */}
-  <div className="absolute inset-0 overflow-hidden">
-    {[
-      'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80',
-      'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80',
-      'https://images.unsplash.com/photo-1584362917165-526a968579e8?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80',
-      'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80&t=2',
-    ].map((image, index) => (
-      <div
-        key={`slide-${index}`} // Changed key from image to a unique string
-        className={`absolute inset-0 transition-opacity duration-1000 ${
-          index === currentImage ? 'opacity-100' : 'opacity-0'
-        }`}
-      >
-        <Image
-          src={image}
-          alt={`Background ${index + 1}`}
-          fill
-          className="object-cover"
-          priority={index === 0}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
-      </div>
-    ))}
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,hsla(267, 89.00%, 50.00%, 0.20),transparent_50%)] animate-pulse-slow" />
-  </div>
+      <section id="home" className="relative min-h-screen flex items-center section-scroll">
+        {/* Image Carousel */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[
+            'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80',
+            'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80',
+            'https://images.unsplash.com/photo-1584362917165-526a968579e8?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80',
+            'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80&t=2',
+          ].map((image, index) => (
+            <div
+              key={`slide-${index}`} // Changed key from image to a unique string
+              className={`absolute inset-0 transition-opacity duration-1000 ${index === currentImage ? 'opacity-100' : 'opacity-0'
+                }`}
+            >
+              <Image
+                src={image}
+                alt={`Background ${index + 1}`}
+                fill
+                className="object-cover"
+                priority={index === 0}
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+            </div>
+          ))}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,hsla(267, 89.00%, 50.00%, 0.20),transparent_50%)] animate-pulse-slow" />
+        </div>
 
-  {/* Content */}
-  <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
-    <div className="animate-fade-in">
-      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
-        Unlock the Future of Cardiovascular Health Today!
-      </h1>
-      <p className="text-xl text-gray-200 max-w-2xl mb-8">
-        JENDO offers a revolutionary, non-invasive solution for early cardiovascular disease detection, delivering AI-powered health reports in 15 minutes. Perfect for patients, labs, and insurance partners seeking proactive heart health solutions.
-      </p>
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <button 
-          onClick={handlePreOrderClick}
-          className="bg-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-purple-700 transition-colors inline-flex items-center justify-center space-x-2 animate-pulse-slow"
-        >
-          <ShoppingCart className="h-5 w-5" />
-          <span>Pre-Order JENDO</span>
-        </button>
-        <button 
-          onClick={handleLabPartnerClick}
-          className="bg-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-purple-700 transition-colors inline-flex items-center justify-center space-x-2 animate-pulse-slow"
-        >
-          <Flask className="h-5 w-5" />
-          <span>Book a Check Up</span>
-        </button>
-        <button 
-          onClick={handleInsuranceClick}
-          className="bg-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-purple-700 transition-colors inline-flex items-center justify-center space-x-2 animate-pulse-slow"
-        >
-          <Shield className="h-5 w-5" />
-          <span>Insurance Partnership</span>
-        </button>
-      </div>
-    </div>
-  </div>
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+          <div className="animate-fade-in">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
+              Unlock the Future of Cardiovascular Health Today!
+            </h1>
+            <p className="text-xl text-gray-200 max-w-2xl mb-8">
+              JENDO offers a revolutionary, non-invasive solution for early cardiovascular disease detection, delivering AI-powered health reports in 15 minutes. Perfect for patients, labs, and insurance partners seeking proactive heart health solutions.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={handlePreOrderClick}
+                className="bg-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-purple-700 transition-colors inline-flex items-center justify-center space-x-2 animate-pulse-slow"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                <span>Pre-Order JENDO</span>
+              </button>
+              <button
+                onClick={handleLabPartnerClick}
+                className="bg-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-purple-700 transition-colors inline-flex items-center justify-center space-x-2 animate-pulse-slow"
+              >
+                <Flask className="h-5 w-5" />
+                <span>Book a Check Up</span>
+              </button>
+              <button
+                onClick={handleInsuranceClick}
+                className="bg-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-purple-700 transition-colors inline-flex items-center justify-center space-x-2 animate-pulse-slow"
+              >
+                <Shield className="h-5 w-5" />
+                <span>Insurance Partnership</span>
+              </button>
+            </div>
+          </div>
+        </div>
 
-  {/* Image Navigation Dots */}
-  <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
-    {[0, 1, 2, 3].map((index) => (
-      <button
-        key={index}
-        onClick={() => setCurrentImage(index)}
-        className={`w-3 h-3 rounded-full transition-all duration-300 ${
-          index === currentImage 
-            ? 'bg-purple-600 scale-110' 
-            : 'bg-white/50 hover:bg-white/75'
-        }`}
-        aria-label={`Go to slide ${index + 1}`}
-      />
-    ))}
-  </div>
-</section>
+        {/* Image Navigation Dots */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
+          {[0, 1, 2, 3].map((index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImage(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentImage
+                  ? 'bg-purple-600 scale-110'
+                  : 'bg-white/50 hover:bg-white/75'
+                }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+      </section>
 
 
       {/* Product Showcase Section */}
@@ -751,29 +779,29 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
               </h2>
               <div className="space-y-4 text-white-300 leading-relaxed">
                 <p>
-                Jendo is an advanced, AI-powered vascular health monitoring system designed to detect endothelial dysfunction, the earliest indicator of cardiovascular diseases (CVDs). Using non-invasive technology, Jendo provides real-time analysis of vascular function in just 15 minutes, enabling early intervention and preventive care.
+                  Jendo is an advanced, AI-powered vascular health monitoring system designed to detect endothelial dysfunction, the earliest indicator of cardiovascular diseases (CVDs). Using non-invasive technology, Jendo provides real-time analysis of vascular function in just 15 minutes, enabling early intervention and preventive care.
                 </p>
                 <p>
-                Integrated with AI and cloud computing, it ensures accuracy, consistency, and efficiency in diagnosing vascular health. Ideal for hospitals, clinics, and health-conscious individuals, Jendo empowers proactive healthcare, reduces treatment costs, and enhances patient outcomes. 
+                  Integrated with AI and cloud computing, it ensures accuracy, consistency, and efficiency in diagnosing vascular health. Ideal for hospitals, clinics, and health-conscious individuals, Jendo empowers proactive healthcare, reduces treatment costs, and enhances patient outcomes.
                 </p>
                 <p>
-                With a seamless implementation process, Jendo is set to revolutionize preventive cardiology and reshape the future of vascular health management.
+                  With a seamless implementation process, Jendo is set to revolutionize preventive cardiology and reshape the future of vascular health management.
                 </p>
               </div>
-                <div className="flex flex-wrap gap-4 pt-4">
-                  <div className="bg-purple-600 backdrop-blur-sm px-6 py-3 rounded-full border border-purple-500/30">
-                    <span className="text-white-900">15 Minutes</span>
-                    <p className="text-sm text-white">Quick Results</p>
-                  </div>
-                  <div className="bg-purple-600 backdrop-blur-sm px-6 py-3 rounded-full border border-purple-500/30">
-                    <span className="text-white-900">87%+</span>
-                    <p className="text-sm text-white">Sensitivity</p>
-                  </div>
-                  <div className="bg-purple-600 backdrop-blur-sm px-6 py-3 rounded-full border border-purple-500/30">
-                    <span className="text-white-900">Non-Invasive</span>
-                    <p className="text-sm text-white">Painless Process</p>
-                  </div>
+              <div className="flex flex-wrap gap-4 pt-4">
+                <div className="bg-purple-600 backdrop-blur-sm px-6 py-3 rounded-full border border-purple-500/30">
+                  <span className="text-white-900">15 Minutes</span>
+                  <p className="text-sm text-white">Quick Results</p>
                 </div>
+                <div className="bg-purple-600 backdrop-blur-sm px-6 py-3 rounded-full border border-purple-500/30">
+                  <span className="text-white-900">87%+</span>
+                  <p className="text-sm text-white">Sensitivity</p>
+                </div>
+                <div className="bg-purple-600 backdrop-blur-sm px-6 py-3 rounded-full border border-purple-500/30">
+                  <span className="text-white-900">Non-Invasive</span>
+                  <p className="text-sm text-white">Painless Process</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -786,92 +814,92 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.1),transparent_50%)] animate-pulse-slow"></div>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            {/* Jendo Patents Section */}
-            <section id="jendo-patents" className="py-24 bg-white section-scroll">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Jendo Patents Section */}
+          <section id="jendo-patents" className="py-24 bg-white section-scroll">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-14">
                 <div className="flex flex-col items-center justify-center mb-4">
-                <span className="text-5xl md:text-6xl mb-2 animate-bounce">🏆</span>
-                <h2
-                  className="text-4xl md:text-5xl font-extrabold mb-2 bg-gradient-to-r from-purple-700 via-purple-500 to-purple-700 bg-clip-text text-transparent"
-                  style={{
-                    WebkitTextStroke: '2px #a855f7',
-                    lineHeight: '1.1',
-                    padding: '0.1em 0',
-                    letterSpacing: '0.01em',
-                    wordBreak: 'break-word',
-                    overflowWrap: 'break-word',
-                    textShadow: '0 2px 8px #c4b5fd, 0 1px 0 #fff'
-                  }}
-                >
-                  Jendo Patents: A Legacy of Global Innovation
-                </h2>
-                </div>
-                  <p className="text-lg md:text-xl text-purple-700 font-semibold mb-2 flex items-center justify-center gap-2">
-                    <span className="text-2xl">🌐</span>
-                    Discover our worldwide recognition in non-invasive vascular health diagnostics
-                  </p>
-                  <p className="text-base md:text-lg text-gray-700 max-w-2xl mx-auto mt-4">
-                    At Jendo, our pursuit of excellence in cardiovascular innovation has earned us prestigious patents across the globe. From the cutting-edge labs of the United States to the high-tech hubs of Japan and the vibrant healthcare landscape of Sri Lanka, our patented technology is transforming preventive care.
-                  </p>
-                  <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto mt-2">
-                    These recognitions are more than accolades—they are a testament to our vision, precision, and global impact in redefining how vascular health is monitored and managed.
-                  </p>
-                </div>
-                <div className="flex justify-center">
-                  <div
-                    className="relative group perspective-1000"
-                    style={{ width: 540, height: 380, maxWidth: '100%' }}
+                  <span className="text-5xl md:text-6xl mb-2 animate-bounce">🏆</span>
+                  <h2
+                    className="text-4xl md:text-5xl font-extrabold mb-2 bg-gradient-to-r from-purple-700 via-purple-500 to-purple-700 bg-clip-text text-transparent"
+                    style={{
+                      WebkitTextStroke: '2px #a855f7',
+                      lineHeight: '1.1',
+                      padding: '0.1em 0',
+                      letterSpacing: '0.01em',
+                      wordBreak: 'break-word',
+                      overflowWrap: 'break-word',
+                      textShadow: '0 2px 8px #c4b5fd, 0 1px 0 #fff'
+                    }}
                   >
-                    {/* Enhanced animated purple glow border (thicker) */}
-                    <div
-                      className="absolute -inset-5 rounded-3xl pointer-events-none z-10"
+                    Jendo Patents: A Legacy of Global Innovation
+                  </h2>
+                </div>
+                <p className="text-lg md:text-xl text-purple-700 font-semibold mb-2 flex items-center justify-center gap-2">
+                  <span className="text-2xl">🌐</span>
+                  Discover our worldwide recognition in non-invasive vascular health diagnostics
+                </p>
+                <p className="text-base md:text-lg text-gray-700 max-w-2xl mx-auto mt-4">
+                  At Jendo, our pursuit of excellence in cardiovascular innovation has earned us prestigious patents across the globe. From the cutting-edge labs of the United States to the high-tech hubs of Japan and the vibrant healthcare landscape of Sri Lanka, our patented technology is transforming preventive care.
+                </p>
+                <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto mt-2">
+                  These recognitions are more than accolades—they are a testament to our vision, precision, and global impact in redefining how vascular health is monitored and managed.
+                </p>
+              </div>
+              <div className="flex justify-center">
+                <div
+                  className="relative group perspective-1000"
+                  style={{ width: 540, height: 380, maxWidth: '100%' }}
+                >
+                  {/* Enhanced animated purple glow border (thicker) */}
+                  <div
+                    className="absolute -inset-5 rounded-3xl pointer-events-none z-10"
+                    style={{
+                      boxShadow: '0 0 120px 40px #a78bfa, 0 0 0 24px #fff',
+                      filter: 'blur(6px)',
+                      opacity: 0.9,
+                      animation: 'patent-glow 3s ease-in-out infinite alternate',
+                      transition: 'opacity 0.3s'
+                    }}
+                  />
+                  {/* Device image with 3D tilt and shadow, larger */}
+                  <div
+                    tabIndex={0}
+                    role="button"
+                    aria-label="Read more about Jendo Patents"
+                    onClick={() => window.location.href = "/blog/jendo-patents"}
+                    className="relative bg-black/50 backdrop-blur-xl p-0 rounded-3xl border-4 border-purple-300/60 overflow-hidden shadow-2xl cursor-pointer transition-transform duration-700 group-hover:scale-[1.06] group-hover:-translate-y-4 group-hover:rotate-2"
+                    style={{
+                      width: 520,
+                      height: 360,
+                      maxWidth: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      perspective: 1200,
+                    }}
+                  >
+                    <img
+                      src="https://i.ibb.co/g85CZcp/unnamed-1.png"
+                      alt="Jendo Patent"
+                      className="object-contain rounded-2xl shadow-xl border-8 border-white bg-white transition-transform duration-700"
                       style={{
-                        boxShadow: '0 0 120px 40px #a78bfa, 0 0 0 24px #fff',
-                        filter: 'blur(6px)',
-                        opacity: 0.9,
-                        animation: 'patent-glow 3s ease-in-out infinite alternate',
-                        transition: 'opacity 0.3s'
+                        width: 480,
+                        height: 320,
+                        objectFit: 'contain',
+                        transform: 'rotateY(-10deg) rotateX(4deg) scale(1.04)',
+                        boxShadow: '0 16px 64px 0 rgba(139,92,246,0.22), 0 8px 32px 0 rgba(0,0,0,0.12)',
                       }}
                     />
-                    {/* Device image with 3D tilt and shadow, larger */}
-                    <div
-                      tabIndex={0}
-                      role="button"
-                      aria-label="Read more about Jendo Patents"
-                      onClick={() => window.location.href = "/blog/jendo-patents"}
-                      className="relative bg-black/50 backdrop-blur-xl p-0 rounded-3xl border-4 border-purple-300/60 overflow-hidden shadow-2xl cursor-pointer transition-transform duration-700 group-hover:scale-[1.06] group-hover:-translate-y-4 group-hover:rotate-2"
-                      style={{
-                        width: 520,
-                        height: 360,
-                        maxWidth: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        perspective: 1200,
-                      }}
-                    >
-                      <img
-                        src="https://i.ibb.co/g85CZcp/unnamed-1.png"
-                        alt="Jendo Patent"
-                        className="object-contain rounded-2xl shadow-xl border-8 border-white bg-white transition-transform duration-700"
-                        style={{
-                          width: 480,
-                          height: 320,
-                          objectFit: 'contain',
-                          transform: 'rotateY(-10deg) rotateX(4deg) scale(1.04)',
-                          boxShadow: '0 16px 64px 0 rgba(139,92,246,0.22), 0 8px 32px 0 rgba(0,0,0,0.12)',
-                        }}
-                      />
-                      {/* Overlay for hover effect */}
-                      <div className="absolute inset-0 rounded-3xl bg-purple-100/40 opacity-0 group-hover:opacity-100 transition duration-300 z-10"></div>
-                      {/* Read More Button */}
-                      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-purple-800 text-white px-14 py-3 rounded-full font-semibold shadow-lg opacity-0 group-hover:opacity-100 transition duration-300 z-20 text-base min-w-[180px] text-center">
-                        Read More
-                      </div>
+                    {/* Overlay for hover effect */}
+                    <div className="absolute inset-0 rounded-3xl bg-purple-100/40 opacity-0 group-hover:opacity-100 transition duration-300 z-10"></div>
+                    {/* Read More Button */}
+                    <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-purple-800 text-white px-14 py-3 rounded-full font-semibold shadow-lg opacity-0 group-hover:opacity-100 transition duration-300 z-20 text-base min-w-[180px] text-center">
+                      Read More
                     </div>
-                    {/* Custom keyframes for enhanced glow */}
-                    <style jsx>{`
+                  </div>
+                  {/* Custom keyframes for enhanced glow */}
+                  <style jsx>{`
                       @keyframes patent-glow {
                         0% {
                           box-shadow: 0 0 120px 40px #a78bfa, 0 0 0 24px #fff;
@@ -887,10 +915,10 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                         }
                       }
                     `}</style>
-                  </div>
                 </div>
               </div>
-            </section>
+            </div>
+          </section>
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-purple-900 mb-4">Experience JENDO in Action</h2>
             <p className="text-lg md:text-xl text-black-200 max-w-3xl mx-auto">
@@ -955,166 +983,166 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
       </section>
 
       {/* Products Section */}
-<section id="products" className="py-24 bg-white section-scroll">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="text-center mb-16">
-      <h2 className="text-4xl font-bold text-purple-900 mb-4">Jendo Products Available Now!</h2>
-      <p className="text-xl text-gray-600">Simple steps to monitor your cardiovascular health</p>
-    </div>
+      <section id="products" className="py-24 bg-white section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-purple-900 mb-4">Jendo Products Available Now!</h2>
+            <p className="text-xl text-gray-600">Simple steps to monitor your cardiovascular health</p>
+          </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-      {/* Basic Package */}
-      <div className="relative group">
-        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
-        <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
-          <div className="relative h-48 mb-6 overflow-hidden rounded-lg">
-            <Image
-              src="https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg"
-              alt="JENDO Basic Device"
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-          </div>
-          <h3 className="text-2xl font-semibold text-gray-900 mb-2">Starter Package</h3>
-          <div className="text-4xl font-bold text-purple-600 mb-6">$225</div>
-          <ul className="space-y-4 mb-8">
-            <li className="flex items-center space-x-3">
-              <CheckCircle className="w-5 h-5 text-purple-600" />
-              <span>JENDO Basic Device</span>
-            </li>
-            <li className="flex items-center space-x-3">
-              <CheckCircle className="w-5 h-5 text-purple-600" />
-              <span>1 Month Software License</span>
-            </li>
-            <li className="flex items-center space-x-3">
-              <CheckCircle className="w-5 h-5 text-purple-600" />
-              <span>Basic Support</span>
-            </li>
-          </ul>
-          <button
-            onClick={() => addToCart({
-              id: 'basic-package',
-              name: 'JENDO Basic Device',
-              price: 225,
-              image_url: 'https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg',
-              description: 'Basic vascular monitoring device for home use'
-            })}
-            className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
-          >
-            <ShoppingCart className="w-5 h-5" />
-            <span>Add to Cart</span>
-          </button>
-        </div>
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Basic Package */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
+                <div className="relative h-48 mb-6 overflow-hidden rounded-lg">
+                  <Image
+                    src="https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg"
+                    alt="JENDO Basic Device"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                </div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-2">Starter Package</h3>
+                <div className="text-4xl font-bold text-purple-600 mb-6">$225</div>
+                <ul className="space-y-4 mb-8">
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600" />
+                    <span>JENDO Basic Device</span>
+                  </li>
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600" />
+                    <span>1 Month Software License</span>
+                  </li>
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600" />
+                    <span>Basic Support</span>
+                  </li>
+                </ul>
+                <button
+                  onClick={() => addToCart({
+                    id: 'basic-package',
+                    name: 'JENDO Basic Device',
+                    price: 225,
+                    image_url: 'https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg',
+                    description: 'Basic vascular monitoring device for home use'
+                  })}
+                  className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  <span>Add to Cart</span>
+                </button>
+              </div>
+            </div>
 
-      {/* Professional Package */}
-      <div className="relative group">
-        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
-        <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-400 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
-          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-full text-sm">
-            Most Popular
-          </div>
-          <div className="relative h-48 mb-6 overflow-hidden rounded-lg">
-            <Image
-              src="https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg"
-              alt="JENDO Pro Device"
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-          </div>
-          <h3 className="text-2xl font-semibold text-gray-900 mb-2">Standard Package</h3>
-          <div className="text-4xl font-bold text-purple-600 mb-6">$2250</div>
-          <ul className="space-y-4 mb-8">
-            <li className="flex items-center space-x-3">
-              <CheckCircle className="w-5 h-5 text-purple-600" />
-              <span>JENDO Pro Device</span>
-            </li>
-            <li className="flex items-center space-x-3">
-              <CheckCircle className="w-5 h-5 text-purple-600" />
-              <span>1 Year Software License</span>
-            </li>
-            <li className="flex items-center space-x-3">
-              <CheckCircle className="w-5 h-5 text-purple-600" />
-              <span>Priority Support</span>
-            </li>
-            <li className="flex items-center space-x-3">
-              <CheckCircle className="w-5 h-5 text-purple-600" />
-              <span>Advanced Analytics</span>
-            </li>
-          </ul>
-          <button
-            onClick={() => addToCart({
-              id: 'pro-package',
-              name: 'JENDO Pro Device',
-              price: 2250,
-              image_url: 'https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg',
-              description: 'Professional vascular monitoring system for clinics'
-            })}
-            className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
-          >
-            <ShoppingCart className="w-5 h-5" />
-            <span>Add to Cart</span>
-          </button>
-        </div>
-      </div>
+            {/* Professional Package */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-400 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-full text-sm">
+                  Most Popular
+                </div>
+                <div className="relative h-48 mb-6 overflow-hidden rounded-lg">
+                  <Image
+                    src="https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg"
+                    alt="JENDO Pro Device"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                </div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-2">Standard Package</h3>
+                <div className="text-4xl font-bold text-purple-600 mb-6">$2250</div>
+                <ul className="space-y-4 mb-8">
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600" />
+                    <span>JENDO Pro Device</span>
+                  </li>
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600" />
+                    <span>1 Year Software License</span>
+                  </li>
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600" />
+                    <span>Priority Support</span>
+                  </li>
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600" />
+                    <span>Advanced Analytics</span>
+                  </li>
+                </ul>
+                <button
+                  onClick={() => addToCart({
+                    id: 'pro-package',
+                    name: 'JENDO Pro Device',
+                    price: 2250,
+                    image_url: 'https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg',
+                    description: 'Professional vascular monitoring system for clinics'
+                  })}
+                  className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  <span>Add to Cart</span>
+                </button>
+              </div>
+            </div>
 
-      {/* Enterprise Package */}
-      <div className="relative group">
-        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
-        <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
-          <div className="relative h-48 mb-6 overflow-hidden rounded-lg">
-            <Image
-              src="https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg"
-              alt="JENDO Enterprise Package"
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-110"
-            />
+            {/* Enterprise Package */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
+                <div className="relative h-48 mb-6 overflow-hidden rounded-lg">
+                  <Image
+                    src="https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg"
+                    alt="JENDO Enterprise Package"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                </div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-2">Enterprise Package</h3>
+                <div className="text-4xl font-bold text-purple-600 mb-6">Custom</div>
+                <ul className="space-y-4 mb-8">
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600" />
+                    <span>Multiple JENDO Devices</span>
+                  </li>
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600" />
+                    <span>Enterprise Software License</span>
+                  </li>
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600" />
+                    <span>24/7 Premium Support</span>
+                  </li>
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600" />
+                    <span>Custom Integration</span>
+                  </li>
+                </ul>
+                <button
+                  onClick={() => addToCart({
+                    id: 'enterprise-package',
+                    name: 'JENDO Enterprise Package',
+                    price: 4999,
+                    image_url: 'https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg',
+                    description: 'Enterprise-level monitoring solution for hospitals'
+                  })}
+                  className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  <span>Add to Cart</span>
+                </button>
+              </div>
+            </div>
           </div>
-          <h3 className="text-2xl font-semibold text-gray-900 mb-2">Enterprise Package</h3>
-          <div className="text-4xl font-bold text-purple-600 mb-6">Custom</div>
-          <ul className="space-y-4 mb-8">
-            <li className="flex items-center space-x-3">
-              <CheckCircle className="w-5 h-5 text-purple-600" />
-              <span>Multiple JENDO Devices</span>
-            </li>
-            <li className="flex items-center space-x-3">
-              <CheckCircle className="w-5 h-5 text-purple-600" />
-              <span>Enterprise Software License</span>
-            </li>
-            <li className="flex items-center space-x-3">
-              <CheckCircle className="w-5 h-5 text-purple-600" />
-              <span>24/7 Premium Support</span>
-            </li>
-            <li className="flex items-center space-x-3">
-              <CheckCircle className="w-5 h-5 text-purple-600" />
-              <span>Custom Integration</span>
-            </li>
-          </ul>
-          <button
-            onClick={() => addToCart({
-              id: 'enterprise-package',
-              name: 'JENDO Enterprise Package',
-              price: 4999,
-              image_url: 'https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg',
-              description: 'Enterprise-level monitoring solution for hospitals'
-            })}
-            className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
-          >
-            <ShoppingCart className="w-5 h-5" />
-            <span>Add to Cart</span>
-          </button>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-      
+      </section>
+
       {/* <section className="py-24 bg-white section-scroll">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> */}
- 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-24">
-            {/* Steps */}
-            {/* <div className="space-y-8">
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-24">
+        {/* Steps */}
+        {/* <div className="space-y-8">
               {[
                 // {
                 //   step: 1,
@@ -1167,350 +1195,350 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                 </div>
               ))}
             </div> */}
-        
+
       </div>
-      
-      
+
+
       <div className="mt-32">
-  <div className="text-center mb-16">
-    <h3 className="text-3xl font-bold text-purple-900 mb-4">Step-by-Step JENDO Test Procedure</h3>
-    <p className="text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto">
-      Detailed walkthrough of the testing process
-    </p>
-  </div>
+        <div className="text-center mb-16">
+          <h3 className="text-3xl font-bold text-purple-900 mb-4">Step-by-Step JENDO Test Procedure</h3>
+          <p className="text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto">
+            Detailed walkthrough of the testing process
+          </p>
+        </div>
 
-  <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-    {/* Timeline Line with Numbers */}
-    <div className="absolute left-10 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-600/20 via-purple-600 to-purple-600/20 transform md:-translate-x-1/2"></div>
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Timeline Line with Numbers */}
+          <div className="absolute left-10 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-600/20 via-purple-600 to-purple-600/20 transform md:-translate-x-1/2"></div>
 
-    {[
-      {
-        title: "Patient Preparation",
-        steps: [
-          "Patient is placed in a supine position (lying down comfortably on their back)",
-          "Ensure a calm environment to reduce external factors influencing results"
-        ],
-        icon: BedDouble,
-        color: "from-blue-600 to-blue-900"
-      },
-      {
-        title: "Signal Extraction",
-        steps: [
-          "A pressure cuff is wrapped around the patient's arm",
-          "The cuff is inflated to maintain 30 mmHg above the systolic pressure for 5 minutes"
-        ],
-        icon: Waves,
-        color: "from-purple-600 to-purple-900"
-      },
-      {
-        title: "Data Collection",
-        steps: [
-          "PPG (Photoplethysmography): Captures pulse signals from the vascular system",
-          "DTM (Digital Thermal Monitoring): Measures temperature variations in the blood flow",
-          "ECG (Electrocardiography): Records the electrical activity of the heart"
-        ],
-        icon: LineChart,
-        color: "from-green-600 to-green-900"
-      },
-      {
-        title: "Cloud-Based Analysis",
-        steps: [
-          "The extracted data is uploaded securely to JENDO's cloud platform",
-          "AI-powered algorithms process the signals to evaluate vascular condition",
-          "Data encryption ensures secure handling of patient information"
-        ],
-        icon: Cloud,
-        color: "from-indigo-600 to-indigo-900"
-      },
-      {
-        title: "Report Generation",
-        steps: [
-          "A detailed Vascular Health Report is generated",
-          "Highlights current vascular conditions and future cardiovascular risk factors"
-        ],
-        icon: FileText,
-        color: "from-red-600 to-red-900"
-      },
-      {
-        title: "Consultation with Doctor",
-        steps: [
-          "The report can be reviewed by a physician",
-          "Recommendations for preventive measures or further treatments"
-        ],
-        icon: Stethoscope,
-        color: "from-yellow-600 to-yellow-900"
-      }
-    ].map((item, index) => (
-      <div 
-        key={index} 
-        className={`relative mb-16 pl-16 md:pl-0 
-          ${index % 2 === 0 
-            ? 'md:ml-[calc(50%+2rem)] md:pr-8' 
-            : 'md:mr-[calc(50%+2rem)] md:pl-8 md:text-right'} 
+          {[
+            {
+              title: "Patient Preparation",
+              steps: [
+                "Patient is placed in a supine position (lying down comfortably on their back)",
+                "Ensure a calm environment to reduce external factors influencing results"
+              ],
+              icon: BedDouble,
+              color: "from-blue-600 to-blue-900"
+            },
+            {
+              title: "Signal Extraction",
+              steps: [
+                "A pressure cuff is wrapped around the patient's arm",
+                "The cuff is inflated to maintain 30 mmHg above the systolic pressure for 5 minutes"
+              ],
+              icon: Waves,
+              color: "from-purple-600 to-purple-900"
+            },
+            {
+              title: "Data Collection",
+              steps: [
+                "PPG (Photoplethysmography): Captures pulse signals from the vascular system",
+                "DTM (Digital Thermal Monitoring): Measures temperature variations in the blood flow",
+                "ECG (Electrocardiography): Records the electrical activity of the heart"
+              ],
+              icon: LineChart,
+              color: "from-green-600 to-green-900"
+            },
+            {
+              title: "Cloud-Based Analysis",
+              steps: [
+                "The extracted data is uploaded securely to JENDO's cloud platform",
+                "AI-powered algorithms process the signals to evaluate vascular condition",
+                "Data encryption ensures secure handling of patient information"
+              ],
+              icon: Cloud,
+              color: "from-indigo-600 to-indigo-900"
+            },
+            {
+              title: "Report Generation",
+              steps: [
+                "A detailed Vascular Health Report is generated",
+                "Highlights current vascular conditions and future cardiovascular risk factors"
+              ],
+              icon: FileText,
+              color: "from-red-600 to-red-900"
+            },
+            {
+              title: "Consultation with Doctor",
+              steps: [
+                "The report can be reviewed by a physician",
+                "Recommendations for preventive measures or further treatments"
+              ],
+              icon: Stethoscope,
+              color: "from-yellow-600 to-yellow-900"
+            }
+          ].map((item, index) => (
+            <div
+              key={index}
+              className={`relative mb-16 pl-16 md:pl-0 
+          ${index % 2 === 0
+                  ? 'md:ml-[calc(50%+2rem)] md:pr-8'
+                  : 'md:mr-[calc(50%+2rem)] md:pl-8 md:text-right'} 
           md:w-[calc(50%-4rem)] animate-fade-in`}
-      >
-        {/* Number directly on the timeline */}
-        <div 
-          className="absolute top-0 left-10 md:left-1/2 transform md:-translate-x-1/2 z-10"
-        >
-          <div className="bg-purple-600 text-white font-bold rounded-full w-8 h-8 md:w-10 md:h-10 flex items-center justify-center">
-            0{index + 1}
-          </div>
-        </div>
+            >
+              {/* Number directly on the timeline */}
+              <div
+                className="absolute top-0 left-10 md:left-1/2 transform md:-translate-x-1/2 z-10"
+              >
+                <div className="bg-purple-600 text-white font-bold rounded-full w-8 h-8 md:w-10 md:h-10 flex items-center justify-center">
+                  0{index + 1}
+                </div>
+              </div>
 
-        {/* Timeline Node - Empty circle, no number */}
-        <div 
-          className={`absolute top-0 left-10 md:left-1/2 transform md:-translate-x-1/2
+              {/* Timeline Node - Empty circle, no number */}
+              <div
+                className={`absolute top-0 left-10 md:left-1/2 transform md:-translate-x-1/2
             w-3 h-3 md:w-4 md:h-4 rounded-full bg-white border-2 border-purple-600 z-5 mt-16`}
-        >
-        </div>
+              >
+              </div>
 
-        {/* Content Card */}
-        <div className="relative group mt-12 md:mt-0">
-          <div className={`absolute -inset-1 bg-gradient-to-r ${item.color} rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow`}></div>
-          <div className="relative bg-white p-4 md:p-8 rounded-2xl shadow-xl border border-gray-100 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
-            <div className="flex flex-col md:flex-row md:items-start md:space-x-6">
-              <div className="flex-shrink-0 mb-4 md:mb-0">
-                <item.icon className="w-8 h-8 md:w-12 md:h-12 text-purple-600" />
+              {/* Content Card */}
+              <div className="relative group mt-12 md:mt-0">
+                <div className={`absolute -inset-1 bg-gradient-to-r ${item.color} rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow`}></div>
+                <div className="relative bg-white p-4 md:p-8 rounded-2xl shadow-xl border border-gray-100 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-1">
+                  <div className="flex flex-col md:flex-row md:items-start md:space-x-6">
+                    <div className="flex-shrink-0 mb-4 md:mb-0">
+                      <item.icon className="w-8 h-8 md:w-12 md:h-12 text-purple-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-lg md:text-xl font-semibold text-gray-900 mb-4">{item.title}</h4>
+                      <ul className="space-y-3">
+                        {item.steps.map((step, stepIndex) => (
+                          <li key={stepIndex} className="flex items-start space-x-3">
+                            <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-purple-600 mt-1 flex-shrink-0" />
+                            <span className="text-sm md:text-base text-gray-600">{step}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="flex-1">
-                <h4 className="text-lg md:text-xl font-semibold text-gray-900 mb-4">{item.title}</h4>
-                <ul className="space-y-3">
-                  {item.steps.map((step, stepIndex) => (
-                    <li key={stepIndex} className="flex items-start space-x-3">
-                      <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-purple-600 mt-1 flex-shrink-0" />
-                      <span className="text-sm md:text-base text-gray-600">{step}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Emma Gallery Section */}
+      <section id="emma-gallery" className="py-20 bg-white section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-purple-900 mb-4">Jendo Gallery</h2>
+            <p className="text-lg text-gray-600">
+              Explore memorable moments and milestones from Jendo’s journey in transforming cardiovascular health.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8" id="emma-gallery-images">
+            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+              <img src="https://i.ibb.co/1tSm4mkJ/Whats-App-Image-2025-07-14-at-13-51-07-40106ee2.jpg" alt="Emma 1" className="w-full h-64 object-cover emma-gallery-img" />
+            </div>
+            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+              <img src="https://i.ibb.co/ymS4bvYM/Whats-App-Image-2025-07-14-at-13-51-07-72813403.jpg" alt="Emma 2" className="w-full h-64 object-cover emma-gallery-img" />
+            </div>
+            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+              <img src="https://i.ibb.co/fz8hvcwW/Whats-App-Image-2025-07-14-at-13-51-07-d33c7810.jpg" alt="Emma 3" className="w-full h-64 object-cover emma-gallery-img" />
+            </div>
+            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+              <img src="https://i.ibb.co/hJ7TcWZx/Whats-App-Image-2025-07-14-at-13-51-08-2c551ce7.jpg" alt="Emma 4" className="w-full h-64 object-cover emma-gallery-img" />
+            </div>
+            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+              <img src="https://i.ibb.co/dwfnDPDT/Whats-App-Image-2025-07-14-at-13-51-08-38e09f3b.jpg" alt="Emma 5" className="w-full h-64 object-cover emma-gallery-img" />
+            </div>
+            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+              <img src="https://i.ibb.co/G4wDD4xS/Whats-App-Image-2025-07-14-at-13-51-36-160dfb2a.jpg" alt="Emma 6" className="w-full h-64 object-cover emma-gallery-img" />
+            </div>
+            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+              <img src="https://i.ibb.co/zYn5mwS/Whats-App-Image-2025-07-14-at-13-51-38-1604ef8d.jpg" alt="Emma 7" className="w-full h-64 object-cover emma-gallery-img" />
+            </div>
+            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+              <img src="https://i.ibb.co/Y4tJ9dvK/Whats-App-Image-2025-07-14-at-13-51-36-5255e477.jpg" alt="Emma 8" className="w-full h-64 object-cover emma-gallery-img" />
+            </div>
+            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+              <img src="https://i.ibb.co/39kCjbJw/Whats-App-Image-2025-07-14-at-13-51-35-6ef53381.jpg" alt="Emma 9" className="w-full h-64 object-cover emma-gallery-img" />
+            </div>
+            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+              <img src="https://i.ibb.co/5XWpWYSZ/Whats-App-Image-2025-07-14-at-13-51-38-780c184c.jpg" alt="Emma 10" className="w-full h-64 object-cover emma-gallery-img" />
+            </div>
+            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
+              <img src="https://i.ibb.co/rf0RzYvm/Whats-App-Image-2025-07-14-at-14-22-26-621a4f6a.jpg" />
             </div>
           </div>
         </div>
-      </div>
-    ))}
-  </div>
-</div>
-
-{/* Emma Gallery Section */}
-<section id="emma-gallery" className="py-20 bg-white section-scroll">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="text-center mb-12">
-      <h2 className="text-3xl font-bold text-purple-900 mb-4">Jendo Gallery</h2>
-     <p className="text-lg text-gray-600">
-  Explore memorable moments and milestones from Jendo’s journey in transforming cardiovascular health.
-</p>
-    </div>
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8" id="emma-gallery-images">
-      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-        <img src="https://i.ibb.co/1tSm4mkJ/Whats-App-Image-2025-07-14-at-13-51-07-40106ee2.jpg" alt="Emma 1" className="w-full h-64 object-cover emma-gallery-img" />
-      </div>
-      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-        <img src="https://i.ibb.co/ymS4bvYM/Whats-App-Image-2025-07-14-at-13-51-07-72813403.jpg" alt="Emma 2" className="w-full h-64 object-cover emma-gallery-img" />
-      </div>
-      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-        <img src="https://i.ibb.co/fz8hvcwW/Whats-App-Image-2025-07-14-at-13-51-07-d33c7810.jpg" alt="Emma 3" className="w-full h-64 object-cover emma-gallery-img" />
-      </div>
-      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-        <img src="https://i.ibb.co/hJ7TcWZx/Whats-App-Image-2025-07-14-at-13-51-08-2c551ce7.jpg" alt="Emma 4" className="w-full h-64 object-cover emma-gallery-img" />
-      </div>
-      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-        <img src="https://i.ibb.co/dwfnDPDT/Whats-App-Image-2025-07-14-at-13-51-08-38e09f3b.jpg" alt="Emma 5" className="w-full h-64 object-cover emma-gallery-img" />
-      </div>
-      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-        <img src="https://i.ibb.co/G4wDD4xS/Whats-App-Image-2025-07-14-at-13-51-36-160dfb2a.jpg" alt="Emma 6" className="w-full h-64 object-cover emma-gallery-img" />
-      </div>
-      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-        <img src="https://i.ibb.co/zYn5mwS/Whats-App-Image-2025-07-14-at-13-51-38-1604ef8d.jpg" alt="Emma 7" className="w-full h-64 object-cover emma-gallery-img" />
-      </div>
-      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-        <img src="https://i.ibb.co/Y4tJ9dvK/Whats-App-Image-2025-07-14-at-13-51-36-5255e477.jpg" alt="Emma 8" className="w-full h-64 object-cover emma-gallery-img" />
-      </div>
-      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-        <img src="https://i.ibb.co/39kCjbJw/Whats-App-Image-2025-07-14-at-13-51-35-6ef53381.jpg" alt="Emma 9" className="w-full h-64 object-cover emma-gallery-img" />
-      </div>
-      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-        <img src="https://i.ibb.co/5XWpWYSZ/Whats-App-Image-2025-07-14-at-13-51-38-780c184c.jpg" alt="Emma 10" className="w-full h-64 object-cover emma-gallery-img" />
-      </div>
-      <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-        <img src="https://i.ibb.co/rf0RzYvm/Whats-App-Image-2025-07-14-at-14-22-26-621a4f6a.jpg" />
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* Statistics Section */}
       <section id="stats" className="relative py-32 bg-gradient-to-b from-gray-900 via-black to-purple-900/20 text-white overflow-hidden section-scroll">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.1),transparent_50%)] animate-pulse-slow" />
           <div className="absolute inset-0">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full bg-purple-600/10"
-            style={{
-          width: Math.random() * 300 + 50 + 'px',
-          height: Math.random() * 300 + 50 + 'px',
-          top: Math.random() * 100 + '%',
-          left: Math.random() * 100 + '%',
-          animation: `float ${Math.random() * 10 + 5}s infinite ease-in-out`,
-          animationDelay: `-${Math.random() * 10}s`,
-            }}
-          />
-        ))}
+            {[...Array(20)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute rounded-full bg-purple-600/10"
+                style={{
+                  width: Math.random() * 300 + 50 + 'px',
+                  height: Math.random() * 300 + 50 + 'px',
+                  top: Math.random() * 100 + '%',
+                  left: Math.random() * 100 + '%',
+                  animation: `float ${Math.random() * 10 + 5}s infinite ease-in-out`,
+                  animationDelay: `-${Math.random() * 10}s`,
+                }}
+              />
+            ))}
           </div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20 animate-fade-in">
-        <h2 className="text-4xl sm:text-5xl font-bold mb-8 relative inline-block">
-          <span className="relative z-10 bg-gradient-to-r from-purple-300 via-purple-400 to-purple-300 bg-clip-text text-transparent animate-shine">
-            Cardiovascular Disease Impact
-          </span>
-          <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-purple-900/20 blur-lg -z-10 animate-pulse-slow" />
-        </h2>
-        <p className="text-lg sm:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-          War is not the number one killer in the world, but cardiovascular diseases.
-        </p>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-8 relative inline-block">
+              <span className="relative z-10 bg-gradient-to-r from-purple-300 via-purple-400 to-purple-300 bg-clip-text text-transparent animate-shine">
+                Cardiovascular Disease Impact
+              </span>
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-purple-900/20 blur-lg -z-10 animate-pulse-slow" />
+            </h2>
+            <p className="text-lg sm:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              War is not the number one killer in the world, but cardiovascular diseases.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-        <div className="relative group perspective-1000">
-          <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur-lg opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow" />
-          <div className="relative bg-black/50 backdrop-blur-xl p-12 rounded-2xl border border-purple-900/20 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2 group-hover:rotate-1">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-purple-900/5 rounded-2xl" />
-            <div className="relative flex flex-col items-center space-y-6">
-          <div className="text-6xl sm:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-purple-300 animate-float animate-shine">
-            17.7M+
-          </div>
-          <div className="h-0.5 w-24 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-pulse-slow" />
-          <p className="text-lg sm:text-2xl text-gray-300 text-center">
-            People die every year from CVD
-          </p>
+            <div className="relative group perspective-1000">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur-lg opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow" />
+              <div className="relative bg-black/50 backdrop-blur-xl p-12 rounded-2xl border border-purple-900/20 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2 group-hover:rotate-1">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-purple-900/5 rounded-2xl" />
+                <div className="relative flex flex-col items-center space-y-6">
+                  <div className="text-6xl sm:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-purple-300 animate-float animate-shine">
+                    17.7M+
+                  </div>
+                  <div className="h-0.5 w-24 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-pulse-slow" />
+                  <p className="text-lg sm:text-2xl text-gray-300 text-center">
+                    People die every year from CVD
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div className="relative group perspective-1000">
-          <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur-lg opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow" />
-          <div className="relative bg-black/50 backdrop-blur-xl p-12 rounded-2xl border border-purple-900/20 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2 group-hover:rotate-1">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-purple-900/5 rounded-2xl" />
-            <div className="relative flex flex-col items-center space-y-6">
-          <div className="text-6xl sm:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-purple-300 animate-float animate-shine" style={{ animationDelay: '0.2s' }}>
-            50%
-          </div>
-          <div className="h-0.5 w-24 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-pulse-slow" />
-          <p className="text-lg sm:text-2xl text-gray-300 text-center">
-            Of CVD deaths can be prevented with early diagnosis
-          </p>
+            <div className="relative group perspective-1000">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur-lg opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow" />
+              <div className="relative bg-black/50 backdrop-blur-xl p-12 rounded-2xl border border-purple-900/20 transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2 group-hover:rotate-1">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-purple-900/5 rounded-2xl" />
+                <div className="relative flex flex-col items-center space-y-6">
+                  <div className="text-6xl sm:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-purple-300 animate-float animate-shine" style={{ animationDelay: '0.2s' }}>
+                    50%
+                  </div>
+                  <div className="h-0.5 w-24 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-pulse-slow" />
+                  <p className="text-lg sm:text-2xl text-gray-300 text-center">
+                    Of CVD deaths can be prevented with early diagnosis
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
           </div>
         </div>
       </section>
 
       {/* Benefits Section */}
-<section id="benefits" className="py-24 bg-white section-scroll">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="text-center mb-16">
-      <h2 className="text-4xl font-bold text-purple-900 mb-4">Value preposition of jendo</h2>
-      <p className="text-xl text-gray-600">Empowering healthcare through innovation</p>
-    </div>
+      <section id="benefits" className="py-24 bg-white section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-purple-900 mb-4">Value preposition of jendo</h2>
+            <p className="text-xl text-gray-600">Empowering healthcare through innovation</p>
+          </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-      {/* For Patients */}
-      <div className="bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
-        <div className="text-purple-600 mb-6">
-          <Heart className="w-12 h-12" />
-        </div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-4">For Patients</h3>
-        <ul className="space-y-4 mb-8">
-          <li className="flex items-start space-x-3">
-            <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
-            <span className="text-gray-600">Early detection of cardiovascular diseases</span>
-          </li>
-          <li className="flex items-start space-x-3">
-            <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
-            <span className="text-gray-600">Personalized health reports</span>
-          </li>
-          <li className="flex items-start space-x-3">
-            <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
-            <span className="text-gray-600">Proactive healthcare solutions</span>
-          </li>
-        </ul>
-        <button
-          onClick={handlePreOrderClick}
-          className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
-        >
-          <ArrowRight className="w-5 h-5" />
-          <span>Get Started Now</span>
-        </button>
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* For Patients */}
+            <div className="bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+              <div className="text-purple-600 mb-6">
+                <Heart className="w-12 h-12" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">For Patients</h3>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
+                  <span className="text-gray-600">Early detection of cardiovascular diseases</span>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
+                  <span className="text-gray-600">Personalized health reports</span>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
+                  <span className="text-gray-600">Proactive healthcare solutions</span>
+                </li>
+              </ul>
+              <button
+                onClick={handlePreOrderClick}
+                className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+              >
+                <ArrowRight className="w-5 h-5" />
+                <span>Get Started Now</span>
+              </button>
+            </div>
 
-      {/* For Labs */}
-      <div className="bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
-        <div className="text-purple-600 mb-6">
-          <Flask className="w-12 h-12" />
-        </div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-4">For Labs</h3>
-        <ul className="space-y-4 mb-8">
-          <li className="flex items-start space-x-3">
-            <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
-            <span className="text-gray-600">Expand your service portfolio</span>
-          </li>
-          <li className="flex items-start space-x-3">
-            <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
-            <span className="text-gray-600">Cutting-edge monitoring solutions</span>
-          </li>
-          <li className="flex items-start space-x-3">
-            <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
-            <span className="text-gray-600">Non-invasive testing methods</span>
-          </li>
-        </ul>
-        <button
-          onClick={handlePreOrderClick}
-          className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
-        >
-          <ArrowRight className="w-5 h-5" />
-          <span>Get Started Now</span>
-        </button>
-      </div>
+            {/* For Labs */}
+            <div className="bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+              <div className="text-purple-600 mb-6">
+                <Flask className="w-12 h-12" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">For Labs</h3>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
+                  <span className="text-gray-600">Expand your service portfolio</span>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
+                  <span className="text-gray-600">Cutting-edge monitoring solutions</span>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
+                  <span className="text-gray-600">Non-invasive testing methods</span>
+                </li>
+              </ul>
+              <button
+                onClick={handlePreOrderClick}
+                className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+              >
+                <ArrowRight className="w-5 h-5" />
+                <span>Get Started Now</span>
+              </button>
+            </div>
 
-      {/* For Insurance Partners */}
-      <div className="bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
-        <div className="text-purple-600 mb-6">
-          <Shield className="w-12 h-12" />
+            {/* For Insurance Partners */}
+            <div className="bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+              <div className="text-purple-600 mb-6">
+                <Shield className="w-12 h-12" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">For Insurance Partners</h3>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
+                  <span className="text-gray-600">Enhanced risk assessment</span>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
+                  <span className="text-gray-600">Reduced claim risks</span>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
+                  <span className="text-gray-600">Improved customer engagement</span>
+                </li>
+              </ul>
+              <button
+                onClick={handlePreOrderClick}
+                className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+              >
+                <ArrowRight className="w-5 h-5" />
+                <span>Get Started Now</span>
+              </button>
+            </div>
+          </div>
         </div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-4">For Insurance Partners</h3>
-        <ul className="space-y-4 mb-8">
-          <li className="flex items-start space-x-3">
-            <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
-            <span className="text-gray-600">Enhanced risk assessment</span>
-          </li>
-          <li className="flex items-start space-x-3">
-            <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
-            <span className="text-gray-600">Reduced claim risks</span>
-          </li>
-          <li className="flex items-start space-x-3">
-            <CheckCircle className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
-            <span className="text-gray-600">Improved customer engagement</span>
-          </li>
-        </ul>
-        <button
-          onClick={handlePreOrderClick}
-          className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
-        >
-          <ArrowRight className="w-5 h-5" />
-          <span>Get Started Now</span>
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
-      
+      </section>
+
       {/* Team Section */}
-     <section id="team" className="py-20 bg-gray-50 section-scroll">
+      <section id="team" className="py-20 bg-gray-50 section-scroll">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-purple-900 mb-4">Our Team</h2>
@@ -1736,9 +1764,9 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
               >
                 <div className="block h-full">
                   <div className="relative h-[250px] w-full">
-                    <Image 
-                      src={post.image} 
-                      alt={post.title} 
+                    <Image
+                      src={post.image}
+                      alt={post.title}
                       fill
                       className="object-contain"
                       priority={index === 0}
@@ -1791,7 +1819,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(129, 13, 238, 0.68),)] animate-pulse-slow" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                                                                                                                                                                                                                                                                                 <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Subscribe to Our Newsletter</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Subscribe to Our Newsletter</h2>
           <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto">
             Get the latest articles and news about cardiovascular health delivered to your inbox.
           </p>
@@ -1801,10 +1829,10 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
               placeholder="Enter your email"
               className="newsletter-input"
             />
-              <button type="submit" className="newsletter-button">
-                Subscribe
-              </button>
-            </form>
+            <button type="submit" className="newsletter-button">
+              Subscribe
+            </button>
+          </form>
         </div>
       </section>
       {/* Contact Section */}
@@ -1823,7 +1851,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                 setIsSubmitting(true);
 
                 const formData = new FormData(e.target as HTMLFormElement);
-                
+
                 try {
                   // Format the current time for the template
                   const now = new Date();
@@ -1971,7 +1999,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
                         <MapPin className="h-5 w-5 text-purple-600" />
                         <span className="text-sm text-gray-900">Trace Expert City, Colombo 10, Sri Lanka</span>
                       </div>
-                      <a 
+                      <a
                         href="https://www.google.com/maps/place/Trace+Expert+City/@6.9300599,79.8588868,17z/data=!3m1!4b1!4m6!3m5!1s0x3ae2591076e625a3:0xad34e9e40449036b!8m2!3d6.9300599!4d79.8614617!16s%2Fg%2F1q6j8f3r1"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -1989,101 +2017,101 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
       </section>
 
       {/* Pre-order Modal */}
-{isPreOrderModalOpen && (
-  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-    <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 animate-fade-in">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-2xl font-bold text-gray-900">Pre-order JENDO</h3>
-        <button 
-          onClick={() => setIsPreOrderModalOpen(false)}
-          className="text-gray-500 hover:text-gray-700 transition-colors"
-        >
-          <X className="h-6 w-6" />
-        </button>
-      </div>
-      <form onSubmit={handlePreOrderSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Full Name</label>
-          <input
-            type="text"
-            id="fullName"
-            name="full_name"
-            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
-            required
-          />
+      {isPreOrderModalOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 animate-fade-in">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">Pre-order JENDO</h3>
+              <button
+                onClick={() => setIsPreOrderModalOpen(false)}
+                className="text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            <form onSubmit={handlePreOrderSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Full Name</label>
+                <input
+                  type="text"
+                  id="fullName"
+                  name="full_name"
+                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="package" className="block text-sm font-medium text-gray-700">Preferred Package</label>
+                <select
+                  id="package"
+                  name="package_type"
+                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  required
+                >
+                  <option value="">Select a package</option>
+                  <option value="starter">Starter Package ($225)</option>
+                  <option value="professional">Standard Package ($2250)</option>
+                  <option value="enterprise">Enterprise Package (Custom)</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="address" className="block text-sm font-medium text-gray-700">Delivery Address</label>
+                <textarea
+                  id="address"
+                  name="delivery_address"
+                  rows={3}
+                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  required
+                ></textarea>
+              </div>
+              <div>
+                <label htmlFor="payment" className="block text-sm font-medium text-gray-700">Preferred Payment Method</label>
+                <select
+                  id="payment"
+                  name="payment_method"
+                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  required
+                >
+                  <option value="">Select payment method</option>
+                  <option value="credit-card">Credit Card</option>
+                  <option value="paypal">PayPal</option>
+                  <option value="bank-transfer">Bank Transfer</option>
+                </select>
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                <span>Complete Pre-order</span>
+              </button>
+            </form>
+          </div>
         </div>
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number</label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="package" className="block text-sm font-medium text-gray-700">Preferred Package</label>
-          <select
-            id="package"
-            name="package_type"
-            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
-            required
-          >
-            <option value="">Select a package</option>
-            <option value="starter">Starter Package ($225)</option>
-            <option value="professional">Standard Package ($2250)</option>
-            <option value="enterprise">Enterprise Package (Custom)</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="address" className="block text-sm font-medium text-gray-700">Delivery Address</label>
-          <textarea
-            id="address"
-            name="delivery_address"
-            rows={3}
-            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
-            required
-          ></textarea>
-        </div>
-        <div>
-          <label htmlFor="payment" className="block text-sm font-medium text-gray-700">Preferred Payment Method</label>
-          <select
-            id="payment"
-            name="payment_method"
-            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
-            required
-          >
-            <option value="">Select payment method</option>
-            <option value="credit-card">Credit Card</option>
-            <option value="paypal">PayPal</option>
-            <option value="bank-transfer">Bank Transfer</option>
-          </select>
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
-        >
-          <ShoppingCart className="w-5 h-5" />
-          <span>Complete Pre-order</span>
-        </button>
-      </form>
-    </div>
-  </div>
-)}
+      )}
 
 
-{isLabPartnerModalOpen && (
+      {isLabPartnerModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
           <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 animate-fade-in">
             <div className="flex justify-between items-center mb-6">
@@ -2191,12 +2219,12 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
 
       {isInsuranceModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 animate-fade-in">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-2xl font-bold text-gray-900">Insurance Partner Ship</h3>
-              <button 
+          <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 animate-fade-in">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">Insurance Partner Ship</h3>
+              <button
                 onClick={() => setIsInsuranceModalOpen(false)}
-                 className="text-gray-500 hover:text-gray-700 transition-colors"
+                className="text-gray-500 hover:text-gray-700 transition-colors"
               >
                 <X className="h-6 w-6" />
               </button>
@@ -2259,7 +2287,7 @@ const handleLabPartnerSubmit = async (e: React.FormEvent) => {
       )}
 
       {showPayhere && payment && (
-        <PayhereCheckout payment={payment} />
+        <PayhereForm payment={payment} />
       )}
     </>
   );

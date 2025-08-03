@@ -61,7 +61,7 @@ export default function CheckoutPage() {
           ...formData,
           amount: total.toFixed(2),
           items: itemsDescription,
-          
+
         })
       });
       console.log(response,"response");
