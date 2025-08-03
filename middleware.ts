@@ -5,18 +5,18 @@ export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Example: Protect specific API routes (optional)
-  if (path.startsWith('/api/protected/')) {
-    const token = request.cookies.get('auth-token');
-    if (!token) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { 
-          status: 401, 
-          headers: { 'Content-Type': 'application/json' } 
-        }
-      );
-    }
-  }
+  // if (path.startsWith('/api/protected/')) {
+  //   const token = request.cookies.get('auth-token');
+  //   if (!token) {
+  //     return new NextResponse(
+  //       JSON.stringify({ error: 'Unauthorized' }),
+  //       { 
+  //         status: 401, 
+  //         headers: { 'Content-Type': 'application/json' } 
+  //       }
+  //     );
+  //   }
+  // }
 
   // Allow all other API routes and requests to proceed normally
   return NextResponse.next();

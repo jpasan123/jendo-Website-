@@ -32,8 +32,19 @@ export default function Cart() {
   return (
     <div className="min-h-screen bg-gray-100 py-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+        <div className="bg-white rounded-2xl shadow-xl p-8 relative">
+          <div className="flex items-center justify-between mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
+            <button 
+              onClick={() => router.back()} 
+              className="flex items-center space-x-2 text-purple-600 hover:text-purple-800 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              <span>Back</span>
+            </button>
+          </div>
 
           {cart.items.length === 0 ? (
             <div className="text-center py-12">

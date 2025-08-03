@@ -42,7 +42,7 @@ export interface PayherePayment {
   order_id: string;
   items: string;
   currency: string;
-  amount:  number;
+  amount:  number | string;
   hash: string;
   custom_1?: string;
   custom_2?: string;
@@ -61,13 +61,13 @@ export function generateHash(payment: Omit<PayherePayment, 'merchant_id' | 'hash
 }
 
 export function createPaymentForm(payment: PayherePayment): PayherePayment {
-  const formattedAmount = typeof payment.amount === 'number'
-    ? payment.amount.toFixed(2)
-    : parseFloat(payment.amount as string).toFixed(2);
+  // const formattedAmount = typeof payment.amount === 'number'
+  //   ? payment.amount.toFixed(2)
+  //   : parseFloat(payment.amount as string).toFixed(2);
 
-  const paymentWithDefaults = {
-    ...payment
-  };
+  // const paymentWithDefaults = {
+  //   ...payment
+  // };
 
   return payment;
 }

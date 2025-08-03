@@ -59,13 +59,10 @@ export default function CheckoutPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          amount: total,
-          currency: 'USD',
           items: itemsDescription,
-          order_id: `ORDER_${Date.now()}`
         })
       });
-
+      console.log(response,"response");
       const result = await response.json();
       console.log('Checkout response:', result);
       if (result.success && result.payherePayment) {
@@ -89,7 +86,15 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 py-32">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <div className="bg-white rounded-3xl shadow-2xl p-12">
+          <div className="bg-white rounded-3xl shadow-2xl p-12 relative">
+            <button 
+              onClick={() => router.back()} 
+              className="absolute top-4 left-4 bg-purple-100 hover:bg-purple-200 text-purple-600 p-2 rounded-lg flex items-center transition-all duration-300"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+            </button>
             <div className="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg className="w-12 h-12 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 10H6L5 9z" />
@@ -115,8 +120,21 @@ export default function CheckoutPage() {
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
           {/* Header */}
           <div className="bg-gradient-to-r from-purple-600 to-indigo-600 px-8 py-6">
-            <h1 className="text-3xl font-bold text-white">Secure Checkout</h1>
-            <p className="text-purple-100 mt-1">Complete your JENDO device order</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-white">Secure Checkout</h1>
+                <p className="text-purple-100 mt-1">Complete your JENDO device order</p>
+              </div>
+              <button 
+                onClick={() => router.back()} 
+                className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg flex items-center transition-all duration-300"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back
+              </button>
+            </div>
           </div>
           
           <div className="p-8">
