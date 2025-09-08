@@ -316,8 +316,16 @@ export default function Home() {
 
   const blogPosts = [
     {
+      title: "Breakthrough for deep tech in Sri Lanka, Jendo closes new investment round ",
+      excerpt: "Jendo secures new funding, marking a major milestone for Sri Lankan deep tech and accelerating innovation in AI-powered cardiovascular health.",
+      date: "April 12, 2024",
+      author: "IEEE EMBS",
+      image: "https://i.ibb.co/Kx8CP8Fg/image-6d9f420cc4.jpg",
+      url: "https://www.ft.lk/front-page/Breakthrough-for-deep-tech-in-Sri-Lanka-Jendo-closes-new-investment-round/44-781375",
+    },
+    {
       title: "Jendo CEO Speaks at IEEE EMBS AXON Workshop on AI in Healthcare",
-      excerpt: "Mr. Keerthi Kodithuwakku highlights Jendo's innovation in AI-powered vascular health monitoring and preventive healthcare.",
+      excerpt: "Jendo's CEO shares insights on AI-driven healthcare solutions and the impact of non-invasive vascular diagnostics at the IEEE EMBS AXON Workshop.",
       date: "April 12, 2024",
       author: "IEEE EMBS",
       image: "https://i.ibb.co/Zb72PxJ/IEEE-2.png",
@@ -325,15 +333,15 @@ export default function Home() {
     },
     {
       title: "John Keells X Open Innovation Challenge – Grand Finale Recap",
-      excerpt: "Jendo wins the JKX Open Innovation Challenge for their noninvasive cardiovascular health platform. Read the full story of the event, the teams, and the winners.",
+      excerpt: "Jendo wins the JKX Open Innovation Challenge, showcasing its pioneering non-invasive cardiovascular health platform among top innovators.",
       date: "November 2, 2023",
       author: "JKX Team",
-      image: "https://i.ibb.co/whCSMgMQ/Whats-App-Image-2025-01-15-at-19-56-35-3b4cc881.jpg", // or your external image link
-      url: "/blog/jkx-open-innovation-challenge", // <-- internal link
+      image: "https://i.ibb.co/whCSMgMQ/Whats-App-Image-2025-01-15-at-19-56-35-3b4cc881.jpg",
+      url: "/blog/jkx-open-innovation-challenge",
     },
     {
       title: "John Keells X announces winners of the Open Innovation Challenge",
-      excerpt: "How AI and machine learning are transforming cardiac care.",
+      excerpt: "Jendo recognized as a winner for its AI and machine learning advancements in cardiac care at the JKX Open Innovation Challenge.",
       date: "March 10, 2024",
       author: "Ada Derana Team",
       image: "https://i.ibb.co/2DJxy9g/JKX-1-1.png",
@@ -341,7 +349,7 @@ export default function Home() {
     },
     {
       title: "The JKX Open Innovation Challenge Finale",
-      excerpt: "Early detection and prevention of cardiovascular diseases.",
+      excerpt: "Jendo's early detection and prevention technology for cardiovascular diseases shines at the JKX Innovation Challenge finale.",
       date: "March 5, 2024",
       author: "Andre Howson",
       image: "https://i.ibb.co/bMqByFXT/JKX-3-1024x425.jpg",
@@ -349,7 +357,7 @@ export default function Home() {
     },
     {
       title: "John Keells X rewards winners of Innovation Challenge",
-      excerpt: "Early detection and prevention of cardiovascular diseases.",
+      excerpt: "Jendo receives recognition and rewards for its innovative approach to cardiovascular disease prevention at the JKX Innovation Challenge.",
       date: "March 20, 2024",
       author: "Sunday Oberver",
       image: "https://i.ibb.co/bMqByFXT/JKX-3-1024x425.jpg",
@@ -357,15 +365,15 @@ export default function Home() {
     },
     {
       title: "Sri Lankan team in early major breakthrough on early detection of NCDs",
-      excerpt: "The 'Jendo' hardware device that is clipped to the patient and to the computer",
+      excerpt: "Jendo's hardware device enables early detection of non-communicable diseases, marking a breakthrough for Sri Lankan medical technology.",
       date: "August 5, 2018",
-      author: " Quintus Perera",
+      author: "Quintus Perera",
       image: "https://i.ibb.co/6RDDJyL7/img.webp",
       url: "http://bizenglish.adaderana.lk/john-keells-x-announces-winners-of-the-open-innovation-challenge/",
     },
     {
       title: "A Hybrid Approach for Screening Endothelial Dysfunction using Photoplethysmography",
-      excerpt: "A Hybrid Approach for Screening Endothelial Dysfunction using Photoplethysmography and Digital Thermal Monitoring",
+      excerpt: "Jendo introduces a hybrid screening method for endothelial dysfunction, combining photoplethysmography and digital thermal monitoring.",
       date: "March 20, 2024",
       author: "Vendys",
       image: "https://i.ibb.co/fdCnj2Qt/dac531-73bbe4c4b6594048bd41440f335212c2-mv2.jpg",
@@ -373,7 +381,7 @@ export default function Home() {
     },
     {
       title: "Srilanka Patent for Jendo",
-      excerpt: "In addition to the home country Sri Lanka, we managed to expand our presence to Japan at the moment and the discussions are in progress with potential partners in Malaysia, UK, US, Jordan and india.",
+      excerpt: "Jendo secures a Sri Lankan patent, expanding its global presence and advancing non-invasive vascular health diagnostics.",
       date: "March 20, 2024",
       author: "Vendys",
       image: "https://i.ibb.co/MxLrpccS/Screen-Shot-2022-12-22-at-00-01-06-1.png",
@@ -381,7 +389,7 @@ export default function Home() {
     },
     {
       title: "Non-invasive assessment of endothelial dysfunction",
-      excerpt: "The COVID-19 pandemic caused by the SARS-CoV-2 virus has infected millions and overburdened the healthcare infrastructure globally.",
+      excerpt: "Jendo's technology enables non-invasive assessment of endothelial dysfunction, supporting global healthcare during the COVID-19 pandemic.",
       date: "May 20, 2021",
       author: "Pub Med",
       image: "https://i.ibb.co/Zzqmty9N/unnamed-1.png",
@@ -389,13 +397,12 @@ export default function Home() {
     },
     {
       title: "Jendo – Heart Disease Prediction using Machine Learning",
-      excerpt: "AI in cardiology – A Steppingstone for Jendo Innovations.",
+      excerpt: "Jendo leverages machine learning for heart disease prediction, setting new standards in AI-driven cardiology.",
       date: "April 21, 2022",
       author: "WIPO",
       image: "https://i.ibb.co/rfQQqBgr/Screenshot-2025-07-09-155342.png",
       url: "https://www.wipo.int/en/web/ip-advantage/w/stories/jendo-heart-disease-prediction-using-machine-learning",
     },
-
   ]
 
 
