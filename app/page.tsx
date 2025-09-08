@@ -321,7 +321,7 @@ export default function Home() {
       date: "April 12, 2024",
       author: "IEEE EMBS",
       image: "https://i.ibb.co/Kx8CP8Fg/image-6d9f420cc4.jpg",
-      url: "https://www.ft.lk/front-page/Breakthrough-for-deep-tech-in-Sri-Lanka-Jendo-closes-new-investment-round/44-781375",
+      url: "https://www.ft.lk/front-page/Breakthrough-for-deep-tech-in-Sri-Lanka-Jendo-closes-new-investment-round/44-781375 ",
     },
     {
       title: "Jendo CEO Speaks at IEEE EMBS AXON Workshop on AI in Healthcare",
@@ -1883,7 +1883,7 @@ export default function Home() {
                     <a
                       href={
                         index === 0
-                          ? '/blog/ieee-embs-axon-workshop'
+                          ? 'https://www.ft.lk/front-page/Breakthrough-for-deep-tech-in-Sri-Lanka-Jendo-closes-new-investment-round/44-781375'
                           : post.url
                       }
                       className="mt-6 inline-block bg-purple-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-purple-700 transition-colors text-center"
