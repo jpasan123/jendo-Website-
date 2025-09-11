@@ -63,7 +63,9 @@ export async function POST(req: Request) {
         amount: data.amount,
         currency: data.currency || 'USD',
         status: 'pending', // Initial status before payment confirmation
-        payment_method: 'PayHere'
+        payment_method: 'PayHere',
+        start_time: data.start_time || '',
+        end_time: data.end_time || ''
       });
     } catch (sheetError) {
       console.error('Failed to save order to Google Sheets:', sheetError);

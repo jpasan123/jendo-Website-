@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { addToSheet } from '@/lib/googleSheets';
 import { createPaymentForm } from '@/lib/payhere';
+import { GoogleSpreadsheet } from 'google-spreadsheet';
+import { serviceAccountAuth } from '@/lib/googleSheets';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,10 +44,40 @@ export async function POST(req: Request) {
       }
     }
 
-    // Save to Google Sheets
+    const { start_time, end_time } = data;
+
+    // 1. Fetch existing bookings from Google Sheets
+    const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID || '', serviceAccountAuth);
+    await doc.loadInfo();
+    let sheet = doc.sheetsByTitle['PreOrders'];
+    if (!sheet) {
+      sheet = await doc.addSheet({ title: 'PreOrders', headerValues: [...Object.keys(data), 'start_time', 'end_time'] });
+    } else {
+      await sheet.loadHeaderRow();
+    }
+    const rows = await sheet.getRows();
+    const requestedStart = new Date(start_time);
+    const requestedEnd = new Date(end_time);
+
+    // 2. Check for overlap
+    const overlap = rows.some(row => {
+      const rowStart = new Date(row.get('start_time'));
+      const rowEnd = new Date(row.get('end_time'));
+      return (requestedStart < rowEnd && requestedEnd > rowStart);
+    });
+    if (overlap) {
+      return NextResponse.json(
+        { success: false, message: 'Selected time range is already booked. Please choose another.' },
+        { status: 409 }
+      );
+    }
+
+    // 3. Save to Google Sheets
     const success = await addToSheet('PreOrders', {
       timestamp: new Date().toISOString(),
-      ...data
+      ...data,
+      start_time,
+      end_time,
     });
 
     if (!success) {

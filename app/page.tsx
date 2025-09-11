@@ -14,6 +14,8 @@ import gsap from 'gsap';
 import type { PayherePayment } from "@/lib/payhere";
 import { createPaymentForm } from "@/lib/payhere";
 import { PayhereForm } from '@/components/ui/payhere-form';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 
 
@@ -41,6 +43,12 @@ export default function Home() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  // New state variables for date range
+  const [preOrderStart, setPreOrderStart] = useState<Date | null>(null);
+  const [preOrderEnd, setPreOrderEnd] = useState<Date | null>(null);
+  const [checkupStart, setCheckupStart] = useState<Date | null>(null);
+  const [checkupEnd, setCheckupEnd] = useState<Date | null>(null);
 
   useEffect(() => {
     const videoElement1 = videoRef1.current;
@@ -505,7 +513,7 @@ export default function Home() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
+          ...Object.fromEntries(formData),
           amount: amount,
           items: `JENDO ${packageType} Package`,
           first_name: firstName,
@@ -591,7 +599,7 @@ export default function Home() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
+          ...Object.fromEntries(formData),
           amount: 17.5,
           items: 'Test trial + Consultation',
           first_name: firstName,
@@ -2116,7 +2124,14 @@ export default function Home() {
                 <X className="h-6 w-6" />
               </button>
             </div>
-            <form onSubmit={handlePreOrderSubmit} className="space-y-4">
+            <form onSubmit={e => {
+              e.preventDefault();
+              const form = e.currentTarget;
+              const formData = new FormData(form);
+              formData.set('start_time', preOrderStart ? preOrderStart.toISOString() : '');
+              formData.set('end_time', preOrderEnd ? preOrderEnd.toISOString() : '');
+              handlePreOrderSubmit(e);
+            }} className="space-y-4">
               <div>
                 <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Full Name</label>
                 <input
@@ -2171,20 +2186,31 @@ export default function Home() {
                   required
                 ></textarea>
               </div>
-              {/* <div>
-                <label htmlFor="payment" className="block text-sm font-medium text-gray-700">Preferred Payment Method</label>
-                <select
-                  id="payment"
-                  name="payment_method"
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
-                  required
-                >
-                  <option value="">Select payment method</option>
-                  <option value="credit-card">Credit Card</option>
-                  <option value="paypal">PayPal</option>
-                  <option value="bank-transfer">Bank Transfer</option>
-                </select>
-              </div> */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Preferred Time Range</label>
+                <div className="flex gap-2">
+                  <DatePicker
+                    selected={preOrderStart}
+                    onChange={date => setPreOrderStart(date)}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    placeholderText="Start Date & Time"
+                    className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  />
+                  <DatePicker
+                    selected={preOrderEnd}
+                    onChange={date => setPreOrderEnd(date)}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    placeholderText="End Date & Time"
+                    className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  />
+                </div>
+              </div>
               <button
                 type="submit"
                 className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
@@ -2210,7 +2236,16 @@ export default function Home() {
                 <X className="h-6 w-6" />
               </button>
             </div>
-            <form onSubmit={handleLabPartnerSubmit} className="space-y-4">
+            <form onSubmit={e => {
+              e.preventDefault();
+              const form = e.currentTarget;
+              const formData = new FormData(form);
+              // Always set start_time and end_time in FormData before submit
+              formData.set('start_time', checkupStart ? checkupStart.toISOString() : '');
+              formData.set('end_time', checkupEnd ? checkupEnd.toISOString() : '');
+              // Call the handler with the event only
+              handleLabPartnerSubmit(e);
+            }} className="space-y-4">
               <div>
                 <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
                   Full Name
@@ -2270,7 +2305,7 @@ export default function Home() {
                 <select
                   id="payment_method"
                   name="payment_method"
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
                   required
                 >
                   <option value="">Select payment method</option>
@@ -2298,6 +2333,31 @@ export default function Home() {
                 <Calendar className="w-5 h-5" />
                 <span>Book Check Up</span>
               </button>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Preferred Time Range</label>
+                <div className="flex gap-2">
+                  <DatePicker
+                    selected={checkupStart}
+                    onChange={date => setCheckupStart(date)}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    placeholderText="Start Date & Time"
+                    className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  />
+                  <DatePicker
+                    selected={checkupEnd}
+                    onChange={date => setCheckupEnd(date)}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    placeholderText="End Date & Time"
+                    className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors"
+                  />
+                </div>
+              </div>
               <FormNotification /> {/* Add this line */}
             </form>
           </div>
