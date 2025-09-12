@@ -67,7 +67,7 @@ export async function POST(req: Request) {
     });
     if (overlap) {
       return NextResponse.json(
-        { success: false, message: 'Selected time range is already booked. Please choose another.' },
+        { success: false, message: 'Use a time already booked' },
         { status: 409 }
       );
     }

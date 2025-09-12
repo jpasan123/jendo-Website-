@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       return (requestedStart < rowEnd && requestedEnd > rowStart);
     });
     if (overlap) {
-      return NextResponse.json({ success: false, message: 'Selected time range is already booked. Please choose another.' }, { status: 409 });
+      return NextResponse.json({ success: false, message: 'Use a time already booked' }, { status: 409 });
     }
     // 3. Save to Google Sheets
     const success = await addToSheet('Checkups', {

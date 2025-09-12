@@ -50,6 +50,9 @@ export default function Home() {
   const [checkupStart, setCheckupStart] = useState<Date | null>(null);
   const [checkupEnd, setCheckupEnd] = useState<Date | null>(null);
 
+  // New state for booking error
+  const [bookingError, setBookingError] = useState<string | null>(null);
+
   useEffect(() => {
     const videoElement1 = videoRef1.current;
     const videoElement2 = videoRef2.current;
@@ -435,7 +438,8 @@ export default function Home() {
     e.preventDefault();
     const form = e.currentTarget;
     setIsSubmitting(true);
-    
+    setBookingError(null);
+
     // Show success message immediately
     setShowSuccess(true);
     // Close the modal
@@ -493,19 +497,31 @@ export default function Home() {
 
       // First save to Google Sheets
       try {
-        await fetch('/api/pre-order', {
+        const response = await fetch('/api/pre-order', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             ...Object.fromEntries(formData),
+            start_time: preOrderStart ? preOrderStart.toISOString() : '',
+            end_time: preOrderEnd ? preOrderEnd.toISOString() : '',
             payment_amount: amount,
             payment_currency: currency,
             payment_status: 'pending'
           }),
         });
+        if (response.status === 409) {
+          setBookingError('Use a time already booked');
+          setIsSubmitting(false);
+          return;
+        }
+        if (!response.ok) {
+          throw new Error('Failed to save to Google Sheets');
+        }
       } catch (sheetError) {
-        console.error("Failed to save to Google Sheets:", sheetError);
-        // Continue with payment flow even if sheet saving fails
+        console.error('Failed to save to Google Sheets:', sheetError);
+        toast.error('Failed to process your request. Please try again.');
+        setIsSubmitting(false);
+        return;
       }
       
       // Then initiate payment
@@ -521,6 +537,8 @@ export default function Home() {
           email: formData.get('email') as string,
           phone: formData.get('phone') as string,
           address: formData.get('delivery_address') as string || 'Not provided',
+          start_time: preOrderStart ? preOrderStart.toISOString() : '',
+          end_time: preOrderEnd ? preOrderEnd.toISOString() : '',
         })
       });
       const result = await response2.json();
@@ -560,6 +578,7 @@ export default function Home() {
 
   const handleLabPartnerSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setBookingError(null);
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
 
@@ -581,6 +600,8 @@ export default function Home() {
       checkup_type: checkupType,
       payment_method: formData.get("payment_method"),
       message: formData.get("message"),
+      start_time: checkupStart ? checkupStart.toISOString() : '',
+      end_time: checkupEnd ? checkupEnd.toISOString() : '',
     };
 
     try {
@@ -607,6 +628,8 @@ export default function Home() {
           email: data.email,
           phone: data.phone,
           address: 'dont know',
+          start_time: data.start_time,
+          end_time: data.end_time,
         })
       });
 
@@ -637,7 +660,7 @@ export default function Home() {
       if (result.success && result.payherePayment) {
         // Save data to Google Sheets directly as well for redundancy
         try {
-          await fetch("/api/book-checkup", {
+          const response = await fetch("/api/book-checkup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -646,9 +669,19 @@ export default function Home() {
               currency
             }),
           });
+          if (response.status === 409) {
+            setBookingError('Use a time already booked');
+            setIsSubmitting(false);
+            return;
+          }
+          if (!response.ok) {
+            throw new Error('Failed to save to Google Sheets');
+          }
         } catch (sheetError) {
           console.error("Failed to save to Google Sheets:", sheetError);
-          // Continue with payment flow even if sheet saving fails
+          toast.error('Failed to process your request. Please try again.');
+          setIsSubmitting(false);
+          return;
         }
         
         setPayment(result.payherePayment);
@@ -658,7 +691,7 @@ export default function Home() {
         alert('Payment initiation failed. Please try again.');
       }
     } catch (error) {
-      toast.error("Failed to book check up");
+      toast.error('Failed to book check up');
       console.error("Book check up error:", error);
     }
   };
@@ -2211,6 +2244,11 @@ export default function Home() {
                   />
                 </div>
               </div>
+              {bookingError && (
+                <div className="mb-4 text-center text-red-600 font-semibold">
+                  {bookingError}
+                </div>
+              )}
               <button
                 type="submit"
                 className="w-full bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
@@ -2358,6 +2396,11 @@ export default function Home() {
                   />
                 </div>
               </div>
+              {bookingError && (
+                <div className="mb-4 text-center text-red-600 font-semibold">
+                  {bookingError}
+                </div>
+              )}
               <FormNotification /> {/* Add this line */}
             </form>
           </div>
