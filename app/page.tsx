@@ -975,7 +975,7 @@ export default function Home() {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-purple-900 mb-4">The Jendo Ecosystem</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              More than a single test—a connected ecosystem that brings together vascular health data, longitudinal insights, and structured care coordination.
+              More than a single test a connected ecosystem that brings together vascular health data, longitudinal insights, and structured care coordination.
             </p>
           </div>
 
@@ -2496,21 +2496,25 @@ export default function Home() {
       </section>
 
       {/* Recognition & Awards Section */}
-      <section id="recognition" className="py-24 bg-gradient-to-b from-purple-900 to-black text-white section-scroll">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="recognition" className="py-24 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white section-scroll relative overflow-hidden">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(139,92,246,0.08),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(99,102,241,0.08),transparent_50%)]"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
-            <div className="inline-block bg-white/10 px-4 py-2 rounded-full mb-4 backdrop-blur-sm">
-              <span className="text-purple-200 font-semibold">International Recognition</span>
+            <div className="inline-block bg-white/5 px-4 py-2 rounded-full mb-4 backdrop-blur-sm border border-white/10">
+              <span className="text-purple-300 font-semibold">International Recognition</span>
             </div>
-            <h2 className="text-4xl font-bold mb-4">Global Innovation & Clinical Excellence</h2>
-            <p className="text-xl text-purple-200 max-w-3xl mx-auto">
+            <h2 className="text-4xl font-bold mb-4 text-white">Global Innovation & Clinical Excellence</h2>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
               Recognized worldwide for advancing cardiovascular prevention through responsible AI and clinical innovation
             </p>
           </div>
 
           {/* Awards Timeline */}
           <div className="relative">
-            <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-500 via-purple-600 to-purple-500 transform -translate-x-1/2 hidden md:block"></div>
+            <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-400/40 via-indigo-400/40 to-purple-400/40 transform -translate-x-1/2 hidden md:block"></div>
             
             <div className="space-y-12">
               {[
@@ -2527,22 +2531,22 @@ export default function Home() {
               ].map((item, index) => (
                 <div key={index} className={`relative ${index % 2 === 0 ? 'md:pr-[50%] md:text-right' : 'md:pl-[50%] md:text-left'}`}>
                   <div className="relative group">
-                    <div className={`absolute -inset-1 bg-gradient-to-r ${item.color} rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 animate-pulse-slow`}></div>
-                    <div className="relative bg-white/5 backdrop-blur-lg p-6 rounded-2xl border border-white/10">
+                    <div className={`absolute -inset-1 bg-gradient-to-r ${item.color} rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500`}></div>
+                    <div className="relative bg-slate-800/50 backdrop-blur-lg p-6 rounded-2xl border border-slate-700/50 hover:border-slate-600/50 transition-all duration-300 shadow-lg">
                       <div className={`flex items-center gap-4 ${index % 2 === 0 ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
-                        <div className={`w-16 h-16 bg-gradient-to-r ${item.color} rounded-full flex items-center justify-center flex-shrink-0`}>
+                        <div className={`w-16 h-16 bg-gradient-to-br ${item.color} rounded-full flex items-center justify-center flex-shrink-0 shadow-lg`}>
                           <item.icon className="w-8 h-8 text-white" />
                         </div>
                         <div className="flex-1">
-                          <div className="text-purple-300 font-semibold mb-1">{item.year}</div>
-                          <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                          <p className="text-purple-200">{item.org}</p>
+                          <div className="text-purple-400 font-semibold mb-1 text-sm">{item.year}</div>
+                          <h3 className="text-xl font-bold mb-2 text-white">{item.title}</h3>
+                          <p className="text-slate-400">{item.org}</p>
                         </div>
                       </div>
                     </div>
                   </div>
                   {/* Timeline dot */}
-                  <div className="absolute top-6 left-1/2 w-4 h-4 bg-purple-500 rounded-full transform -translate-x-1/2 border-4 border-black hidden md:block"></div>
+                  <div className="absolute top-6 left-1/2 w-4 h-4 bg-purple-400 rounded-full transform -translate-x-1/2 border-4 border-slate-900 hidden md:block shadow-lg"></div>
                 </div>
               ))}
             </div>
@@ -2551,28 +2555,28 @@ export default function Home() {
           {/* Research Publications */}
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="relative group h-full">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
-              <div className="relative bg-white/5 backdrop-blur-lg p-6 rounded-2xl border border-white/10 h-full flex flex-col">
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
+              <div className="relative bg-slate-800/50 backdrop-blur-lg p-6 rounded-2xl border border-slate-700/50 hover:border-slate-600/50 transition-all duration-300 h-full flex flex-col shadow-lg">
                 <div className="flex items-center mb-4">
                   <BookOpen className="w-6 h-6 text-blue-400 mr-3" />
-                  <h4 className="text-lg font-bold">IEEE Xplore</h4>
+                  <h4 className="text-lg font-bold text-white">IEEE Xplore</h4>
                 </div>
-                <p className="text-purple-200 mb-4">Peer-reviewed clinical research publication</p>
-                <a href="https://ieeexplore.ieee.org/document/9629748" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors">
+                <p className="text-slate-400 mb-4">Peer-reviewed clinical research publication</p>
+                <a href="https://ieeexplore.ieee.org/document/9629748" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors mt-auto">
                   View Publication <ExternalLink className="w-4 h-4 ml-2" />
                 </a>
               </div>
             </div>
 
             <div className="relative group h-full">
-              <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-teal-600 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
-              <div className="relative bg-white/5 backdrop-blur-lg p-6 rounded-2xl border border-white/10 h-full flex flex-col">
+              <div className="absolute -inset-1 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
+              <div className="relative bg-slate-800/50 backdrop-blur-lg p-6 rounded-2xl border border-slate-700/50 hover:border-slate-600/50 transition-all duration-300 h-full flex flex-col shadow-lg">
                 <div className="flex items-center mb-4">
                   <BookOpen className="w-6 h-6 text-green-400 mr-3" />
-                  <h4 className="text-lg font-bold">PubMed</h4>
+                  <h4 className="text-lg font-bold text-white">PubMed</h4>
                 </div>
-                <p className="text-purple-200 mb-4">Indexed medical research database</p>
-                <a href="https://pubmed.ncbi.nlm.nih.gov/33254535/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-green-400 hover:text-green-300 transition-colors">
+                <p className="text-slate-400 mb-4">Indexed medical research database</p>
+                <a href="https://pubmed.ncbi.nlm.nih.gov/33254535/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-green-400 hover:text-green-300 transition-colors mt-auto">
                   View Publication <ExternalLink className="w-4 h-4 ml-2" />
                 </a>
               </div>
@@ -2787,6 +2791,117 @@ export default function Home() {
                   </li>
                 </ul>
               </div>
+            </div>
+          </div>
+
+          {/* External Research Publications */}
+          <div className="mb-12">
+            <div className="text-center mb-12">
+              <h3 className="text-3xl font-bold text-purple-900 mb-4">Related Research Publications</h3>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Peer-reviewed studies supporting cardiovascular assessment and vascular health monitoring
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[
+                {
+                  title: "Arterial Stiffness and Wave Reflection",
+                  journal: "PMC - Cardiovascular Research",
+                  year: "2015",
+                  description: "Comprehensive review of arterial stiffness as a marker of cardiovascular disease and its clinical implications.",
+                  url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4553666/",
+                  imageUrl: "https://i.ibb.co/C5vwTMxM/research1.jpg"
+                },
+                {
+                  title: "Endothelial Function and Cardiovascular Disease",
+                  journal: "PubMed - Circulation",
+                  year: "2007",
+                  description: "Assessment of endothelial function in clinical practice and its role in cardiovascular risk prediction.",
+                  url: "https://pubmed.ncbi.nlm.nih.gov/17430168/",
+                  imageUrl: "https://i.ibb.co/d4r9Y60B/research2-blue.jpg"
+                },
+                {
+                  title: "Photoplethysmography Signal Processing",
+                  journal: "MDPI Electronics",
+                  year: "2019",
+                  description: "Advanced signal processing techniques for PPG-based cardiovascular monitoring systems.",
+                  url: "https://www.mdpi.com/2079-9292/8/3/271",
+                  imageUrl: "https://i.ibb.co/wNh5BnPP/research3.jpg"
+                },
+                {
+                  title: "Vascular Aging and Assessment Methods",
+                  journal: "MDPI Sensors",
+                  year: "2018",
+                  description: "Non-invasive methods for assessing vascular aging and arterial health using sensor technologies.",
+                  url: "https://www.mdpi.com/1424-8220/18/6/1894",
+                  imageUrl: "https://i.ibb.co/C5vwTMxM/research1.jpg"
+                },
+                {
+                  title: "Digital Thermal Monitoring in Vascular Assessment",
+                  journal: "PubMed - Vascular Medicine",
+                  year: "2010",
+                  description: "Clinical validation of digital thermal monitoring for vascular reactivity assessment.",
+                  url: "https://pubmed.ncbi.nlm.nih.gov/20459206/",
+                  imageUrl: "https://i.ibb.co/d4r9Y60B/research2-blue.jpg"
+                },
+                {
+                  title: "Cardiovascular Risk Prediction Models",
+                  journal: "PubMed - Clinical Research",
+                  year: "2016",
+                  description: "Novel approaches to cardiovascular risk stratification using physiological biomarkers.",
+                  url: "https://pubmed.ncbi.nlm.nih.gov/27830091/",
+                  imageUrl: "https://i.ibb.co/wNh5BnPP/research3.jpg"
+                }
+              ].map((research, index) => (
+                <a
+                  key={index}
+                  href={research.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col h-full"
+                >
+                  {/* Research Image */}
+                  <div className="relative h-48 w-full bg-gradient-to-br from-purple-100 via-purple-50 to-white overflow-hidden">
+                    <Image
+                      src={research.imageUrl}
+                      alt={research.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      quality={95}
+                      priority={index < 3}
+                    />
+                    <div className="absolute top-3 right-3 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10">
+                      {research.year}
+                    </div>
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-purple-900/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                      <span className="text-white font-semibold flex items-center">
+                        Read Full Paper <ExternalLink className="w-4 h-4 ml-2" />
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-6 flex-1 flex flex-col">
+                    <div className="flex items-center gap-2 mb-3">
+                      <FileText className="w-4 h-4 text-purple-600 flex-shrink-0" />
+                      <span className="text-sm text-purple-600 font-medium">{research.journal}</span>
+                    </div>
+                    <h4 className="text-lg font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-purple-600 transition-colors">
+                      {research.title}
+                    </h4>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">
+                      {research.description}
+                    </p>
+                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                      <span className="text-xs text-gray-500 font-medium">External Publication</span>
+                      <ExternalLink className="w-4 h-4 text-purple-600 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </a>
+              ))}
             </div>
           </div>
 

@@ -11,13 +11,47 @@ interface Message {
   timestamp: Date;
 }
 
+// Simple markdown-like text formatter
+const formatMessage = (content: string) => {
+  return content.split('\n').map((line, index) => {
+    // Handle bold text (**text**)
+    const boldRegex = /\*\*(.*?)\*\*/g;
+    const parts = line.split(boldRegex);
+    
+    return (
+      <p key={index} className="mb-2 last:mb-0">
+        {parts.map((part, i) => {
+          if (i % 2 === 1) {
+            return <strong key={i} className="font-semibold">{part}</strong>;
+          }
+          return part;
+        })}
+      </p>
+    );
+  });
+};
+
 export function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: 'Hello! I\'m JENDO\'s AI assistant. How can I help you today?',
+      content: `👋 **Welcome to Jendo Health!**
+
+I'm your AI health assistant powered by a three-tier intelligent system. I can help you with:
+
+🫀 **About Jendo** - Our technology and mission
+⚕️ **How It Works** - Test procedure details
+💓 **Heart Health** - Cardiovascular information
+🛡️ **Safety** - Test safety and comfort
+🏆 **Patents** - Our innovations
+📅 **Booking** - Appointments and pricing
+📞 **Contact** - Get in touch
+
+Just ask me anything! I'm here 24/7 to assist you.
+
+⚠️ **Important:** Jendo supports early detection and preventive care but does not replace professional medical advice.`,
       timestamp: new Date()
     }
   ]);
@@ -48,42 +82,53 @@ export function ChatBot() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentMessage = inputMessage.trim();
     setInputMessage('');
     setIsLoading(true);
 
     try {
-      // Simulated response
-      setTimeout(() => {
-        const assistantMessage: Message = {
-          role: 'assistant',
-          content: getSimulatedResponse(inputMessage),
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, assistantMessage]);
-        setIsLoading(false);
-      }, 1000);
+      // Call the Jendo Chatbot API (Three-Tier System)
+      const response = await fetch('/api/chatbot', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: currentMessage,
+          history: messages.slice(-5).map(m => ({ // Send last 5 messages for context
+            role: m.role,
+            content: m.content
+          }))
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+
+      const data = await response.json();
+      
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: data.content,
+        timestamp: new Date(data.timestamp)
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
       console.error('Failed to get AI response:', error);
+      
+      // Fallback response if API fails
+      const fallbackMessage: Message = {
+        role: 'assistant',
+        content: `I apologize for the technical difficulty. Please contact our team directly:\n\n📞 Phone: 0766210120\n📧 Email: info@jendoinnovations.com\n🏢 Location: Bay 09, Trace Expert City, Colombo\n\nBusiness Hours: Mon-Fri 9 AM - 5 PM`,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, fallbackMessage]);
+    } finally {
       setIsLoading(false);
     }
-  };
-
-  const getSimulatedResponse = (input: string): string => {
-    const lowercaseInput = input.toLowerCase();
-    
-    if (lowercaseInput.includes('price') || lowercaseInput.includes('cost')) {
-      return 'Our JENDO devices start from $999 for the Basic Package. Would you like to know more about our pricing plans?';
-    }
-    
-    if (lowercaseInput.includes('how does the jendo device') && lowercaseInput.includes('work')) {
-      return 'JENDO uses advanced non-invasive technology to monitor vascular health. It combines PPG, DTM, and ECG measurements to provide comprehensive cardiovascular analysis in just 15 minutes.';
-    }
-    
-    if (lowercaseInput.includes('contact') || lowercaseInput.includes('support')) {
-      return 'You can reach our support team at info@jendoinnovations.com or call us at 0766210120. Would you like me to help you with anything specific?';
-    }
-    
-    return 'I understand you\'re interested in JENDO. Could you please provide more details about your question so I can better assist you?';
   };
 
   return (
@@ -155,15 +200,24 @@ export function ChatBot() {
             >
               <div
                 className={cn(
-                  "max-w-[80%] rounded-2xl px-4 py-2",
+                  "max-w-[85%] rounded-2xl px-4 py-3",
                   message.role === 'user'
                     ? "bg-purple-600 text-white"
-                    : "bg-gray-100 text-gray-900"
+                    : "bg-gray-100 text-gray-900 shadow-sm"
                 )}
               >
-                <p className="text-sm">{message.content}</p>
+                <div className="text-sm leading-relaxed whitespace-pre-line">
+                  {message.role === 'assistant' ? (
+                    formatMessage(message.content)
+                  ) : (
+                    <p>{message.content}</p>
+                  )}
+                </div>
                 {isMounted && (
-                  <p className="text-xs mt-1 opacity-70">
+                  <p className={cn(
+                    "text-xs mt-2 opacity-70",
+                    message.role === 'user' ? "text-white/80" : "text-gray-600"
+                  )}>
                     {message.timestamp.toLocaleTimeString([], { 
                       hour: '2-digit', 
                       minute: '2-digit' 
@@ -175,8 +229,11 @@ export function ChatBot() {
           ))}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-gray-100 rounded-2xl px-4 py-2">
-                <Loader2 className="h-5 w-5 animate-spin text-purple-600" />
+              <div className="bg-gray-100 rounded-2xl px-4 py-3 shadow-sm">
+                <div className="flex items-center space-x-2">
+                  <Loader2 className="h-5 w-5 animate-spin text-purple-600" />
+                  <span className="text-sm text-gray-600">Thinking...</span>
+                </div>
               </div>
             </div>
           )}
