@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import Image from 'next/image';
-import { Heart, Shield, ArrowRight, Users, Activity, Download, MapPin, Mail, Clock, User, LineChart, FlaskRound as Flask, Building2, Stethoscope, FileHeart, ChartBar, Brain, Microscope, BarChart3, ShieldCheck, PieChart, HandHeart, Facebook, Twitter, Linkedin, CreditCard, Package, CheckCircle, ShoppingCart, X, Calendar, FileText, BedDouble, Waves, Cloud, Instagram, FacebookIcon } from 'lucide-react';
+import { Heart, Shield, ArrowRight, Users, Activity, Download, MapPin, Mail, Clock, User, LineChart, FlaskRound as Flask, Building2, Stethoscope, FileHeart, ChartBar, Brain, Microscope, BarChart3, ShieldCheck, PieChart, HandHeart, Facebook, Twitter, Linkedin, CreditCard, Package, CheckCircle, ShoppingCart, X, Calendar, FileText, BedDouble, Waves, Cloud, Instagram, FacebookIcon, Award, Globe, BookOpen, Lock, Eye, Database, Cpu, TrendingUp, Target, Zap, Fingerprint, HeartPulse, ClipboardCheck, UserCheck, Building, Share2, BarChart2, ExternalLink, AlertTriangle } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { toast } from 'sonner';
 import { FormNotification } from '@/components/ui/form-notification';
@@ -34,12 +34,14 @@ export default function Home() {
 
   // Add these lines here
   const [currentImage, setCurrentImage] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState({ src: '', alt: '' });
 
   //Add the vide section here
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const videoRef1 = useRef<HTMLVideoElement>(null)
   const videoRef2 = useRef<HTMLVideoElement>(null)
-  const videoSectionRef = useRef<HTMLElement>(null)
+  const videoSectionRef = useRef<HTMLDivElement>(null)
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -61,15 +63,18 @@ export default function Home() {
     const options = {
       root: null,
       rootMargin: "0px",
-      threshold: 0.5,
+      threshold: 0.3,
     };
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           setIsVideoPlaying(true);
-          videoElement1?.play().catch(error => console.log("Video 1 autoplay failed:", error));
-          videoElement2?.play().catch(error => console.log("Video 2 autoplay failed:", error));
+          // Add a small delay to ensure videos are ready
+          setTimeout(() => {
+            videoElement1?.play().catch(error => console.log("Video 1 autoplay failed:", error));
+            videoElement2?.play().catch(error => console.log("Video 2 autoplay failed:", error));
+          }, 100);
         } else {
           setIsVideoPlaying(false);
           videoElement1?.pause();
@@ -828,35 +833,42 @@ export default function Home() {
             <div className="relative mb-8">
               <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white mb-8 text-center">
               <span className="bg-gradient-to-r from-purple-100 via-white to-purple-100 bg-clip-text text-transparent animate-shine">
-                Unlock the Future of Cardiovascular Health Today!
+                Advancing the Future of AI-Enabled Preventive Cardiovascular Care
               </span>
               </h1>
-              <p className="text-xl sm:text-2xl text-gray-200 max-w-3xl mx-auto mb-10 text-center leading-relaxed">
-              JENDO offers a revolutionary, non-invasive solution for early cardiovascular disease detection, delivering AI-powered health reports in 15 minutes. Perfect for patients, labs, and insurance partners seeking proactive heart health solutions.
+              <p className="text-xl sm:text-2xl text-gray-200 max-w-4xl mx-auto mb-10 text-center leading-relaxed">
+                Structured monitoring, evidence-based guidance, and coordinated care—built around the Jendo Vascular Health Test to support proactive cardiovascular health across a lifetime.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={handlePreOrderClick}
+              <a
+                href="#for-clinicians"
                 className="bg-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-purple-700 transition-colors inline-flex items-center justify-center space-x-2 animate-pulse-slow"
               >
-                <ShoppingCart className="h-5 w-5" />
-                <span>Pre-Order JENDO</span>
+                <Stethoscope className="h-5 w-5" />
+                <span>For Clinicians</span>
+              </a>
+              <a
+                href="#for-individuals"
+                className="bg-white text-purple-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors inline-flex items-center justify-center space-x-2 animate-pulse-slow"
+              >
+                <Heart className="h-5 w-5" />
+                <span>For Individuals</span>
+              </a>
+              <button
+                onClick={handlePreOrderClick}
+                className="bg-purple-600 text-white px-6 py-2 rounded-full font-medium hover:bg-purple-700 transition-colors inline-flex items-center justify-center space-x-2"
+              >
+                <ShoppingCart className="h-4 w-4" />
+                <span>Pre-Order</span>
               </button>
               <button
                 onClick={handleLabPartnerClick}
-                className="bg-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-purple-700 transition-colors inline-flex items-center justify-center space-x-2 animate-pulse-slow"
+                className="bg-purple-600 text-white px-6 py-2 rounded-full font-medium hover:bg-purple-700 transition-colors inline-flex items-center justify-center space-x-2"
               >
-                <Flask className="h-5 w-5" />
-                <span>Book a Check Up</span>
+                <Calendar className="h-4 w-4" />
+                <span>Book Test</span>
               </button>
-              {/* <button
-                onClick={handleInsuranceClick}
-                className="bg-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-purple-700 transition-colors inline-flex items-center justify-center space-x-2 animate-pulse-slow"
-              >
-                <Shield className="h-5 w-5" />
-                <span>Insurance Partnership</span>
-              </button> */}
             </div>
           </div>
         </div>
@@ -874,6 +886,499 @@ export default function Home() {
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
+        </div>
+      </section>
+
+      {/* Problem & Solution Section */}
+      <section className="py-24 bg-white section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* The Problem */}
+            <div className="relative group h-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-red-600 to-red-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-red-100 h-full flex flex-col">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                    <AlertTriangle className="w-6 h-6 text-red-600" />
+                  </div>
+                  <h2 className="text-3xl font-bold text-gray-900">The Problem</h2>
+                </div>
+                <p className="text-xl text-gray-800 mb-6 font-semibold">
+                  Cardiovascular disease remains the leading cause of death worldwide.
+                </p>
+                <ul className="space-y-4">
+                  <li className="flex items-start space-x-3">
+                    <X className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Risk often develops <strong>silently over decades</strong></span>
+                  </li>
+                  <li className="flex items-start space-x-3">
+                    <X className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Most care models rely on <strong>late detection and episodic intervention</strong></span>
+                  </li>
+                  <li className="flex items-start space-x-3">
+                    <X className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Individuals and clinicians lack tools for <strong>early functional insight and longitudinal tracking</strong></span>
+                  </li>
+                </ul>
+                <div className="mt-6 p-4 bg-red-50 rounded-lg border-l-4 border-red-600">
+                  <p className="text-gray-800 font-medium">
+                    As a result, opportunities for meaningful prevention are frequently missed.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* The Jendo Solution */}
+            <div className="relative group h-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full flex flex-col">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                    <CheckCircle className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <h2 className="text-3xl font-bold text-gray-900">The Jendo Solution</h2>
+                </div>
+                <p className="text-lg text-gray-700 mb-6">
+                  Jendo is a cardiovascular health platform designed to support <strong>earlier awareness</strong>, <strong>structured monitoring</strong>, and <strong>shared responsibility</strong> for long-term heart health.
+                </p>
+                <div className="mb-6">
+                  <p className="text-gray-800 font-semibold mb-3">Built around the Jendo Vascular Health Test, the platform combines:</p>
+                  <ul className="space-y-3">
+                    <li className="flex items-start space-x-3">
+                      <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                      <span className="text-gray-700"><strong>Serial, non-invasive</strong> vascular monitoring</span>
+                    </li>
+                    <li className="flex items-start space-x-3">
+                      <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                      <span className="text-gray-700"><strong>Longitudinal</strong> health data organization</span>
+                    </li>
+                    <li className="flex items-start space-x-3">
+                      <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                      <span className="text-gray-700"><strong>Evidence-based</strong> guidance and care coordination</span>
+                    </li>
+                  </ul>
+                </div>
+                <div className="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-600">
+                  <p className="text-gray-800 font-medium">
+                    Together, these elements enable a shift from one-time assessments to <strong>continuous, trend-based cardiovascular insight</strong>.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Jendo Ecosystem Section */}
+      <section id="ecosystem" className="py-24 bg-gradient-to-b from-gray-50 to-white section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-purple-900 mb-4">The Jendo Ecosystem</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              More than a single test—a connected ecosystem that brings together vascular health data, longitudinal insights, and structured care coordination.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            {/* Card 1: Personal Health Data */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white p-6 rounded-2xl shadow-xl border border-purple-100 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2">
+                <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                  <Database className="w-7 h-7 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Personal Cardiovascular Health Data</h3>
+                <p className="text-gray-600">
+                  A centralized, longitudinal record of lifestyle, clinical history, and cardiovascular-relevant data.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 2: Evidence-Based Guidance */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white p-6 rounded-2xl shadow-xl border border-purple-100 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2">
+                <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                  <BookOpen className="w-7 h-7 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Evidence-Based Health Guidance</h3>
+                <p className="text-gray-600">
+                  Trusted educational content and decision-support tools designed to complement clinical care.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 3: Care Coordination */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white p-6 rounded-2xl shadow-xl border border-purple-100 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2">
+                <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                  <Users className="w-7 h-7 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Care Coordination</h3>
+                <p className="text-gray-600">
+                  Structured engagement with clinicians, enabling better-prepared consultations and shared decision-making.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 4: Serial Monitoring */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white p-6 rounded-2xl shadow-xl border border-purple-100 h-full transform transition-all duration-500 group-hover:scale-[1.02] group-hover:-translate-y-2">
+                <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                  <Activity className="w-7 h-7 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Serial Vascular Monitoring</h3>
+                <p className="text-gray-600">
+                  Ongoing assessment of vascular reactivity to track change over time and support early evaluation.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-12">
+            <div className="inline-block bg-purple-50 px-8 py-6 rounded-2xl border border-purple-200">
+              <p className="text-lg text-purple-900 font-semibold">
+                A unified platform that connects data, insight, and care coordination to support a more proactive and continuous approach to cardiovascular health.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Technology Section - Vascular Health Test */}
+      <section id="technology" className="py-24 bg-white section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-purple-900 mb-4">The Jendo Vascular Health Test</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Clear, objective insight into vascular function using a safe, non-invasive approach
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+            {/* What Is It */}
+            <div className="relative group h-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-gradient-to-br from-purple-50 to-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full flex flex-col">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                    <Microscope className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">What Is It?</h3>
+                </div>
+                <p className="text-gray-700 mb-6">
+                  The Jendo Vascular Health Test is a <strong>non-invasive vascular reactivity assessment</strong> that evaluates how blood vessels respond to a brief, controlled physiological stimulus.
+                </p>
+                <ul className="space-y-3">
+                  <li className="flex items-start space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700"><strong>Non-invasive:</strong> No needles, injections, or contrast agents</span>
+                  </li>
+                  <li className="flex items-start space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700"><strong>Cost-effective:</strong> No reagents or consumables needed</span>
+                  </li>
+                  <li className="flex items-start space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700"><strong>Clinician-guided:</strong> Supports, not replaces, clinical judgment</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Why It Matters */}
+            <div className="relative group h-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-gradient-to-br from-purple-50 to-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full flex flex-col">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                    <HeartPulse className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Why Vascular Reactivity Matters</h3>
+                </div>
+                <p className="text-gray-700 mb-4">
+                  Long before structural disease becomes apparent, <strong>functional changes in vascular behavior</strong> may occur.
+                </p>
+                <ul className="space-y-3">
+                  <li className="flex items-start space-x-3">
+                    <TrendingUp className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Ability of blood vessels to respond to changes in blood flow</span>
+                  </li>
+                  <li className="flex items-start space-x-3">
+                    <Target className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Early alterations that precede overt cardiovascular disease</span>
+                  </li>
+                  <li className="flex items-start space-x-3">
+                    <Eye className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Physiological dimension not captured by traditional risk factors</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* 5-Step Protocol */}
+          <div className="mb-16">
+            <h3 className="text-3xl font-bold text-center text-purple-900 mb-12">How the Test Works</h3>
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+              {[
+                { step: 1, title: "Sensor Placement", icon: Fingerprint, desc: "Optical and thermal sensors placed on fingertips" },
+                { step: 2, title: "Baseline", icon: LineChart, desc: "Recording resting signals under controlled conditions" },
+                { step: 3, title: "Cuff Occlusion", icon: Activity, desc: "Standard arm cuff inflated briefly to alter blood flow" },
+                { step: 4, title: "Recovery", icon: TrendingUp, desc: "Recording vascular responses as flow normalizes" },
+                { step: 5, title: "Assessment", icon: BarChart2, desc: "Deriving quantitative vascular reactivity indices" }
+              ].map((item) => (
+                <div key={item.step} className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-xl blur opacity-20 group-hover:opacity-100 transition duration-700 animate-pulse-slow"></div>
+                  <div className="relative bg-white p-6 rounded-xl shadow-lg border border-purple-100 h-full transform transition-all duration-500 group-hover:scale-105">
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                        {item.step}
+                      </div>
+                      <item.icon className="w-8 h-8 text-purple-600 mx-auto mb-3" />
+                      <h4 className="font-bold text-gray-900 mb-2">{item.title}</h4>
+                      <p className="text-sm text-gray-600">{item.desc}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-purple-50 p-8 rounded-2xl border-l-4 border-purple-600">
+            <p className="text-gray-800 text-center">
+              <strong>Important:</strong> The test does not provide a diagnosis. Results are intended to be interpreted in the context of the patient's overall clinical picture.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* For Clinicians Section */}
+      <section id="for-clinicians" className="py-24 bg-gradient-to-b from-gray-50 to-white section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-block bg-purple-100 px-4 py-2 rounded-full mb-4">
+              <span className="text-purple-800 font-semibold">For Healthcare Professionals</span>
+            </div>
+            <h2 className="text-4xl font-bold text-purple-900 mb-4">Empowering Clinicians with Actionable Insights</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Earlier insight, structured patient categorization, and long-term cardiovascular risk management
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {/* Earlier Insight */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full">
+                <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-6">
+                  <Eye className="w-7 h-7 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Earlier Insight</h3>
+                <ul className="space-y-3 text-gray-700">
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-sm">Objective assessment of vascular reactivity</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-sm">Evaluation in asymptomatic individuals</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-sm">Observation of silent physiological patterns</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Risk Stratification */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full">
+                <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-6">
+                  <BarChart3 className="w-7 h-7 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Patient Categorization</h3>
+                <ul className="space-y-3 text-gray-700">
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-sm">Group by functional response patterns</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-sm">Distinguish stable vs. changing profiles</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-sm">Personalized follow-up intervals</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Workflow Integration */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full">
+                <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-6">
+                  <ClipboardCheck className="w-7 h-7 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Workflow Integration</h3>
+                <ul className="space-y-3 text-gray-700">
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-sm">Outpatient-friendly assessments</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-sm">Digital reports during consultations</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-sm">Longitudinal data organization</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-r from-purple-600 to-purple-900 text-white p-8 rounded-2xl text-center">
+            <h3 className="text-2xl font-bold mb-4">Ready to Partner with Jendo?</h3>
+            <p className="text-lg mb-6">Join healthcare professionals worldwide in transforming cardiovascular care</p>
+            <a href="#contact" className="inline-block bg-white text-purple-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors">
+              Request a Demo
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* For Individuals Section */}
+      <section id="for-individuals" className="py-24 bg-white section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-block bg-purple-100 px-4 py-2 rounded-full mb-4">
+              <span className="text-purple-800 font-semibold">For Individuals & Families</span>
+            </div>
+            <h2 className="text-4xl font-bold text-purple-900 mb-4">Take an Active Role in Your Heart Health</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Understanding your cardiovascular health doesn't have to be complicated
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+            {/* Why It Matters Early */}
+            <div className="relative group h-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-gradient-to-br from-purple-50 to-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full flex flex-col">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                    <Heart className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Why It Matters Early</h3>
+                </div>
+                <p className="text-gray-700 mb-6">
+                  Your heart and blood vessels work quietly every day. Changes often develop gradually without obvious symptoms.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <Zap className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-gray-900">Build Healthier Habits</p>
+                      <p className="text-sm text-gray-600">Before issues arise</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <TrendingUp className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-gray-900">Understand Impact</p>
+                      <p className="text-sm text-gray-600">How lifestyle choices affect your body</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <UserCheck className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-gray-900">Take Proactive Role</p>
+                      <p className="text-sm text-gray-600">In long-term wellbeing</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* How Jendo Supports You */}
+            <div className="relative group h-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-gradient-to-br from-purple-50 to-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full flex flex-col">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                    <HandHeart className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">How Jendo Supports You</h3>
+                </div>
+                <p className="text-gray-700 mb-6">
+                  Clear information and trends rather than isolated numbers.
+                </p>
+                <ul className="space-y-4">
+                  <li className="flex items-start space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">View vascular health measurements in one place</span>
+                  </li>
+                  <li className="flex items-start space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Track changes over time vs. one-off readings</span>
+                  </li>
+                  <li className="flex items-start space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">See how lifestyle relates to your health journey</span>
+                  </li>
+                  <li className="flex items-start space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Come to visits better prepared and informed</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Privacy Card */}
+          <div className="relative group max-w-4xl mx-auto">
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+            <div className="relative bg-gradient-to-r from-purple-600 to-purple-900 text-white p-8 rounded-2xl">
+              <div className="flex items-center mb-4">
+                <Lock className="w-8 h-8 mr-3" />
+                <h3 className="text-2xl font-bold">Your Privacy & Data Protection</h3>
+              </div>
+              <p className="text-purple-100 mb-6">
+                Your health information is personal—and Jendo treats it that way.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white/10 p-4 rounded-xl backdrop-blur-sm">
+                  <ShieldCheck className="w-6 h-6 mb-2" />
+                  <p className="font-semibold mb-1">Secure Storage</p>
+                  <p className="text-sm text-purple-100">Industry-standard protections</p>
+                </div>
+                <div className="bg-white/10 p-4 rounded-xl backdrop-blur-sm">
+                  <UserCheck className="w-6 h-6 mb-2" />
+                  <p className="font-semibold mb-1">You Control</p>
+                  <p className="text-sm text-purple-100">How info is used & shared</p>
+                </div>
+                <div className="bg-white/10 p-4 rounded-xl backdrop-blur-sm">
+                  <Eye className="w-6 h-6 mb-2" />
+                  <p className="font-semibold mb-1">Transparency</p>
+                  <p className="text-sm text-purple-100">Clear privacy practices</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-12">
+            <a href="#contact" className="inline-block bg-purple-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-purple-700 transition-colors text-lg">
+              Get Started with Jendo
+            </a>
+          </div>
         </div>
       </section>
 
@@ -937,8 +1442,7 @@ export default function Home() {
 
       {/* Video Section */}
       <section
-        ref={videoSectionRef}
-        className="relative py-16 bg-gradient-to-b from-white-900 to-black overflow-hidden"
+        className="relative py-16 bg-gradient-to-b from-white to-purple-50 overflow-hidden"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.1),transparent_50%)] animate-pulse-slow"></div>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -1049,60 +1553,83 @@ export default function Home() {
           </section>
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-purple-900 mb-4">Experience JENDO in Action</h2>
-            <p className="text-lg md:text-xl text-black-200 max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
               Watch how our revolutionary technology is changing cardiovascular health monitoring.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Video 1 */}
-            <div className="relative aspect-video rounded-md overflow-hidden shadow-md group">
-              <div className="absolute inset-0 bg-purple-900/5 group-hover:bg-purple-900/0 transition-all duration-300"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <button
-                  onClick={toggleVideo}
-                  className="bg-white/80 text-purple-900 rounded-full p-2 shadow-md hover:bg-white transition-all duration-300 transform hover:scale-110 z-10"
-                >
-                  {isVideoPlaying ? <Pause size={32} /> : <Play size={32} />}
-                </button>
+          <div ref={videoSectionRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+            {/* Video 1 - Tablet Mockup */}
+            <div className="relative group" data-video-container="1">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-3xl blur-xl opacity-30 group-hover:opacity-60 transition duration-500 animate-pulse-slow"></div>
+              <div className="relative bg-gradient-to-br from-purple-50 to-white p-6 rounded-3xl shadow-2xl border border-purple-200">
+                <div className="relative mx-auto max-w-2xl">
+                  <div className="relative bg-gradient-to-b from-gray-900 to-gray-800 rounded-3xl p-3 shadow-2xl">
+                    <div className="absolute top-3 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-700 rounded-full z-10"></div>
+                    <div className="relative aspect-video rounded-2xl overflow-hidden bg-black">
+                      <video
+                        ref={videoRef1}
+                        className="w-full h-full object-cover"
+                        poster="/video-thumbnail.jpg"
+                        playsInline
+                        muted
+                        loop
+                      >
+                        <source src="/jendo-showcase.mp4" type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="bg-purple-600/90 backdrop-blur-sm text-white rounded-full p-4 shadow-lg transform transition-transform hover:scale-110">
+                          {isVideoPlaying ? <Pause size={32} /> : <Play size={32} className="ml-1" />}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="absolute -inset-4 bg-gradient-to-r from-purple-600/20 to-purple-900/20 blur-2xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </div>
+                <div className="mt-6 text-center">
+                  <h3 className="text-lg font-bold text-purple-900 mb-2">Real-Time Monitoring</h3>
+                  <p className="text-sm text-gray-600">See how JENDO captures cardiovascular data in real-time</p>
+                </div>
               </div>
-              <video
-                ref={videoRef1}
-                className="w-full h-full object-cover"
-                poster="/video-thumbnail.jpg"
-                playsInline
-                muted
-                loop
-              >
-                <source src="/jendo-showcase.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
             </div>
-            {/* Video 2 */}
-            <div className="relative aspect-video rounded-md overflow-hidden shadow-md group">
-              <div className="absolute inset-0 bg-purple-900/5 group-hover:bg-purple-900/0 transition-all duration-300"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <button
-                  onClick={toggleVideo}
-                  className="bg-white/80 text-purple-900 rounded-full p-2 shadow-md hover:bg-white transition-all duration-300 transform hover:scale-110 z-10"
-                >
-                  {isVideoPlaying ? <Pause size={32} /> : <Play size={32} />}
-                </button>
+
+            {/* Video 2 - Tablet Mockup */}
+            <div className="relative group" data-video-container="2">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-3xl blur-xl opacity-30 group-hover:opacity-60 transition duration-500 animate-pulse-slow"></div>
+              <div className="relative bg-gradient-to-br from-purple-50 to-white p-6 rounded-3xl shadow-2xl border border-purple-200">
+                <div className="relative mx-auto max-w-2xl">
+                  <div className="relative bg-gradient-to-b from-gray-900 to-gray-800 rounded-3xl p-3 shadow-2xl">
+                    <div className="absolute top-3 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-700 rounded-full z-10"></div>
+                    <div className="relative aspect-video rounded-2xl overflow-hidden bg-black">
+                      <video
+                        ref={videoRef2}
+                        className="w-full h-full object-cover"
+                        poster="/video_thumbnail2.png"
+                        playsInline
+                        muted
+                        loop
+                      >
+                        <source src="/jendo_device.mp4" type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="bg-purple-600/90 backdrop-blur-sm text-white rounded-full p-4 shadow-lg transform transition-transform hover:scale-110">
+                          {isVideoPlaying ? <Pause size={32} /> : <Play size={32} className="ml-1" />}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="absolute -inset-4 bg-gradient-to-r from-purple-600/20 to-purple-900/20 blur-2xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </div>
+                <div className="mt-6 text-center">
+                  <h3 className="text-lg font-bold text-purple-900 mb-2">Clinical Device Setup</h3>
+                  <p className="text-sm text-gray-600">Professional-grade equipment for accurate assessments</p>
+                </div>
               </div>
-              <video
-                ref={videoRef2}
-                className="w-full h-full object-cover"
-                poster="/video_thumbnail2.png"
-                playsInline
-                muted
-                loop
-              >
-                <source src="/jendo_device.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
             </div>
           </div>
           <div className="mt-8 text-center">
-            <p className="text-base md:text-lg font-bold text-purple-700 mb-4-w-2xl mx-auto">
+            <p className="text-base md:text-lg font-bold text-purple-700 max-w-2xl mx-auto">
               JENDO&apos;s non-invasive technology provides accurate cardiovascular health assessments in just 15 minutes,
               revolutionizing early detection and prevention of heart diseases.
             </p>
@@ -1449,7 +1976,7 @@ export default function Home() {
       </div>
 
       {/* Emma Gallery Section */}
-      <section id="emma-gallery" className="py-20 bg-white section-scroll">
+      <section id="emma-gallery" className="py-20 bg-gradient-to-b from-purple-50 to-white section-scroll relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-purple-900 mb-4">Jendo Gallery</h2>
@@ -1457,63 +1984,155 @@ export default function Home() {
               Explore memorable moments and milestones from Jendo’s journey in transforming cardiovascular health.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8" id="emma-gallery-images">
-            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-              <img src="https://i.ibb.co/1tSm4mkJ/Whats-App-Image-2025-07-14-at-13-51-07-40106ee2.jpg" alt="Emma 1" className="w-full h-64 object-cover emma-gallery-img" />
-            </div>
-            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-              <img src="https://i.ibb.co/ymS4bvYM/Whats-App-Image-2025-07-14-at-13-51-07-72813403.jpg" alt="Emma 2" className="w-full h-64 object-cover emma-gallery-img" />
-            </div>
-            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-              <img src="https://i.ibb.co/fz8hvcwW/Whats-App-Image-2025-07-14-at-13-51-07-d33c7810.jpg" alt="Emma 3" className="w-full h-64 object-cover emma-gallery-img" />
-            </div>
-            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-              <img src="https://i.ibb.co/hJ7TcWZx/Whats-App-Image-2025-07-14-at-13-51-08-2c551ce7.jpg" alt="Emma 4" className="w-full h-64 object-cover emma-gallery-img" />
-            </div>
-            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-              <img src="https://i.ibb.co/dwfnDPDT/Whats-App-Image-2025-07-14-at-13-51-08-38e09f3b.jpg" alt="Emma 5" className="w-full h-64 object-cover emma-gallery-img" />
-            </div>
-            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-              <img src="https://i.ibb.co/G4wDD4xS/Whats-App-Image-2025-07-14-at-13-51-36-160dfb2a.jpg" alt="Emma 6" className="w-full h-64 object-cover emma-gallery-img" />
-            </div>
-            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-              <img src="https://i.ibb.co/zYn5mwS/Whats-App-Image-2025-07-14-at-13-51-38-1604ef8d.jpg" alt="Emma 7" className="w-full h-64 object-cover emma-gallery-img" />
-            </div>
-            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-              <img src="https://i.ibb.co/Y4tJ9dvK/Whats-App-Image-2025-07-14-at-13-51-36-5255e477.jpg" alt="Emma 8" className="w-full h-64 object-cover emma-gallery-img" />
-            </div>
-            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-              <img src="https://i.ibb.co/39kCjbJw/Whats-App-Image-2025-07-14-at-13-51-35-6ef53381.jpg" alt="Emma 9" className="w-full h-64 object-cover emma-gallery-img" />
-            </div>
-            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-              <img src="https://i.ibb.co/5XWpWYSZ/Whats-App-Image-2025-07-14-at-13-51-38-780c184c.jpg" alt="Emma 10" className="w-full h-64 object-cover emma-gallery-img" />
-            </div>
-            <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-100">
-              <img src="https://i.ibb.co/rf0RzYvm/Whats-App-Image-2025-07-14-at-14-22-26-621a4f6a.jpg" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8" id="emma-gallery-images">
+            {[
+              { src: "https://i.ibb.co/1tSm4mkJ/Whats-App-Image-2025-07-14-at-13-51-07-40106ee2.jpg", alt: "Health Camp Team Consultation" },
+              { src: "https://i.ibb.co/ymS4bvYM/Whats-App-Image-2025-07-14-at-13-51-07-72813403.jpg", alt: "Healthcare Professional Assessment" },
+              { src: "https://i.ibb.co/fz8hvcwW/Whats-App-Image-2025-07-14-at-13-51-07-d33c7810.jpg", alt: "Cardiovascular Screening Process" },
+              { src: "https://i.ibb.co/hJ7TcWZx/Whats-App-Image-2025-07-14-at-13-51-08-2c551ce7.jpg", alt: "Medical Team Collaboration" },
+              { src: "https://i.ibb.co/dwfnDPDT/Whats-App-Image-2025-07-14-at-13-51-08-38e09f3b.jpg", alt: "Patient Care Session" },
+              { src: "https://i.ibb.co/G4wDD4xS/Whats-App-Image-2025-07-14-at-13-51-36-160dfb2a.jpg", alt: "Health Monitoring Setup" },
+              { src: "https://i.ibb.co/zYn5mwS/Whats-App-Image-2025-07-14-at-13-51-38-1604ef8d.jpg", alt: "Community Health Event" },
+              { src: "https://i.ibb.co/Y4tJ9dvK/Whats-App-Image-2025-07-14-at-13-51-36-5255e477.jpg", alt: "Professional Training Session" },
+              { src: "https://i.ibb.co/39kCjbJw/Whats-App-Image-2025-07-14-at-13-51-35-6ef53381.jpg", alt: "Clinical Assessment Demo" },
+              { src: "https://i.ibb.co/5XWpWYSZ/Whats-App-Image-2025-07-14-at-13-51-38-780c184c.jpg", alt: "Healthcare Innovation" },
+              { src: "https://i.ibb.co/rf0RzYvm/Whats-App-Image-2025-07-14-at-14-22-26-621a4f6a.jpg", alt: "Team Achievement Moment" }
+            ].map((image, index) => (
+              <div 
+                key={index} 
+                className="gallery-item relative group overflow-hidden rounded-2xl shadow-lg transform transition-all duration-500 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl cursor-pointer"
+                onClick={() => {
+                  setLightboxImage(image);
+                  setLightboxOpen(true);
+                }}
+              >
+                <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-900 rounded-2xl blur opacity-0 group-hover:opacity-75 transition duration-500 -z-10"></div>
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-100 to-white p-1">
+                  <div className="relative overflow-hidden rounded-xl">
+                    <img 
+                      src={image.src} 
+                      alt={image.alt} 
+                      className="w-full h-64 object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-purple-900/80 via-purple-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  </div>
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                  <div className="bg-gradient-to-r from-purple-600/95 to-purple-900/95 backdrop-blur-sm rounded-lg p-3">
+                    <p className="text-white text-sm font-semibold text-center">{image.alt}</p>
+                  </div>
+                </div>
+                <div className="absolute top-3 right-3 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-lg">
+                  <Heart className="w-4 h-4 inline-block mr-1" />
+                  View
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Decorative Elements */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-20 left-10 w-72 h-72 bg-purple-300/10 rounded-full blur-3xl animate-pulse-slow"></div>
+            <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+          </div>
+        </div>
+        
+        <style jsx>{`
+          @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+          }
+          .gallery-item {
+            animation: popIn 0.6s ease-out forwards;
+            opacity: 0;
+          }
+          .gallery-item:nth-child(1) { animation-delay: 0ms; }
+          .gallery-item:nth-child(2) { animation-delay: 100ms; }
+          .gallery-item:nth-child(3) { animation-delay: 200ms; }
+          .gallery-item:nth-child(4) { animation-delay: 300ms; }
+          .gallery-item:nth-child(5) { animation-delay: 400ms; }
+          .gallery-item:nth-child(6) { animation-delay: 500ms; }
+          .gallery-item:nth-child(7) { animation-delay: 600ms; }
+          .gallery-item:nth-child(8) { animation-delay: 700ms; }
+          .gallery-item:nth-child(9) { animation-delay: 800ms; }
+          .gallery-item:nth-child(10) { animation-delay: 900ms; }
+          .gallery-item:nth-child(11) { animation-delay: 1000ms; }
+        `}</style>
+      </section>
+
+      {/* Lightbox Modal */}
+      {lightboxOpen && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 animate-in fade-in duration-300"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-4 right-4 z-[110] p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-300 hover:scale-110"
+            aria-label="Close lightbox"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <div 
+            className="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative w-full h-full flex flex-col items-center justify-center">
+              <div className="relative w-full h-full flex items-center justify-center">
+                <img
+                  src={lightboxImage.src}
+                  alt={lightboxImage.alt}
+                  className="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
+                />
+              </div>
+              <div className="mt-4 bg-purple-600/90 backdrop-blur-sm rounded-lg px-6 py-3 max-w-2xl">
+                <p className="text-white text-center font-semibold">{lightboxImage.alt}</p>
+              </div>
             </div>
           </div>
         </div>
-      </section>
+      )}
 
       {/* Statistics Section */}
       <section id="stats" className="relative py-32 bg-gradient-to-b from-gray-900 via-black to-purple-900/20 text-white overflow-hidden section-scroll">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.1),transparent_50%)] animate-pulse-slow" />
+          <style jsx>{`
+            @keyframes float-element {
+              0% { transform: translateY(0px); }
+              50% { transform: translateY(-20px); }
+              100% { transform: translateY(0px); }
+            }
+            .float-orb {
+              animation: float-element var(--animation-duration) infinite ease-in-out;
+            }
+          `}</style>
           <div className="absolute inset-0">
-            {[...Array(20)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute rounded-full bg-purple-600/10"
-                style={{
-                  width: Math.random() * 300 + 50 + 'px',
-                  height: Math.random() * 300 + 50 + 'px',
-                  top: Math.random() * 100 + '%',
-                  left: Math.random() * 100 + '%',
-                  animation: `float ${Math.random() * 10 + 5}s infinite ease-in-out`,
-                  animationDelay: `-${Math.random() * 10}s`,
-                }}
-              />
-            ))}
+            {[...Array(20)].map((_, i) => {
+              const seed = i;
+              const width = (seed * 73) % 300 + 50;
+              const height = (seed * 157) % 300 + 50;
+              const top = (seed * 41) % 100;
+              const left = (seed * 89) % 100;
+              const duration = (seed * 11) % 10 + 5;
+              const delay = (seed * 23) % 10;
+              return (
+                <div
+                  key={i}
+                  className="absolute rounded-full bg-purple-600/10 float-orb"
+                  style={{
+                    width: `${width}px`,
+                    height: `${height}px`,
+                    top: `${top}%`,
+                    left: `${left}%`,
+                    '--animation-duration': `${duration}s`,
+                    animationDelay: `-${delay}s`,
+                  } as React.CSSProperties}
+                />
+              );
+            })}
           </div>
         </div>
 
@@ -1876,6 +2495,334 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Recognition & Awards Section */}
+      <section id="recognition" className="py-24 bg-gradient-to-b from-purple-900 to-black text-white section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-block bg-white/10 px-4 py-2 rounded-full mb-4 backdrop-blur-sm">
+              <span className="text-purple-200 font-semibold">International Recognition</span>
+            </div>
+            <h2 className="text-4xl font-bold mb-4">Global Innovation & Clinical Excellence</h2>
+            <p className="text-xl text-purple-200 max-w-3xl mx-auto">
+              Recognized worldwide for advancing cardiovascular prevention through responsible AI and clinical innovation
+            </p>
+          </div>
+
+          {/* Awards Timeline */}
+          <div className="relative">
+            <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-500 via-purple-600 to-purple-500 transform -translate-x-1/2 hidden md:block"></div>
+            
+            <div className="space-y-12">
+              {[
+                { year: "2025", title: "Presidential Gold Award", org: "Government of Sri Lanka", icon: Award, color: "from-yellow-500 to-yellow-600" },
+                { year: "2025", title: "ICT Leader of the Year", org: "CSSL", icon: Award, color: "from-purple-500 to-purple-600" },
+                { year: "2025", title: "Global Initiative on AI for Health", org: "ITU / WHO / WIPO - Panelist & Contributor", icon: Globe, color: "from-blue-500 to-blue-600" },
+                { year: "2023", title: "WIPO Global Innovation Awards", org: "Nominee", icon: Award, color: "from-purple-500 to-indigo-600" },
+                { year: "2022", title: "CEO of the Year - AI Category", org: "National ICT Awards", icon: Award, color: "from-purple-500 to-purple-600" },
+                { year: "2021", title: "Patents Granted", org: "United States & Japan", icon: FileText, color: "from-green-500 to-green-600" },
+                { year: "2021", title: "IEEE Research Publication", org: "Biomedical Engineering World Congress", icon: BookOpen, color: "from-blue-500 to-cyan-600" },
+                { year: "2018", title: "Best Startup of the Year", org: "National ICT Awards", icon: Award, color: "from-purple-500 to-purple-600" },
+                { year: "2018", title: "MetLife CEO Award", org: "Regional Innovation Competition", icon: Award, color: "from-blue-500 to-blue-600" },
+                { year: "2017", title: "Top 10 Innovations", org: "Cambridge Innovations Forum - University of Cambridge", icon: Award, color: "from-purple-500 to-pink-600" }
+              ].map((item, index) => (
+                <div key={index} className={`relative ${index % 2 === 0 ? 'md:pr-[50%] md:text-right' : 'md:pl-[50%] md:text-left'}`}>
+                  <div className="relative group">
+                    <div className={`absolute -inset-1 bg-gradient-to-r ${item.color} rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 animate-pulse-slow`}></div>
+                    <div className="relative bg-white/5 backdrop-blur-lg p-6 rounded-2xl border border-white/10">
+                      <div className={`flex items-center gap-4 ${index % 2 === 0 ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
+                        <div className={`w-16 h-16 bg-gradient-to-r ${item.color} rounded-full flex items-center justify-center flex-shrink-0`}>
+                          <item.icon className="w-8 h-8 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-purple-300 font-semibold mb-1">{item.year}</div>
+                          <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                          <p className="text-purple-200">{item.org}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Timeline dot */}
+                  <div className="absolute top-6 left-1/2 w-4 h-4 bg-purple-500 rounded-full transform -translate-x-1/2 border-4 border-black hidden md:block"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Research Publications */}
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="relative group h-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white/5 backdrop-blur-lg p-6 rounded-2xl border border-white/10 h-full flex flex-col">
+                <div className="flex items-center mb-4">
+                  <BookOpen className="w-6 h-6 text-blue-400 mr-3" />
+                  <h4 className="text-lg font-bold">IEEE Xplore</h4>
+                </div>
+                <p className="text-purple-200 mb-4">Peer-reviewed clinical research publication</p>
+                <a href="https://ieeexplore.ieee.org/document/9629748" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors">
+                  View Publication <ExternalLink className="w-4 h-4 ml-2" />
+                </a>
+              </div>
+            </div>
+
+            <div className="relative group h-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-teal-600 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white/5 backdrop-blur-lg p-6 rounded-2xl border border-white/10 h-full flex flex-col">
+                <div className="flex items-center mb-4">
+                  <BookOpen className="w-6 h-6 text-green-400 mr-3" />
+                  <h4 className="text-lg font-bold">PubMed</h4>
+                </div>
+                <p className="text-purple-200 mb-4">Indexed medical research database</p>
+                <a href="https://pubmed.ncbi.nlm.nih.gov/33254535/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-green-400 hover:text-green-300 transition-colors">
+                  View Publication <ExternalLink className="w-4 h-4 ml-2" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Privacy, Security & Ethics Section */}
+      <section id="privacy" className="py-24 bg-white section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-purple-900 mb-4">Privacy, Security & Ethics</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Core principles—not afterthoughts
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            {/* Data Confidentiality */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white p-6 rounded-2xl shadow-xl border border-purple-100 h-full">
+                <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                  <Lock className="w-7 h-7 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Data Confidentiality</h3>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                    <span>Personal & health data treated as confidential</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                    <span>Restricted access to authorized users only</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                    <span>Used only for intended purposes</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Secure Infrastructure */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white p-6 rounded-2xl shadow-xl border border-purple-100 h-full">
+                <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                  <ShieldCheck className="w-7 h-7 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Secure Infrastructure</h3>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                    <span>Secure server environments with controlled access</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                    <span>Encrypted data transmission</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                    <span>Protection at rest and in transit</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* User Control */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white p-6 rounded-2xl shadow-xl border border-purple-100 h-full">
+                <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                  <UserCheck className="w-7 h-7 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">User Control</h3>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                    <span>Users can view their own health information</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                    <span>Sharing occurs with user consent</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                    <span>No selling of personal health data</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Ethical AI */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white p-6 rounded-2xl shadow-xl border border-purple-100 h-full">
+                <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                  <Brain className="w-7 h-7 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Ethical AI Use</h3>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                    <span><strong>Supportive, not autonomous</strong></span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                    <span>Non-diagnostic outputs</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                    <span>No autonomous treatment decisions</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-8 rounded-2xl border border-purple-200">
+            <div className="flex items-start space-x-4">
+              <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <ShieldCheck className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-purple-900 mb-2">Our Commitment to Responsible Health Technology</h3>
+                <p className="text-gray-700 mb-4">
+                  Jendo recognizes that trust is essential in health technology. Privacy, security, and ethics are integrated into how the platform is designed, developed, and deployed.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 flex-shrink-0" />
+                    <span className="text-gray-700">Respect individual privacy</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 flex-shrink-0" />
+                    <span className="text-gray-700">Protect sensitive health data</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-purple-600 flex-shrink-0" />
+                    <span className="text-gray-700">Use technology responsibly</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Research & Evidence Section */}
+      <section id="research" className="py-24 bg-gradient-to-b from-gray-50 to-white section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-purple-900 mb-4">Research & Evidence</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Grounded in biomedical research and evidence-based principles
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+            {/* Core Research */}
+            <div className="relative group h-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full flex flex-col">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                    <BookOpen className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Core Jendo Research</h3>
+                </div>
+                <h4 className="font-bold text-lg text-gray-900 mb-3">A Hybrid Approach for Screening Endothelial Dysfunction</h4>
+                <p className="text-gray-700 mb-6">
+                  This study presents the scientific rationale and technical framework for combining non-invasive physiological signals to assess vascular reactivity and support early cardiovascular health insight.
+                </p>
+                <a 
+                  href="https://ieeexplore.ieee.org/document/9629748" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center bg-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-700 transition-colors"
+                >
+                  Read Published Research <ExternalLink className="w-4 h-4 ml-2" />
+                </a>
+              </div>
+            </div>
+
+            {/* Ongoing Validation */}
+            <div className="relative group h-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 animate-pulse-slow"></div>
+              <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-purple-100 h-full flex flex-col">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                    <Microscope className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Ongoing Research</h3>
+                </div>
+                <p className="text-gray-700 mb-6">
+                  Jendo continues to engage in ongoing research and validation activities:
+                </p>
+                <ul className="space-y-3">
+                  <li className="flex items-start space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Exploratory clinical evaluations under real-world conditions</span>
+                  </li>
+                  <li className="flex items-start space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Methodological refinement of signal acquisition and analysis</span>
+                  </li>
+                  <li className="flex items-start space-x-3">
+                    <CheckCircle className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
+                    <span className="text-gray-700">Collaboration with clinicians and academic partners</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Technology Foundation */}
+          <div className="bg-gradient-to-r from-purple-600 to-purple-900 text-white p-8 rounded-2xl">
+            <h3 className="text-2xl font-bold mb-6">Scientific Foundation</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <div className="flex items-center mb-4">
+                  <Activity className="w-6 h-6 mr-3" />
+                  <h4 className="text-xl font-bold">Photoplethysmography (PPG)</h4>
+                </div>
+                <p className="text-purple-100">
+                  Assesses vascular tone, pulse waveform characteristics, and peripheral blood flow dynamics.
+                </p>
+              </div>
+              <div>
+                <div className="flex items-center mb-4">
+                  <Waves className="w-6 h-6 mr-3" />
+                  <h4 className="text-xl font-bold">Digital Thermal Monitoring (DTM)</h4>
+                </div>
+                <p className="text-purple-100">
+                  Evaluates microvascular responses by measuring temperature changes following transient blood flow occlusion.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-12 text-center bg-purple-50 p-8 rounded-2xl border border-purple-200">
+            <p className="text-gray-800 text-lg">
+              <strong>Endothelial dysfunction</strong> represents an early functional abnormality in the cardiovascular disease continuum, consistently shown in peer-reviewed studies to be associated with increased risk even when individuals appear clinically stable or asymptomatic.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Blog Section */}
       <section id="blog" className="py-20 bg-white section-scroll">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -2018,7 +2965,7 @@ export default function Home() {
                 }
               }} className="space-y-6">
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-400 to-purple-600 rounded-xl blur-sm opacity-10 group-hover:opacity-30 transition duration-500"></div>
                   <div className="relative">
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Name</label>
                     <input
@@ -2033,7 +2980,7 @@ export default function Home() {
                 </div>
 
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-400 to-purple-600 rounded-xl blur-sm opacity-10 group-hover:opacity-30 transition duration-500"></div>
                   <div className="relative">
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                     <input
@@ -2048,7 +2995,7 @@ export default function Home() {
                 </div>
 
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-400 to-purple-600 rounded-xl blur-sm opacity-10 group-hover:opacity-30 transition duration-500"></div>
                   <div className="relative">
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">Phone (Optional)</label>
                     <input
@@ -2062,7 +3009,7 @@ export default function Home() {
                 </div>
 
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-400 to-purple-600 rounded-xl blur-sm opacity-10 group-hover:opacity-30 transition duration-500"></div>
                   <div className="relative">
                     <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Message</label>
                     <textarea
@@ -2107,7 +3054,7 @@ export default function Home() {
               </div>
               {/* Google Maps Integration */}
               <div className="relative group mt-6">
-                <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-400 to-purple-600 rounded-2xl blur-sm opacity-10 group-hover:opacity-25 transition duration-500"></div>
                 <div className="relative bg-white rounded-2xl shadow-xl border border-purple-100 overflow-hidden">
                   <div className="aspect-[21/9] w-full">
                     <iframe

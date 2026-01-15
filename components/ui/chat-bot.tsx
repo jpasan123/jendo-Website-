@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Loader2, Bot } from 'lucide-react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 interface Message {
@@ -12,6 +13,7 @@ interface Message {
 
 export function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
@@ -22,6 +24,10 @@ export function ChatBot() {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -86,17 +92,30 @@ export function ChatBot() {
       <button
         onClick={() => setIsOpen(true)}
         className={cn(
-          "fixed z-40 p-4 rounded-full shadow-lg",
-          "bg-purple-600 text-white",
-          "hover:bg-purple-700 transition-all duration-300",
+          "fixed z-40 rounded-full shadow-2xl",
+          "bg-white border-2 border-purple-200",
+          "hover:border-purple-400 hover:shadow-purple-200/50 transition-all duration-300",
           "focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2",
-          "bottom-4 right-4 sm:bottom-6 sm:right-6", // Adjusted positioning for mobile
-          "animate-bounce-slow",
+          "bottom-16 right-16 sm:bottom-20 sm:right-20",
+          "w-16 h-16 sm:w-20 sm:h-20",
+          "flex items-center justify-center",
+          "group hover:scale-105 transition-transform",
           isOpen && "hidden"
         )}
         aria-label="Open chat"
       >
-        <MessageSquare className="h-6 w-6" />
+        <div className="relative w-11 h-11 sm:w-14 sm:h-14">
+          <Image
+            src="https://i.ibb.co/cbTZ66m/OIP-8-removebg-preview.png"
+            alt="JENDO Chat"
+            fill
+            className="object-contain p-0.5"
+            priority
+          />
+        </div>
+        <div className="absolute bottom-0 right-0 w-5 h-5 bg-purple-600 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+          <MessageSquare className="h-3 w-3 text-white" />
+        </div>
       </button>
 
       {/* Chat Window */}
@@ -143,12 +162,14 @@ export function ChatBot() {
                 )}
               >
                 <p className="text-sm">{message.content}</p>
-                <p className="text-xs mt-1 opacity-70">
-                  {message.timestamp.toLocaleTimeString([], { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                  })}
-                </p>
+                {isMounted && (
+                  <p className="text-xs mt-1 opacity-70">
+                    {message.timestamp.toLocaleTimeString([], { 
+                      hour: '2-digit', 
+                      minute: '2-digit' 
+                    })}
+                  </p>
+                )}
               </div>
             </div>
           ))}
