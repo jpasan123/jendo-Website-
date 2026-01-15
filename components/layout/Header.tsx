@@ -16,12 +16,14 @@ export function Header() {
   const pathname = usePathname();
 
   const navigation = [
-    { name: 'ABOUT & MORE', href: '#about' },
-    { name: 'PRE ORDER', href: '#preorder' },
-    { name: 'GALLERY', href: '#emma-gallery' },
-    { name: 'BLOG', href: '#blog' },
+    { name: 'ECOSYSTEM', href: '#ecosystem' },
+    { name: 'TECHNOLOGY', href: '#technology' },
+    { name: 'FOR CLINICIANS', href: '#for-clinicians' },
+    { name: 'FOR INDIVIDUALS', href: '#for-individuals' },
+    { name: 'RECOGNITION', href: '#recognition' },
+    { name: 'RESEARCH', href: '#research' },
     { name: 'OUR TEAM', href: '#team' },
-    { name: 'CONTACT US', href: '#contact' },
+    { name: 'CONTACT', href: '#contact' },
   ];
 
   useEffect(() => {
@@ -99,59 +101,59 @@ export function Header() {
       <nav className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 sm:h-24 md:h-28 items-center justify-between">
           {/* Logo */}
-          <div className="flex-shrink-0 relative z-10 group">
-            <Link href="/" className="flex items-center">
-              <div className="relative w-[200px] h-[80px] sm:w-[250px] sm:h-[90px] md:w-[300px] md:h-[100px] transform transition-all duration-500 group-hover:scale-110 group-hover:-rotate-2">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-purple-900/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="flex-shrink-0 relative z-10">
+            <Link 
+              href="/" 
+              className="flex items-center outline-none focus:outline-none focus-visible:outline-none active:outline-none [-webkit-tap-highlight-color:transparent] focus:ring-0 focus:shadow-none active:shadow-none focus:bg-transparent active:bg-transparent"
+              style={{ WebkitTapHighlightColor: 'transparent' }}
+            >
+              <div className="relative w-[200px] h-[80px] sm:w-[250px] sm:h-[90px] md:w-[300px] md:h-[100px]">
                 <Image
                   src="https://i.ibb.co/cbTZ66m/OIP-8-removebg-preview.png"
                   alt="JENOO Logo"
                   fill
-                  className="object-contain transition-all duration-500 group-hover:brightness-110 animate-float mix-blend-luminosity"
+                  className="object-contain mix-blend-luminosity"
                   priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 animate-shine" />
               </div>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:space-x-6 relative z-10">
-            <div className="flex items-center space-x-1">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={(e) => handleNavigation(e, item.href)}
-                  className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
-                    isScrolled 
-                      ? "text-gray-300 hover:text-purple-400 hover:bg-purple-900/20" 
-                      : "text-white hover:text-purple-300 hover:bg-white/10",
-                    activeSection === item.href.replace('#', '') && 
-                      (isScrolled 
-                        ? "text-purple-400 bg-purple-900/20" 
-                        : "text-purple-300 bg-white/10"),
-                    "relative overflow-hidden group"
-                  )}
-                >
-                  <span className="relative z-10">{item.name}</span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-purple-900/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
-                </Link>
-              ))}
-            </div>
+          <div className="hidden md:flex md:items-center md:gap-0.5 lg:gap-0.5 xl:gap-0.5 relative z-10 flex-shrink min-w-0">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={(e) => handleNavigation(e, item.href)}
+                className={cn(
+                  "px-2 md:px-2.5 lg:px-3 xl:px-4 py-2 rounded-full text-[10px] md:text-xs lg:text-sm font-medium transition-all duration-300 whitespace-nowrap",
+                  isScrolled 
+                    ? "text-gray-300 hover:text-purple-400 hover:bg-purple-900/20" 
+                    : "text-white hover:text-purple-300 hover:bg-white/10",
+                  activeSection === item.href.replace('#', '') && 
+                    (isScrolled 
+                      ? "text-purple-400 bg-purple-900/20" 
+                      : "text-purple-300 bg-white/10"),
+                  "relative overflow-hidden group"
+                )}
+              >
+                <span className="relative z-10">{item.name}</span>
+                <span className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-purple-900/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
+              </Link>
+            ))}
 
             {/* Cart Icon */}
             <Link 
               href="/cart"
               className={cn(
-                "relative p-2 rounded-full transition-all duration-300",
+                "relative p-2 rounded-full transition-all duration-300 flex-shrink-0 ml-2",
                 isScrolled 
                   ? "text-gray-300 hover:text-purple-400 " 
                   : "text-white hover:text-purple-300"
               )}
             >
-              <ShoppingCart className="h-6 w-6" />
+              <ShoppingCart className="h-5 w-5 lg:h-6 lg:w-6" />
               {cart.items.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-purple-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                   {cart.items.length}

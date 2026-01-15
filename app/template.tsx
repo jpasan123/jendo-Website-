@@ -8,13 +8,10 @@ import { ChatBot } from '@/components/ui/chat-bot';
 import Image from 'next/image';
 
 export default function Template({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
+    setLoading(false);
   }, []);
 
   return (
