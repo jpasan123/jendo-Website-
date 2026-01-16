@@ -43,25 +43,8 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  
-  // Webpack Configuration for Google Sheets
-  webpack: (config) => {
-    config.resolve.fallback = { 
-      ...config.resolve.fallback,
-      fs: false,
-      net: false,
-      tls: false,
-      child_process: false,
-    };
-    return config;
-  },
-  
-  // Server Actions and External Packages
-  serverActions: true, // Moved to root level
-  serverExternalPackages: ['google-spreadsheet'], // Moved from experimental
+  // Webpack Configuration for Google Sheets (Turbopack migration needed for Next.js 16+)
+  // Remove deprecated/unsupported options for Next.js 16+
 };
 
 module.exports = nextConfig;
