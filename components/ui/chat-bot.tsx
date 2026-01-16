@@ -142,14 +142,14 @@ Just ask me anything! I'm here 24/7 to assist you.
           "hover:border-purple-400 hover:shadow-purple-200/50 transition-all duration-300",
           "focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2",
           "bottom-16 right-16 sm:bottom-20 sm:right-20",
-          "w-16 h-16 sm:w-20 sm:h-20",
+          "w-15 h-15 sm:w-18 sm:h-18", // Larger main button
           "flex items-center justify-center",
           "group hover:scale-105 transition-transform",
           isOpen && "hidden"
         )}
         aria-label="Open chat"
       >
-        <div className="relative w-11 h-11 sm:w-14 sm:h-14">
+        <div className="relative w-16 h-16 sm:w-20 sm:h-20"> {/* Larger logo */}
           <Image
             src="https://i.ibb.co/cbTZ66m/OIP-8-removebg-preview.png"
             alt="JENDO Chat"
@@ -158,8 +158,8 @@ Just ask me anything! I'm here 24/7 to assist you.
             priority
           />
         </div>
-        <div className="absolute bottom-0 right-0 w-5 h-5 bg-purple-600 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
-          <MessageSquare className="h-3 w-3 text-white" />
+        <div className="absolute bottom-1 right-1 w-4 h-4 sm:w-5 sm:h-5 bg-purple-600 rounded-full flex items-center justify-center shadow-lg border-2 border-white"> {/* Smaller badge */}
+          <MessageSquare className="h-2.5 w-2.5 sm:h-3 w-3 text-white" />
         </div>
       </button>
 
