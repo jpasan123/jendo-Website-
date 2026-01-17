@@ -13,7 +13,7 @@ interface ChatResponse {
 }
 
 // Backend API Configuration
-const BACKEND_API_URL = process.env.CHATBOT_BACKEND_URL || 'http://localhost:8080/api/chatbot/message';
+const BACKEND_API_URL = process.env.CHATBOT_BACKEND_URL || 'https://jendo.mytodoo.com/api/chatbot/message';
 const HUGGINGFACE_TOKEN = process.env.HUGGINGFACE_TOKEN || '';
 
 // TIER 1: Call Spring Boot Backend (Primary - with three-tier system built-in)

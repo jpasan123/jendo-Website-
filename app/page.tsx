@@ -837,7 +837,7 @@ export default function Home() {
               </span>
               </h1>
               <p className="text-xl sm:text-2xl text-gray-200 max-w-4xl mx-auto mb-10 text-center leading-relaxed">
-                Structured monitoring, evidence-based guidance, and coordinated care—built around the Jendo Vascular Health Test to support proactive cardiovascular health across a lifetime.
+                Structured monitoring, evidence-based guidance, and coordinated care built around the Jendo Vascular Health Test to support proactive cardiovascular health across a lifetime.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -2859,45 +2859,58 @@ export default function Home() {
                   href={research.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col h-full"
+                  className="group relative bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] flex flex-col h-full border border-gray-100"
                 >
-                  {/* Research Image */}
-                  <div className="relative h-48 w-full bg-gradient-to-br from-purple-100 via-purple-50 to-white overflow-hidden">
-                    <Image
-                      src={research.imageUrl}
-                      alt={research.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      quality={95}
-                      priority={index < 3}
-                    />
-                    <div className="absolute top-3 right-3 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10">
+                  {/* Gradient Glow Effect */}
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition duration-500 -z-10"></div>
+                  
+                  {/* Research Image with Enhanced Quality */}
+                  <div className="relative h-72 w-full bg-white overflow-hidden flex items-center justify-center p-4">
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={research.imageUrl}
+                        alt={research.title}
+                        fill
+                        className="object-contain group-hover:scale-105 transition-transform duration-500"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        quality={100}
+                        priority={index < 3}
+                        unoptimized={true}
+                      />
+                    </div>
+                    <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm font-bold px-4 py-2 rounded-full shadow-2xl z-20 border border-white/20">
                       {research.year}
                     </div>
-                    {/* Hover overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-purple-900/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
-                      <span className="text-white font-semibold flex items-center">
-                        Read Full Paper <ExternalLink className="w-4 h-4 ml-2" />
+                    {/* Enhanced Hover overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-purple-900/95 via-purple-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-6 z-20">
+                      <span className="text-white text-lg font-bold flex items-center gap-2 animate-fade-in">
+                        <FileText className="w-5 h-5" />
+                        Read Full Paper 
+                        <ExternalLink className="w-5 h-5" />
                       </span>
                     </div>
                   </div>
 
-                  {/* Content */}
-                  <div className="p-6 flex-1 flex flex-col">
-                    <div className="flex items-center gap-2 mb-3">
-                      <FileText className="w-4 h-4 text-purple-600 flex-shrink-0" />
-                      <span className="text-sm text-purple-600 font-medium">{research.journal}</span>
+                  {/* Enhanced Content */}
+                  <div className="p-8 flex-1 flex flex-col bg-gradient-to-b from-white to-purple-50/30">
+                    <div className="flex items-center gap-2 mb-4">
+                      <FileText className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                      <span className="text-sm text-purple-700 font-semibold tracking-wide uppercase">{research.journal}</span>
                     </div>
-                    <h4 className="text-lg font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-purple-600 transition-colors">
+                    <h4 className="text-xl font-bold text-gray-900 mb-4 line-clamp-2 group-hover:text-purple-600 transition-colors leading-tight">
                       {research.title}
                     </h4>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">
+                    <p className="text-gray-700 text-base mb-6 line-clamp-4 flex-1 leading-relaxed">
                       {research.description}
                     </p>
-                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
-                      <span className="text-xs text-gray-500 font-medium">External Publication</span>
-                      <ExternalLink className="w-4 h-4 text-purple-600 group-hover:translate-x-1 transition-transform" />
+                    <div className="flex items-center justify-between mt-auto pt-6 border-t-2 border-gray-200">
+                      <span className="text-sm text-gray-600 font-semibold flex items-center gap-2">
+                        <BookOpen className="w-4 h-4 text-purple-600" />
+                        External Publication
+                      </span>
+                      <div className="w-10 h-10 rounded-full bg-purple-100 group-hover:bg-purple-600 flex items-center justify-center transition-all duration-300">
+                        <ExternalLink className="w-5 h-5 text-purple-600 group-hover:text-white transition-colors" />
+                      </div>
                     </div>
                   </div>
                 </a>
@@ -2950,36 +2963,41 @@ export default function Home() {
             {blogPosts.map((post, index) => (
               <div
                 key={index}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col"
+                className="group bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.02] h-full flex flex-col border border-gray-100"
               >
                 <div className="block h-full">
-                  <div className="relative h-[250px] w-full">
+                  {/* Gradient Glow Effect */}
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-900 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition duration-500 -z-10"></div>
+                  
+                  <div className="relative h-[280px] w-full bg-gradient-to-br from-purple-50 to-white overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent z-10"></div>
                     <Image
                       src={post.image}
                       alt={post.title}
                       fill
-                      className="object-contain"
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
                       priority={index === 0}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw"
                       quality={100}
                       loading="eager"
+                      unoptimized={false}
                     />
                   </div>
-                  <div className="p-6 flex-1 flex flex-col">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2 hover:text-purple-600 transition-colors">
+                  <div className="p-8 flex-1 flex flex-col bg-gradient-to-b from-white to-purple-50/30">
+                    <h3 className="text-xl font-bold text-gray-900 mb-4 line-clamp-2 group-hover:text-purple-600 transition-colors leading-tight">
                       {post.title}
                     </h3>
-                    <p className="text-gray-600 mb-4 line-clamp-3 flex-1">
+                    <p className="text-gray-700 text-base mb-6 line-clamp-3 flex-1 leading-relaxed">
                       {post.excerpt}
                     </p>
-                    <div className="flex items-center justify-between text-sm text-gray-500 mt-auto">
+                    <div className="flex items-center justify-between text-sm text-gray-600 mt-auto pb-6 border-b-2 border-gray-200">
                       <div className="flex items-center space-x-2">
-                        <User className="h-4 w-4" />
-                        <span className="truncate max-w-[120px]">{post.author}</span>
+                        <User className="h-5 w-5 text-purple-600" />
+                        <span className="truncate max-w-[120px] font-medium">{post.author}</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Clock className="h-4 w-4" />
-                        <span>{post.date}</span>
+                        <Clock className="h-5 w-5 text-purple-600" />
+                        <span className="font-medium">{post.date}</span>
                       </div>
                     </div>
                     {/* Read More Button */}
@@ -2989,11 +3007,12 @@ export default function Home() {
                           ? 'https://www.ft.lk/front-page/Breakthrough-for-deep-tech-in-Sri-Lanka-Jendo-closes-new-investment-round/44-781375'
                           : post.url
                       }
-                      className="mt-6 inline-block bg-purple-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-purple-700 transition-colors text-center"
+                      className="mt-6 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-3 rounded-full font-bold hover:from-purple-700 hover:to-purple-800 transition-all duration-300 shadow-lg hover:shadow-xl group-hover:scale-105"
                       target={index === 0 ? undefined : "_blank"}
                       rel={index === 0 ? undefined : "noopener noreferrer"}
                     >
                       Read More
+                      <ExternalLink className="w-5 h-5" />
                     </a>
                   </div>
                 </div>

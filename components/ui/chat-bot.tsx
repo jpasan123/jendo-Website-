@@ -142,7 +142,7 @@ Just ask me anything! I'm here 24/7 to assist you.
           "hover:border-purple-400 hover:shadow-purple-200/50 transition-all duration-300",
           "focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2",
           "bottom-16 right-16 sm:bottom-20 sm:right-20",
-          "w-15 h-15 sm:w-18 sm:h-18", // Larger main button
+          "w-14 h-14 sm:w-17 sm:h-17", // Larger main button
           "flex items-center justify-center",
           "group hover:scale-105 transition-transform",
           isOpen && "hidden"
