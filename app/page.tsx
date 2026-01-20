@@ -828,16 +828,19 @@ export default function Home() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-20 sm:py-28 lg:py-32">
           <div className="animate-fade-in">
-            <div className="relative mb-8">
-              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white mb-8 text-center">
-              <span className="bg-gradient-to-r from-purple-100 via-white to-purple-100 bg-clip-text text-transparent animate-shine">
-                Advancing the Future of AI-Enabled Preventive Cardiovascular Care
+            <div className="relative mb-8 sm:mb-10">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 sm:mb-8 text-center leading-snug px-2">
+              <span className="bg-gradient-to-r from-purple-100 via-white to-purple-100 bg-clip-text text-transparent animate-shine block mb-3 sm:mb-4 break-words">
+                Advancing Preventive Cardiovascular Care
+              </span>
+              <span className="bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300 bg-clip-text text-transparent text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl block mt-3 sm:mt-4 break-words overflow-visible whitespace-normal">
+                Through Intelligent Technology
               </span>
               </h1>
-              <p className="text-xl sm:text-2xl text-gray-200 max-w-4xl mx-auto mb-10 text-center leading-relaxed">
-                Structured monitoring, evidence-based guidance, and coordinated care built around the Jendo Vascular Health Test to support proactive cardiovascular health across a lifetime.
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200 max-w-6xl mx-auto mb-8 sm:mb-10 text-center leading-relaxed px-2 sm:px-4 break-words">
+                A clinically validated, non-invasive vascular health test designed as an alternative to costly, time-intensive, operator-dependent cardiovascular assessments - built to transform primary care and prevention at scale.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
