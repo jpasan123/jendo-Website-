@@ -835,10 +835,23 @@ export default function Home() {
               <span className="bg-gradient-to-r from-purple-100 via-white to-purple-100 bg-clip-text text-transparent animate-shine block mb-3 sm:mb-4 break-words">
                 Advancing Preventive Cardiovascular Care
               </span>
-              <span className="bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300 bg-clip-text text-transparent text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl block mt-3 sm:mt-4 break-words overflow-visible whitespace-normal">
+              <span className="bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300 bg-clip-text text-transparent text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl block mt-3 sm:mt-4 break-words overflow-visible whitespace-normal">
                 Through Intelligent Technology
               </span>
               </h1>
+              
+              {/* Animated Heart Icon */}
+              <div className="flex justify-center my-6 sm:my-8">
+                <div className="relative">
+                  <Heart 
+                    className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-purple-400 fill-purple-400 opacity-50" 
+                  />
+                  <div className="absolute inset-0 animate-ping">
+                    <Heart className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-purple-300 fill-purple-300 opacity-30" />
+                  </div>
+                </div>
+              </div>
+              
               <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200 max-w-6xl mx-auto mb-8 sm:mb-10 text-center leading-relaxed px-2 sm:px-4 break-words">
                 A clinically validated, non-invasive vascular health test designed as an alternative to costly, time-intensive, operator-dependent cardiovascular assessments - built to transform primary care and prevention at scale.
               </p>
