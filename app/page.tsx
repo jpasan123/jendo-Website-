@@ -835,7 +835,7 @@ export default function Home() {
               <span className="bg-gradient-to-r from-purple-100 via-white to-purple-100 bg-clip-text text-transparent animate-shine block mb-3 sm:mb-4 break-words">
                 Advancing Preventive Cardiovascular Care
               </span>
-              <span className="bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300 bg-clip-text text-transparent text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl block mt-3 sm:mt-4 break-words overflow-visible whitespace-normal">
+              <span className="bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300 bg-clip-text text-transparent text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl block mt-3 sm:mt-4 break-words overflow-visible whitespace-normal">
                 Through Intelligent Technology
               </span>
               </h1>
