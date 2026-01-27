@@ -800,9 +800,9 @@ export default function Home() {
     <>
 
       {/* Hero Section */}
-      <section id="home" className="relative min-h-screen flex items-center section-scroll">
+      <section id="home" className="relative min-h-screen flex items-center section-scroll overflow-hidden">
         {/* Background Image */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0">
           <Image
             src="/images/jendo_background.jpg"
             alt="Jendo Background"
@@ -821,21 +821,13 @@ export default function Home() {
         {/* Content */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-20 sm:py-28 lg:py-32">
           <div className="animate-fade-in">
-            <div className="relative mb-8 sm:mb-10">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 text-center leading-none px-2">
-              <span className="bg-gradient-to-r from-purple-100 via-white to-purple-100 bg-clip-text text-transparent animate-shine block mb-1 break-words">
+            <div className="relative mb-8 sm:mb-10 pb-6">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-4 text-center px-2 pb-6" style={{ lineHeight: '1.4' }}>
+              <span className="bg-gradient-to-r from-purple-100 via-white to-purple-100 bg-clip-text text-transparent animate-shine block mb-1 break-words py-1">
                 Assuring Vascular Health
               </span>
-              <span className="bg-gradient-to-r from-purple-100 via-white to-purple-100 bg-clip-text text-transparent animate-shine block mb-2 sm:mb-3 break-words">
+              <span className="bg-gradient-to-r from-purple-100 via-white to-purple-100 bg-clip-text text-transparent animate-shine block mb-2 sm:mb-3 break-words py-1">
                 for a Quality Life
-              </span>
-              <span className="relative inline-block w-full">
-                <span className="bg-gradient-to-r from-purple-200 via-white to-purple-200 bg-clip-text text-transparent text-xl sm:text-2xl md:text-3xl lg:text-4xl block mt-2 sm:mt-3 break-words font-extrabold tracking-wider uppercase drop-shadow-[0_0_10px_rgba(168,85,247,0.4)] animate-shine" style={{ backgroundSize: '200% auto', letterSpacing: '0.08em' }}>
-                  AI Technology
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-purple-300 to-purple-400 bg-clip-text text-transparent blur-sm opacity-40 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-wider uppercase pointer-events-none" style={{ letterSpacing: '0.08em' }}>
-                  AI Technology
-                </div>
               </span>
               </h1>
               

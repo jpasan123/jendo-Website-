@@ -127,7 +127,7 @@ export function Header() {
                 href={item.href}
                 onClick={(e) => handleNavigation(e, item.href)}
                 className={cn(
-                  "px-1 md:px-1.5 lg:px-3 xl:px-4 py-2 rounded-full text-[10px] md:text-xs lg:text-sm font-medium transition-all duration-300 whitespace-nowrap",
+                  "px-1 md:px-1.5 lg:px-2.5 xl:px-3 py-2 rounded-full text-[9px] md:text-[10px] lg:text-xs font-medium transition-all duration-300 whitespace-nowrap",
                   isScrolled 
                     ? "text-gray-300 hover:text-purple-400 hover:bg-purple-900/20" 
                     : "text-white hover:text-purple-300 hover:bg-white/10",
