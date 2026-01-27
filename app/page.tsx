@@ -870,13 +870,6 @@ export default function Home() {
                 <ShoppingCart className="h-4 w-4" />
                 <span>Pre-Order</span>
               </button>
-              <button
-                onClick={handleLabPartnerClick}
-                className="bg-purple-600 text-white px-6 py-2 rounded-full font-medium hover:bg-purple-700 transition-colors inline-flex items-center justify-center space-x-2"
-              >
-                <Calendar className="h-4 w-4" />
-                <span>Book Test</span>
-              </button>
             </div>
           </div>
         </div>
