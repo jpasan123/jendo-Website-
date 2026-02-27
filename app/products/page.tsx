@@ -183,7 +183,7 @@ export default function Products() {
                       onClick={() => addToCart({
                         id: 'pro-package',
                         name: 'JENDO Pro Device',
-                        price: 2400,
+                        // price: 2400,
                         image_url: 'https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg',
                         description: 'Professional vascular monitoring system for clinics'
                       })}

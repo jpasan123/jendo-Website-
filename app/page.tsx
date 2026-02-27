@@ -791,7 +791,7 @@ export default function Home() {
   };
 
   const preOrderPrices = {
-    professional: { amount: 2400, currency: "USD" },
+    // professional: { amount: 2400, currency: "USD" },
     enterprise: { amount: 0, currency: "USD" }, // Custom, handle as needed
   };
 
@@ -1668,7 +1668,7 @@ export default function Home() {
                   <div className="flex-1 flex flex-col">
                     <div className="flex-1">
                       <h3 className="text-2xl font-semibold text-gray-900 mb-2">Standard Package</h3>
-                      <div className="text-3xl font-bold text-purple-600 mb-4">$2,400<span className="text-base text-gray-600">/year</span></div>
+                      {/* <div className="text-3xl font-bold text-purple-600 mb-4">$2,400<span className="text-base text-gray-600">/year</span></div> */}
                       <ul className="space-y-2">
                         <li className="flex items-center space-x-2">
                           <CheckCircle className="w-4 h-4 text-purple-600 flex-shrink-0" />
@@ -1692,7 +1692,7 @@ export default function Home() {
                       onClick={() => addToCart({
                         id: 'pro-package',
                         name: 'JENDO Pro Device',
-                        price: 2400,
+                        // price: 2400,
                         image_url: 'https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg',
                         description: 'Professional vascular monitoring system for clinics'
                       })}
@@ -3259,7 +3259,7 @@ export default function Home() {
                   required
                 >
                   <option value="">Select a package</option>
-                  <option value="professional">Standard Package ($2,400/year)</option>
+                  {/* <option value="professional">Standard Package ($2,400/year)</option> */}
                   <option value="enterprise">Enterprise Package (Custom)</option>
                 </select>
               </div>
