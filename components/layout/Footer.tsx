@@ -1,18 +1,26 @@
 'use client';
 
-import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone, Heart } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone, Heart, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
+const font = 'var(--font-red-hat-display),sans-serif';
+
 export function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-gray-900 to-black text-gray-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Logo and Company Info */}
-          <div className="space-y-4">
-            <Link href="/" className="block">
-              <div className="relative w-[200px] h-[80px]">
+    <footer style={{ background: '#0a0a0a', fontFamily: font }}>
+      {/* Top accent line */}
+      <div className="h-px w-full" style={{ background: 'linear-gradient(to right,transparent,#893A9F,transparent)' }} />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
+
+        {/* Main grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-14">
+
+          {/* Col 1 — Brand (spans 2 on lg) */}
+          <div className="lg:col-span-2 flex flex-col gap-6">
+            <Link href="/">
+              <div className="relative w-[160px] h-[64px]">
                 <Image
                   src="https://i.ibb.co/cbTZ66m/OIP-8-removebg-preview.png"
                   alt="JENDO Logo"
@@ -21,188 +29,142 @@ export function Footer() {
                 />
               </div>
             </Link>
-            <p className="text-sm">
-              Empowering healthcare with cutting-edge vascular monitoring solutions.
+            <p className="text-sm leading-relaxed max-w-xs" style={{ color: '#9ca3af' }}>
+              Empowering healthcare with cutting-edge AI-powered vascular monitoring — designed in Sri Lanka &amp; Japan, manufactured in Switzerland.
             </p>
-            <div className="flex space-x-4">
-              <Link href="#" className="hover:text-purple-400 transition-colors">
-                <Facebook className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="hover:text-purple-400 transition-colors">
-                <Twitter className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="hover:text-purple-400 transition-colors">
-                <Instagram className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="hover:text-purple-400 transition-colors">
-                <Linkedin className="h-5 w-5" />
-              </Link>
+            {/* Social icons */}
+            <div className="flex gap-3">
+              {[
+                { icon: <Facebook className="w-4 h-4" />, href: '#' },
+                { icon: <Twitter className="w-4 h-4" />, href: '#' },
+                { icon: <Instagram className="w-4 h-4" />, href: '#' },
+                { icon: <Linkedin className="w-4 h-4" />, href: '#' },
+              ].map((s, i) => (
+                <a
+                  key={i}
+                  href={s.href}
+                  className="w-9 h-9 rounded-lg flex items-center justify-center transition-all hover:scale-110"
+                  style={{ background: '#1a1a1a', color: '#9ca3af', border: '1px solid #2a2a2a' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#893A9F'; (e.currentTarget as HTMLElement).style.color = '#fff'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#1a1a1a'; (e.currentTarget as HTMLElement).style.color = '#9ca3af'; }}
+                >
+                  {s.icon}
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Col 2 — Quick Links */}
           <div>
-            <h4 className="font-semibold text-white mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link href="#about" className="hover:text-purple-400 transition-colors">
-                  About & More
-                </Link>
+            <h4 className="text-xs font-bold tracking-widest uppercase mb-5" style={{ color: '#893A9F' }}>Quick Links</h4>
+            <ul className="space-y-3">
+              {[
+                { label: 'About', href: '#about' },
+                { label: 'Technology', href: '#technology' },
+                { label: 'Products', href: '#products' },
+                { label: 'Pre-Order', href: '#preorder' },
+                { label: 'Our Team', href: '#team' },
+                { label: 'Latest News', href: '#blog' },
+                { label: 'Contact Us', href: '#contact' },
+              ].map((link, i) => (
+                <li key={i}>
+                  <Link
+                    href={link.href}
+                    className="text-sm flex items-center gap-1.5 transition-colors group"
+                    style={{ color: '#9ca3af' }}
+                    onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#c084fc'}
+                    onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#9ca3af'}
+                  >
+                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#893A9F]" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Col 3 — Jendo Inc. */}
+          <div>
+            <h4 className="text-xs font-bold tracking-widest uppercase mb-5" style={{ color: '#893A9F' }}>Jendo Inc.</h4>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3">
+                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#893A9F' }} />
+                <span className="text-sm leading-relaxed" style={{ color: '#9ca3af' }}>
+                  251, Little Falls Drive,<br/>Wilmington, Delaware, USA
+                </span>
               </li>
-              <li>
-                <Link href="#preorder" className="hover:text-purple-400 transition-colors">
-                  Pre Order
-                </Link>
+              <li className="flex items-center gap-3">
+                <Mail className="w-4 h-4 flex-shrink-0" style={{ color: '#893A9F' }} />
+                <a href="mailto:info@jendoinnovations.com" className="text-sm transition-colors" style={{ color: '#9ca3af' }}
+                  onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#c084fc'}
+                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#9ca3af'}>
+                  info@jendoinnovations.com
+                </a>
               </li>
-              <li>
-                <Link href="#blog" className="hover:text-purple-400 transition-colors">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link href="#team" className="hover:text-purple-400 transition-colors">
-                  Our Team
-                </Link>
+              <li className="flex items-center gap-3">
+                <Phone className="w-4 h-4 flex-shrink-0" style={{ color: '#893A9F' }} />
+                <a href="tel:+94766210120" className="text-sm transition-colors" style={{ color: '#9ca3af' }}
+                  onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#c084fc'}
+                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#9ca3af'}>
+                  +94 76 621 0120
+                </a>
               </li>
             </ul>
           </div>
 
-          {/* Contact Info */}
-            <div>
-              <h4 className="font-semibold text-white mb-4">Jendo Incoperation</h4>
-              <ul className="space-y-2">
-                <li className="flex items-start space-x-2">
-                  <MapPin className="h-5 w-5 text-purple-400 flex-shrink-0 mt-0.5" />
-                  <span>251, Little Falls Drive, Wilmington, New Castle County, Delaware.</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <Mail className="h-4 w-4 text-purple-400" />
-                  <a href="mailto:info@jendoinnovations.com" className="hover:text-purple-400 transition-colors">
-                    info@jendoinnovations.com
-                  </a>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <Phone className="h-4 w-4 text-purple-400" />
-                  <span>0766210120</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Additional Contact Info */}
-            <div>
-            <h4 className="font-semibold text-white mb-4">AI health R&D centre</h4>
-            <ul className="space-y-2">
-              <li className="flex items-center space-x-2">
-              <MapPin className="h-4 w-4 text-purple-400" />
-              <span>Bay X, Trace Expert City</span>
+          {/* Col 4 — R&D Centre */}
+          <div>
+            <h4 className="text-xs font-bold tracking-widest uppercase mb-5" style={{ color: '#893A9F' }}>AI Health R&amp;D Centre</h4>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3">
+                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#893A9F' }} />
+                <span className="text-sm leading-relaxed" style={{ color: '#9ca3af' }}>
+                  Bay X, Trace Expert City,<br/>Colombo 10, Sri Lanka
+                </span>
               </li>
-              <li className="flex items-center space-x-2">
-              <Mail className="h-4 w-4 text-purple-400" />
-              <a href="mailto:support@jendoinnovations.com" className="hover:text-purple-400 transition-colors">
-              info@jendoinnovations.com
-              </a>
+              <li className="flex items-center gap-3">
+                <Mail className="w-4 h-4 flex-shrink-0" style={{ color: '#893A9F' }} />
+                <a href="mailto:keerthi@jendoinnovations.com" className="text-sm transition-colors" style={{ color: '#9ca3af' }}
+                  onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#c084fc'}
+                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#9ca3af'}>
+                  keerthi@jendoinnovations.com
+                </a>
               </li>
-              <li className="flex items-center space-x-2">
-              <Phone className="h-4 w-4 text-purple-400" />
-              <span>0766210120</span>
+              <li className="flex items-center gap-3">
+                <Phone className="w-4 h-4 flex-shrink-0" style={{ color: '#893A9F' }} />
+                <a href="tel:+94766210120" className="text-sm transition-colors" style={{ color: '#9ca3af' }}
+                  onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#c084fc'}
+                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#9ca3af'}>
+                  +94 76 621 0120
+                </a>
               </li>
             </ul>
-            </div>
+          </div>
 
-          {/* Newsletter */}
-            {/* Quick Links */}
-            <div>
-            <h4 className="font-semibold text-white mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li>
-              <Link href="#about" className="hover:text-purple-400 transition-colors">
-                About & More
-              </Link>
-              </li>
-              <li>
-              <Link href="#preorder" className="hover:text-purple-400 transition-colors">
-                Pre Order
-              </Link>
-              </li>
-              <li>
-              <Link href="#blog" className="hover:text-purple-400 transition-colors">
-                Blog
-              </Link>
-              </li>
-              <li>
-              <Link href="#team" className="hover:text-purple-400 transition-colors">
-                Our Team
-              </Link>
-              </li>
-            </ul>
-            </div>
-
-            {/* Newsletter */}
-            <div>
-            <h4 className="font-semibold text-white mb-4">Newsletter</h4>
-            <p className="text-sm mb-4">Subscribe to stay updated with our latest innovations</p>
-            <form className="space-y-2">
-              <input
-              type="email"
-              placeholder="Your email address"
-              className="w-full px-4 py-2 rounded-full bg-gray-800 border border-gray-700 focus:outline-none focus:border-purple-500 text-white"
-              />
-              <button
-              type="submit"
-              className="w-full bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
-              >
-              <Mail className="h-4 w-4" />
-              <span>Subscribe</span>
-              </button>
-            </form>
-            </div>
-
-            {/* Contact Info
-            <div>
-            <h4 className="font-semibold text-white mb-4">Contact Us</h4>
-            <ul className="space-y-2">
-              <li className="flex items-center space-x-2">
-              <MapPin className="h-4 w-4 text-purple-400" />
-              <span>Bay X, Trace Expert City</span>
-              </li>
-              <li className="flex items-center space-x-2">
-              <Mail className="h-4 w-4 text-purple-400" />
-              <a href="mailto:info@jendoinnovations.com" className="hover:text-purple-400 transition-colors">
-              info@jendoinnovations.com
-              </a>
-              </li>
-              <li className="flex items-center space-x-2">
-              <Phone className="h-4 w-4 text-purple-400" />
-              <span>0766210120</span>
-              </li>
-            </ul>
-            </div> */}
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-gray-800">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="flex flex-col items-center md:items-start w-full md:w-auto space-y-2">
-              <p className="text-sm flex items-center justify-center md:justify-start w-full">
-              © {new Date().getFullYear()} JENDO. Made with <Heart className="h-4 w-4 mx-1 text-purple-400" /> in Sri Lanka
-              </p>
-              <p className="text-sm text-center md:text-left">
-              Jendo Product is designed in Sri Lanka and Japan and manufactured in Switzerland.
-              </p>
-            </div>
-            <div className="flex space-x-6 text-sm">
-              <Link href="/privacy-policy" className="hover:text-purple-400 transition-colors">
-                Privacy Policy
+        {/* Bottom bar */}
+        <div className="pt-7 flex flex-col md:flex-row items-center justify-between gap-5" style={{ borderTop: '1px solid #1f1f1f' }}>
+          <p className="text-xs flex items-center gap-1.5" style={{ color: '#6b7280' }}>
+            &copy; {new Date().getFullYear()} JENDO Innovations. Made with
+            <Heart className="w-3.5 h-3.5" style={{ color: '#893A9F' }} />
+            in Sri Lanka
+          </p>
+          <div className="flex flex-wrap items-center gap-6">
+            {[
+              { label: 'Privacy Policy', href: '/privacy-policy' },
+              { label: 'Terms of Service', href: '/terms-of-service' },
+              { label: 'Cookie Policy', href: '/cookie-policy' },
+            ].map((l, i) => (
+              <Link key={i} href={l.href} className="text-xs transition-colors" style={{ color: '#6b7280' }}
+                onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#c084fc'}
+                onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#6b7280'}>
+                {l.label}
               </Link>
-              <Link href="/terms-of-service" className="hover:text-purple-400 transition-colors">
-                Terms of Service
-              </Link>
-              <Link href="/cookie-policy" className="hover:text-purple-400 transition-colors">
-                Cookie Policy
-              </Link>
-            </div>
+            ))}
           </div>
         </div>
+
       </div>
     </footer>
   );

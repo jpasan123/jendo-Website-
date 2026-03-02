@@ -18,8 +18,6 @@ export function Header() {
   const navigation = [
     { name: 'ECOSYSTEM', href: '#ecosystem' },
     { name: 'TECHNOLOGY', href: '#technology' },
-    { name: 'FOR CLINICIANS', href: '#for-clinicians' },
-    { name: 'FOR INDIVIDUALS', href: '#for-individuals' },
     { name: 'RECOGNITION', href: '#recognition' },
     { name: 'RESEARCH', href: '#research' },
     { name: 'OUR TEAM', href: '#team' },
@@ -92,27 +90,29 @@ export function Header() {
   return (
     <header 
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-        isScrolled ? "bg-[#1a1a1a]/95 backdrop-blur-md border-b border-purple-900/20" : "bg-[#1a1a1a]/95"
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        isScrolled
+          ? "bg-black/60 backdrop-blur-3xl border-b border-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.5)]"
+          : "bg-black/40 backdrop-blur-2xl border-b border-white/5"
       )}
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 to-black/10 pointer-events-none" />
+      {/* no background overlay, keep nav fully transparent */}
       
-      <nav className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-20 sm:h-24 md:h-28 items-center justify-between">
+      <nav className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 font-[var(--font-red-hat-display)]">
+        <div className="flex h-[88px] items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0 relative z-10">
             <Link 
               href="/" 
-              className="flex items-center outline-none focus:outline-none focus-visible:outline-none active:outline-none [-webkit-tap-highlight-color:transparent] focus:ring-0 focus:shadow-none active:shadow-none focus:bg-transparent active:bg-transparent"
+              className="flex items-center gap-2 outline-none focus:outline-none [-webkit-tap-highlight-color:transparent]"
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
-              <div className="relative w-[200px] h-[80px] sm:w-[250px] sm:h-[90px] md:w-[300px] md:h-[100px]">
+              <div className="relative w-[120px] h-[120px]">
                 <Image
-                  src="https://i.ibb.co/cbTZ66m/OIP-8-removebg-preview.png"
-                  alt="JENOO Logo"
+                  src="/jendo-icon.png"
+                  alt="JENDO Logo"
                   fill
-                  className="object-contain mix-blend-luminosity"
+                  className="object-contain"
                   priority
                 />
               </div>
@@ -120,26 +120,18 @@ export function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:gap-0.5 lg:gap-0.5 xl:gap-0.5 relative z-10 flex-shrink min-w-0">
+          <div className="hidden md:flex md:items-center md:gap-1 lg:gap-3 relative z-10">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 onClick={(e) => handleNavigation(e, item.href)}
                 className={cn(
-                  "px-1 md:px-1.5 lg:px-2.5 xl:px-3 py-2 rounded-full text-[9px] md:text-[10px] lg:text-xs font-medium transition-all duration-300 whitespace-nowrap",
-                  isScrolled 
-                    ? "text-gray-300 hover:text-purple-400 hover:bg-purple-900/20" 
-                    : "text-white hover:text-purple-300 hover:bg-white/10",
-                  activeSection === item.href.replace('#', '') && 
-                    (isScrolled 
-                      ? "text-purple-400 bg-purple-900/20" 
-                      : "text-purple-300 bg-white/10"),
-                  "relative overflow-hidden group"
+                  "px-3 py-2 text-[11px] lg:text-[12px] font-semibold tracking-[0.12em] font-[var(--font-red-hat-display)] transition-colors duration-200 whitespace-nowrap text-white/90 hover:text-purple-300",
+                  activeSection === item.href.replace('#', '') && "text-purple-300 border-b border-purple-400"
                 )}
               >
-                <span className="relative z-10">{item.name}</span>
-                <span className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-purple-900/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
+                <span>{item.name}</span>
               </Link>
             ))}
 
@@ -147,15 +139,13 @@ export function Header() {
             <Link 
               href="/cart"
               className={cn(
-                "relative p-2 rounded-full transition-all duration-300 flex-shrink-0 ml-2",
-                isScrolled 
-                  ? "text-gray-300 hover:text-purple-400 " 
-                  : "text-white hover:text-purple-300"
+                "relative p-2 rounded-full transition-all duration-300 flex-shrink-0 ml-3",
+                "text-white/80 hover:text-purple-300"
               )}
             >
-              <ShoppingCart className="h-5 w-5 lg:h-6 lg:w-6" />
+              <ShoppingCart className="h-6 w-6 lg:h-7 lg:w-7" />
               {cart.items.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-purple-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-[#893A9F] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                   {cart.items.length}
                 </span>
               )}
@@ -168,14 +158,12 @@ export function Header() {
               href="/cart"
               className={cn(
                 "relative p-2 rounded-full transition-all duration-300",
-                isScrolled 
-                  ? "text-gray-300 hover:text-purple-400" 
-                  : "text-white hover:text-purple-300"
+                "text-white/80 hover:text-purple-300"
               )}
             >
-              <ShoppingCart className="h-6 w-6" />
+              <ShoppingCart className="h-7 w-7" />
               {cart.items.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-purple-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-[#893A9F] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                   {cart.items.length}
                 </span>
               )}
@@ -186,13 +174,11 @@ export function Header() {
               onClick={() => setIsOpen(!isOpen)}
               className={cn(
                 "p-2 rounded-lg transition-colors",
-                isScrolled 
-                  ? "text-gray-300 hover:text-purple-400" 
-                  : "text-white hover:text-purple-300"
+                "text-white/80 hover:text-purple-300"
               )}
               aria-label="Toggle menu"
             >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
             </button>
           </div>
         </div>
