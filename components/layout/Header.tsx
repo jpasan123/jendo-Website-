@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, ShoppingCart } from 'lucide-react';
+import { Menu, X, ShoppingCart, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/hooks/useCart';
 import { usePathname } from 'next/navigation';
@@ -16,12 +16,12 @@ export function Header() {
   const pathname = usePathname();
 
   const navigation = [
-    { name: 'ECOSYSTEM', href: '#ecosystem' },
-    { name: 'TECHNOLOGY', href: '#technology' },
-    { name: 'RECOGNITION', href: '#recognition' },
-    { name: 'RESEARCH', href: '#research' },
-    { name: 'OUR TEAM', href: '#team' },
-    { name: 'CONTACT', href: '#contact' },
+    { name: 'Ecosystem', href: '#ecosystem' },
+    { name: 'Technology', href: '#technology' },
+    { name: 'Recognition', href: '#recognition' },
+    { name: 'Research', href: '#research' },
+    { name: 'Our Team', href: '#team' },
+    { name: 'Contact', href: '#contact' },
   ];
 
   useEffect(() => {
@@ -127,7 +127,7 @@ export function Header() {
                 href={item.href}
                 onClick={(e) => handleNavigation(e, item.href)}
                 className={cn(
-                  "px-3 py-2 text-[11px] lg:text-[12px] font-semibold tracking-[0.12em] font-[var(--font-red-hat-display)] transition-colors duration-200 whitespace-nowrap text-white/90 hover:text-purple-300",
+                  "px-3 py-2 text-[13px] lg:text-[14px] tracking-[0.08em] font-[var(--font-red-hat-display)] transition-colors duration-200 whitespace-nowrap text-white/90 hover:text-purple-300",
                   activeSection === item.href.replace('#', '') && "text-purple-300 border-b border-purple-400"
                 )}
               >
@@ -135,7 +135,7 @@ export function Header() {
               </Link>
             ))}
 
-            {/* Cart Icon */}
+{/* Cart Icon - hidden
             <Link 
               href="/cart"
               className={cn(
@@ -150,10 +150,24 @@ export function Header() {
                 </span>
               )}
             </Link>
+            */}
+
+            {/* Visit My Jendo Portal button */}
+            <a
+              href="https://app.jendo.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-3 flex items-center gap-2 px-4 py-2 rounded-full text-[13px] lg:text-[14px] font-[var(--font-red-hat-display)] text-white whitespace-nowrap transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 active:scale-95"
+              style={{ background: 'linear-gradient(135deg,#893A9F,#4a1260)', border: '1px solid rgba(192,132,252,0.3)' }}
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              Visit My Jendo Portal
+            </a>
           </div>
 
           {/* Mobile Menu Button and Cart Icon */}
           <div className="md:hidden flex items-center space-x-4 relative z-10">
+            {/* Mobile Cart Icon - hidden
             <Link 
               href="/cart"
               className={cn(
@@ -168,6 +182,7 @@ export function Header() {
                 </span>
               )}
             </Link>
+            */}
 
             <button
               id="mobile-menu-button"
@@ -183,41 +198,84 @@ export function Header() {
           </div>
         </div>
 
-        {/* Mobile Navigation Menu */}
+        {/* Mobile Navigation — staggered dropdown */}
+
+        {/* Blurred backdrop (behind menu, over page content) */}
+        <div
+          onClick={() => setIsOpen(false)}
+          className={cn(
+            'md:hidden fixed inset-0 top-[88px] z-30 backdrop-blur-md bg-black/40 transition-opacity duration-300',
+            isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          )}
+          aria-hidden="true"
+        />
+
+        {/* Dropdown panel */}
         <div
           id="mobile-nav"
           className={cn(
-            'md:hidden fixed inset-0 top-[80px] sm:top-[96px] bg-[#1a1a1a]/98 backdrop-blur-md transition-all duration-300 ease-in-out z-50',
-            isOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-full invisible'
+            'md:hidden fixed left-0 right-0 top-[88px] z-40',
+            'bg-[#0c0c0c]/95 backdrop-blur-xl border-b border-white/10 shadow-2xl',
+            'transition-all duration-300 ease-in-out overflow-hidden',
+            isOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
           )}
         >
-          <div className="h-[calc(100vh-80px)] sm:h-[calc(100vh-96px)] overflow-y-auto px-4 py-6">
-            <div className="flex flex-col space-y-3">
-              {navigation.map((item) => (
-                <Link
+          <ul className="flex flex-col px-4 pt-4 pb-6">
+            {navigation.map((item, i) => {
+              const isActive = activeSection === item.href.replace('#', '');
+              return (
+                <li
                   key={item.name}
-                  href={item.href}
-                  onClick={(e) => {
-                    handleNavigation(e, item.href);
-                    setIsOpen(false);
-                  }}
                   className={cn(
-                    "relative px-6 py-4 rounded-xl text-lg font-medium transition-all duration-300",
-                    "border border-purple-500/20 backdrop-blur-sm",
-                    "hover:border-purple-500/50 hover:bg-purple-500/10",
-                    "active:scale-[0.98] active:bg-purple-500/20",
-                    activeSection === item.href.replace('#', '')
-                      ? "bg-gradient-to-r from-purple-500/20 to-purple-600/20 text-purple-300 border-purple-500/50 shadow-[inset_0_1px_0_0_rgba(147,51,234,0.1)]"
-                      :  "text-purple-500 bg-[#1a1a1a]"
+                    'transition-all duration-300',
+                    isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
                   )}
+                  style={{ transitionDelay: isOpen ? `${i * 60}ms` : '0ms' }}
                 >
-                  <span className="relative z-10">{item.name}</span>
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-600/20 to-purple-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-600/10 via-purple-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </Link>
-              ))}
-            </div>
-          </div>
+                  <Link
+                    href={item.href}
+                    onClick={(e) => { handleNavigation(e, item.href); setIsOpen(false); }}
+                    className={cn(
+                      'flex items-center gap-3 px-4 py-3.5 rounded-lg text-[15px] font-[var(--font-red-hat-display)] transition-colors duration-200',
+                      isActive
+                        ? 'text-white'
+                        : 'text-white/60 hover:text-white'
+                    )}
+                  >
+                    <span
+                      className="w-1 h-4 rounded-full flex-shrink-0 transition-opacity duration-200"
+                      style={{ background: '#893A9F', opacity: isActive ? 1 : 0 }}
+                    />
+                    {item.name}
+                  </Link>
+                  {i < navigation.length - 1 && (
+                    <div className="mx-4 h-px bg-white/5" />
+                  )}
+                </li>
+              );
+            })}
+
+            {/* Portal CTA */}
+            <li
+              className={cn(
+                'mt-4 transition-all duration-300',
+                isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+              )}
+              style={{ transitionDelay: isOpen ? `${navigation.length * 60}ms` : '0ms' }}
+            >
+              <a
+                href="https://app.jendo.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center justify-center gap-2.5 w-full px-5 py-3.5 rounded-xl text-[15px] font-[var(--font-red-hat-display)] text-white transition-all duration-200 active:scale-[0.97]"
+                style={{ background: 'linear-gradient(135deg,#893A9F,#4a1260)', border: '1px solid rgba(192,132,252,0.25)' }}
+              >
+                <ExternalLink className="w-4 h-4 flex-shrink-0" />
+                Visit My Jendo Portal
+              </a>
+            </li>
+          </ul>
         </div>
       </nav>
     </header>

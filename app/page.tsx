@@ -783,7 +783,7 @@ export default function Home() {
     <>
 
       {/* Hero Section */}
-      <section id="home" className="relative min-h-screen flex items-center section-scroll overflow-hidden">
+      <section id="home" className="relative min-h-screen flex items-start sm:items-center section-scroll overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
@@ -802,22 +802,22 @@ export default function Home() {
         </div>
 
         {/* Hero Content */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-16 pb-20 sm:pt-10 sm:pb-28">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-10 lg:px-16 pt-28 pb-16 sm:pt-16 sm:pb-28 md:pt-10">
           <div className="flex flex-col items-start max-w-3xl">
 
 
             {/* Main heading — Red Hat Display via CSS variable */}
             <h1
-              className="text-left text-white tracking-tight mt-32 mb-6"
+              className="text-left text-white tracking-tight mt-4 sm:mt-10 md:mt-32 mb-4 sm:mb-6"
               style={{
                 fontFamily: "var(--font-red-hat-display), sans-serif",
                 fontWeight: 900,
-                fontSize: 'clamp(2rem, 4.2vw, 4rem)',
+                fontSize: 'clamp(2.2rem, 7vw, 4rem)',
                 lineHeight: 1.1,
               }}
             >
               {/* first line */}
-              <span className="block whitespace-nowrap">
+              <span className="block">
                 Assuring{' '}
                 <span
                   style={{
@@ -833,14 +833,14 @@ export default function Home() {
             </h1>
 
             {/* Sub-copy */}
-            <p className="text-base sm:text-lg text-gray-300 leading-relaxed max-w-xl mb-10">
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 leading-relaxed max-w-xl mb-7 sm:mb-10">
               A clinically validated, non-invasive vascular health test &mdash; designed as an alternative
               to costly, operator-dependent cardiovascular assessments. Built to transform primary
               care and prevention at scale.
             </p>
 
             {/* Stats row */}
-            <div className="flex flex-wrap gap-6 mb-10">
+            <div className="flex flex-wrap gap-4 sm:gap-6 mb-7 sm:mb-10">
               {[
                 { value: '15 min', label: 'Test Duration' },
                 { value: 'Non-invasive', label: 'Procedure' },
@@ -859,7 +859,7 @@ export default function Home() {
             </div>
 
             {/* CTA buttons */}
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               <a
                 href="#for-clinicians"
                 className="inline-flex items-center gap-2 text-white text-sm font-semibold px-7 py-3.5 rounded-full transition-all duration-300 shadow-lg hover:-translate-y-0.5"
@@ -1804,8 +1804,8 @@ export default function Home() {
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-4" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Standard Package</h3>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-5xl font-black text-white" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>$2,400</span>
-                    <span className="text-base font-medium" style={{color:"#d4a8e8", fontFamily:"var(--font-red-hat-display),sans-serif"}}>/year</span>
+                    {/* <span className="text-5xl font-black text-white" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>$2,400</span>
+                    <span className="text-base font-medium" style={{color:"#d4a8e8", fontFamily:"var(--font-red-hat-display),sans-serif"}}>/year</span> */}
                   </div>
                 </div>
                 {/* Bottom wave divider */}
@@ -1832,6 +1832,7 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
+{/* Add to Cart button - hidden
                 <button
                   onClick={() => addToCart({
                     id: 'pro-package',
@@ -1848,6 +1849,7 @@ export default function Home() {
                   <ShoppingCart className="w-4 h-4" />
                   Add to Cart
                 </button>
+                */}
               </div>
             </div>
 
@@ -1901,6 +1903,7 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
+{/* Contact Sales button - hidden
                 <button
                   onClick={() => addToCart({
                     id: 'enterprise-package',
@@ -1917,6 +1920,7 @@ export default function Home() {
                   <ShoppingCart className="w-4 h-4" />
                   Contact Sales
                 </button>
+                */}
               </div>
             </div>
 
@@ -2083,6 +2087,10 @@ export default function Home() {
 
           {(() => {
             const galleryImages = [
+              { src: "https://i.ibb.co/9mDYzKp8/Whats-App-Image-2026-03-03-at-08-31-17.jpg", alt: "Jendo Health Camp Event" },
+              { src: "https://i.ibb.co/hJ5kqKCX/Whats-App-Image-2026-03-03-at-08-31-17-1.jpg", alt: "Cardiovascular Screening Session" },
+              { src: "https://i.ibb.co/3mN1mtqj/Whats-App-Image-2026-03-03-at-08-31-18.jpg", alt: "Medical Professionals Collaboration" },
+              { src: "https://i.ibb.co/HfXt87DS/Whats-App-Image-2026-03-03-at-08-31-18-1.jpg", alt: "Community Health Initiative" },
               { src: "https://i.ibb.co/1tSm4mkJ/Whats-App-Image-2025-07-14-at-13-51-07-40106ee2.jpg", alt: "Health Camp Team Consultation" },
               { src: "https://i.ibb.co/ymS4bvYM/Whats-App-Image-2025-07-14-at-13-51-07-72813403.jpg", alt: "Healthcare Professional Assessment" },
               { src: "https://i.ibb.co/fz8hvcwW/Whats-App-Image-2025-07-14-at-13-51-07-d33c7810.jpg", alt: "Cardiovascular Screening Process" },
@@ -2096,18 +2104,15 @@ export default function Home() {
               { src: "https://i.ibb.co/rf0RzYvm/Whats-App-Image-2025-07-14-at-14-22-26-621a4f6a.jpg", alt: "Team Achievement Moment" },
             ];
 
-            const GalleryCard = ({ image, index, heightClass = "h-56" }: { image: typeof galleryImages[0]; index: number; heightClass?: string }) => (
+            const GalleryCard = ({ image, index }: { image: typeof galleryImages[0]; index: number }) => (
               <div
-                className={`relative group overflow-hidden rounded-2xl cursor-pointer border border-[#ede8f5] shadow-sm hover:shadow-xl transition-all duration-300 ${heightClass}`}
+                className="relative group overflow-hidden rounded-2xl cursor-pointer border border-[#ede8f5] shadow-sm hover:shadow-xl transition-all duration-300 break-inside-avoid mb-4"
                 onClick={() => { setLightboxImage(image); setLightboxOpen(true); }}
               >
-                <img src={image.src} alt={image.alt} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                <img src={image.src} alt={image.alt} className="w-full h-auto block transition-transform duration-500 group-hover:scale-105" loading="lazy" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#2d0a3e]/75 via-[#2d0a3e]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                   <p className="text-white text-sm font-semibold" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{image.alt}</p>
-                </div>
-                <div className="absolute top-3 left-3 w-7 h-7 rounded-full flex items-center justify-center text-white text-[11px] font-black shadow" style={{background:"linear-gradient(135deg,#893A9F,#4a1260)", fontFamily:"var(--font-red-hat-display),sans-serif"}}>
-                  {index < 10 ? `0${index}` : index}
                 </div>
                 <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <Eye className="w-4 h-4 text-white" />
@@ -2116,27 +2121,13 @@ export default function Home() {
             );
 
             return (
-              <div className="space-y-4">
-                <div className="grid gap-4" style={{gridTemplateColumns:"2fr 1fr"}}>
-                  <GalleryCard image={galleryImages[0]} index={1} heightClass="h-[420px]" />
-                  <div className="flex flex-col gap-4 h-[420px]">
-                    <GalleryCard image={galleryImages[1]} index={2} heightClass="flex-1" />
-                    <GalleryCard image={galleryImages[2]} index={3} heightClass="flex-1" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {galleryImages.slice(3, 7).map((img, i) => (
-                    <GalleryCard key={i} image={img} index={i + 4} heightClass="h-56" />
+              <div>
+                <div className="columns-2 md:columns-3 lg:columns-4 gap-4">
+                  {galleryImages.map((img, i) => (
+                    <GalleryCard key={i} image={img} index={i + 1} />
                   ))}
                 </div>
-                <div className="grid gap-4" style={{gridTemplateColumns:"1fr 2fr"}}>
-                  <div className="flex flex-col gap-4 h-[420px]">
-                    <GalleryCard image={galleryImages[7]} index={8} heightClass="flex-1" />
-                    <GalleryCard image={galleryImages[8]} index={9} heightClass="flex-1" />
-                  </div>
-                  <GalleryCard image={galleryImages[9]} index={10} heightClass="h-[420px]" />
-                </div>
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white border border-[#ede8f5] rounded-2xl px-8 py-5">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white border border-[#ede8f5] rounded-2xl px-8 py-5 mt-4">
                   <div>
                     <p className="text-base font-bold text-gray-900" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Showing {galleryImages.length} moments</p>
                     <p className="text-sm text-gray-400" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Click any image to view full screen</p>

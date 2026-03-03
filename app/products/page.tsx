@@ -192,9 +192,10 @@ export default function Products() {
                     <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#a78bca' }}>Standard Package</p>
                     <h3 className="text-2xl font-bold leading-tight mb-1" style={{ color: '#1f2937' }}>JENDO Pro</h3>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-bold" style={{ color: '#893A9F' }}>$2,400</span>
-                      <span className="text-sm" style={{ color: '#9ca3af' }}>/year</span>
+                      {/* <span className="text-3xl font-bold" style={{ color: '#893A9F' }}>$2,400</span>
+                      <span className="text-sm" style={{ color: '#9ca3af' }}>/year</span> */}
                     </div>
+                    {/* Add to Cart button - hidden
                     <button
                       onClick={() => addToCart({
                         id: 'pro-package',
@@ -208,6 +209,7 @@ export default function Products() {
                       <Package className="w-4 h-4" />
                       <span>Add to Cart</span>
                     </button>
+                    */}
                   </div>
                 </div>
 
@@ -224,6 +226,7 @@ export default function Products() {
                   ))}
                 </ul>
 
+{/* Add to Cart button - hidden
                 <button
                   onClick={() => addToCart({ id: 'pro-package', name: 'JENDO Pro Device', price: 2400, image_url: 'https://i.ibb.co/Jz3yM3F/jendo-medical-device-845.jpg', description: 'Professional vascular monitoring system' })}
                   className="w-full py-3.5 rounded-2xl text-sm font-bold text-white flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
@@ -231,6 +234,7 @@ export default function Products() {
                 >
                   <Package className="w-4 h-4" /> Add to Cart
                 </button>
+                */}
               </div>
             </div>
 
@@ -267,6 +271,7 @@ export default function Products() {
                   ))}
                 </ul>
 
+{/* Contact Sales button - hidden
                 <button
                   onClick={() => router.push('/contact')}
                   className="w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
@@ -274,6 +279,7 @@ export default function Products() {
                 >
                   <Globe className="w-4 h-4" /> Contact Sales
                 </button>
+                */}
               </div>
             </div>
           </div>
