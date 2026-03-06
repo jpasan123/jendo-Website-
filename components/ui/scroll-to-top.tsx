@@ -30,11 +30,11 @@ export function ScrollToTop() {
   return (
     <button
       onClick={scrollToTop}
+      style={{ background: '#893A9F' }}
       className={cn(
         "fixed z-40 p-3 rounded-full shadow-lg transition-all duration-300",
-        "bg-purple-600 hover:bg-purple-700 text-white",
-        "focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2",
-        "bottom-20 right-4 sm:bottom-6 sm:right-20", // Adjusted positioning for mobile
+        "text-white focus:outline-none",
+        "bottom-[6.5rem] left-6 sm:bottom-[6.5rem] sm:left-8", // Stacked above the chatbot button
         isVisible ? "scale-100 opacity-100" : "scale-0 opacity-0"
       )}
       aria-label="Scroll to top"

@@ -1,9 +1,14 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Red_Hat_Display } from 'next/font/google';
 import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
+const redHatDisplay = Red_Hat_Display({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-red-hat-display',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.jendo.health.com'), // Add this line
@@ -55,7 +60,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} ${redHatDisplay.variable}`} suppressHydrationWarning>{children}</body>
     </html>
   );
 }
