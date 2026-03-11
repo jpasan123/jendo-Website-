@@ -154,7 +154,7 @@ export function Header() {
 
             {/* Visit My Jendo Portal button */}
             <a
-              href="https://app.jendo.com"
+              href="http://188.166.240.119:5173/login"
               target="_blank"
               rel="noopener noreferrer"
               className="ml-3 flex items-center gap-2 px-4 py-2 rounded-full text-[13px] lg:text-[14px] font-[var(--font-red-hat-display)] text-white whitespace-nowrap transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 active:scale-95"
