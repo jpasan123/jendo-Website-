@@ -20,6 +20,7 @@ export function Header() {
     { name: 'Technology', href: '#technology' },
     { name: 'Recognition', href: '#recognition' },
     { name: 'Research', href: '#research' },
+    { name: 'News', href: '#blog' },
     { name: 'Our Team', href: '#team' },
     { name: 'Contact', href: '#contact' },
   ];

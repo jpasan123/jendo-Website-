@@ -330,7 +330,26 @@ export default function Home() {
     // },
   ]
 
-  const blogPosts = [
+  type BlogPost = {
+    title: string;
+    excerpt: string;
+    date: string;
+    author: string;
+    image: string;
+    url: string;
+    imageFit?: "cover" | "contain";
+  };
+
+  const blogPosts: BlogPost[] = [
+    {
+      title: "Sri Lankan AI Medical Device JENDO Successfully Piloted in Bahrain",
+      excerpt: "A Sri Lankan‑invented medical device, JENDO, designed for non‑invasive early detection of cardiovascular conditions using AI, was successfully piloted at the King Hamad American Mission Hospital in Bahrain in February. Developed by engineer Keerthi Kodithuwakku and his team, the device enables preventive screening through physiological signal analysis.",
+      date: "February 2026",
+      author: "Jendo Team",
+      image: "https://i.ibb.co/Q3Pmmq5z/Whats-App-Image-2026-03-03-at-08-31-39.jpg",
+      url: "/blog/jendo-bahrain-pilot",
+      imageFit: "contain",
+    },
     {
       title: "Breakthrough for deep tech in Sri Lanka, Jendo closes new investment round ",
       excerpt: "Jendo secures new funding, marking a major milestone for Sri Lankan deep tech and accelerating innovation in AI-powered cardiovascular health.",
@@ -340,12 +359,30 @@ export default function Home() {
       url: "https://www.ft.lk/front-page/Breakthrough-for-deep-tech-in-Sri-Lanka-Jendo-closes-new-investment-round/44-781375 ",
     },
     {
+      title: "New Production in Progress: Advancing Science-Based Innovation in Sri Lanka",
+      excerpt: "Pleased to share that a new production is currently in progress, focusing on advancing science-based innovations in Sri Lanka. This initiative is being carried out in collaboration with the TV Derana and National Academy of Sciences Sri Lanka, with the aim of strengthening the role of research-driven solutions in national development.",
+      date: "March 2026",
+      author: "Jendo Team",
+      image: "https://i.ibb.co/B5CGB1VS/4061e00e-5407-4198-9690-080b10d33844.jpg",
+      url: "/blog/innovation-production-in-progress-sri-lanka",
+      imageFit: "contain",
+    },
+    {
       title: "Jendo CEO Speaks at IEEE EMBS AXON Workshop on AI in Healthcare",
       excerpt: "Jendo's CEO shares insights on AI-driven healthcare solutions and the impact of non-invasive vascular diagnostics at the IEEE EMBS AXON Workshop.",
       date: "April 12, 2024",
       author: "IEEE EMBS",
       image: "https://i.ibb.co/Zb72PxJ/IEEE-2.png",
       url: "https://docs.google.com/document/d/1JKBsun40koXUQVNlIIzibPbXGScFxp1DngaUcoGZOlM/edit?usp=sharing",
+    },
+    {
+      title: "Lanka Ventures PLC invests in Jendo Innovations",
+      excerpt: "Lanka Ventures PLC announced a strategic investment in Jendo Innovations, helping accelerate a Sri Lankan biomedical engineering breakthrough in early vascular disease diagnosis and AI-enabled preventive screening.",
+      date: "October 23, 2023",
+      author: "Jendo Team",
+      image: "https://i.ibb.co/KpJtFWqH/image-f336df078b.jpg",
+      url: "/blog/lanka-ventures-invests-in-jendo-innovations",
+      imageFit: "contain",
     },
     {
       title: "John Keells X Open Innovation Challenge – Grand Finale Recap",
@@ -1874,10 +1911,12 @@ export default function Home() {
                     <span className="text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider" style={{background:"rgba(137,58,159,0.3)", color:"#d4a8e8", fontFamily:"var(--font-red-hat-display),sans-serif", border:"1px solid rgba(137,58,159,0.5)"}}>Enterprise</span>
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-4" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Enterprise Package</h3>
+                  {/*
                   <div className="flex items-baseline gap-1.5">
                     <span className="text-5xl font-black text-white" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Custom</span>
                     <span className="text-base font-medium" style={{color:"#b8a8cc", fontFamily:"var(--font-red-hat-display),sans-serif"}}>pricing</span>
                   </div>
+                  */}
                 </div>
                 {/* Bottom wave divider */}
                 <div className="relative h-6 overflow-hidden" style={{marginTop:"-2px"}}>
@@ -2087,6 +2126,8 @@ export default function Home() {
 
           {(() => {
             const galleryImages = [
+              { src: "https://i.ibb.co/Q3Pmmq5z/Whats-App-Image-2026-03-03-at-08-31-39.jpg", alt: "JENDO Bahrain Pilot — King Hamad American Mission Hospital" },
+              { src: "https://i.ibb.co/B5CGB1VS/4061e00e-5407-4198-9690-080b10d33844.jpg", alt: "Innovation Production in Progress — Sri Lanka" },
               { src: "https://i.ibb.co/9mDYzKp8/Whats-App-Image-2026-03-03-at-08-31-17.jpg", alt: "Jendo Health Camp Event" },
               { src: "https://i.ibb.co/hJ5kqKCX/Whats-App-Image-2026-03-03-at-08-31-17-1.jpg", alt: "Cardiovascular Screening Session" },
               { src: "https://i.ibb.co/3mN1mtqj/Whats-App-Image-2026-03-03-at-08-31-18.jpg", alt: "Medical Professionals Collaboration" },
@@ -2846,7 +2887,7 @@ export default function Home() {
                     src={blogPosts[0].image}
                     alt={blogPosts[0].title}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    className={`${blogPosts[0].imageFit === "contain" ? "object-contain" : "object-cover"} group-hover:scale-105 transition-transform duration-500`}
                     sizes="(max-width:1024px) 100vw, 50vw"
                     quality={90}
                     priority
@@ -2892,7 +2933,7 @@ export default function Home() {
                     src={post.image}
                     alt={post.title}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    className={`${post.imageFit === "contain" ? "object-contain" : "object-cover"} group-hover:scale-105 transition-transform duration-500`}
                     sizes="(max-width:768px) 100vw, (max-width:1024px) 50vw, 33vw"
                     quality={85}
                     unoptimized={false}
