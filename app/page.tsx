@@ -209,28 +209,6 @@ export default function Home() {
     //   },
     // },
     {
-      name: "Vinod Samarawickrama",
-      role: "Manager Connectivity Program Meta Inc.",
-      image: "https://i.ibb.co/n7xdCBm/8-1.jpg",
-      social: {
-        linkedin: "https://www.linkedin.com/in/vinod-samarawickrama-767bb273/",
-        twitter: "https://twitter.com/vinodsamarawickrama",
-        facebook: "https://web.facebook.com/vinod.samarawickrama",
-        instagram: "https://instagram.com/vinodsamarawickrama",
-      },
-    },
-    {
-      name: "Dilan Christostom",
-      role: "Head of Investment - Softlogic Holdings PLC",
-      image: "https://i.ibb.co/hxStrttQ/image-7bc6206568.jpg",
-      social: {
-        linkedin: "https://www.linkedin.com/in/dilan-christostom-b18a1854/",
-        // twitter: "https://twitter.com/niloojayatilake",
-        // facebook: "https://facebook.com/niloo.jayatilake",
-        // instagram: "https://instagram.com/niloojayatilake",
-      },
-    },
-    {
       name: "Heminda Jayaweera",
       role: "Executive Director - TRACE Expert City",
       image: "https://i.ibb.co/W5g1BHQ/3-1.jpg",
@@ -250,6 +228,28 @@ export default function Home() {
         twitter: "https://twitter.com/chandriendemel",
         facebook: "https://www.facebook.com/palitha.gamage.1/",
         instagram: "https://instagram.com/chandriendemel",
+      },
+    },
+    {
+      name: "Vinod Samarawickrama",
+      role: "Manager Connectivity Program Meta Inc.",
+      image: "https://i.ibb.co/n7xdCBm/8-1.jpg",
+      social: {
+        linkedin: "https://www.linkedin.com/in/vinod-samarawickrama-767bb273/",
+        twitter: "https://twitter.com/vinodsamarawickrama",
+        facebook: "https://web.facebook.com/vinod.samarawickrama",
+        instagram: "https://instagram.com/vinodsamarawickrama",
+      },
+    },
+    {
+      name: "Dilan Christostom",
+      role: "Head of Investment - Softlogic Holdings PLC",
+      image: "https://i.ibb.co/hxStrttQ/image-7bc6206568.jpg",
+      social: {
+        linkedin: "https://www.linkedin.com/in/dilan-christostom-b18a1854/",
+        // twitter: "https://twitter.com/niloojayatilake",
+        // facebook: "https://facebook.com/niloo.jayatilake",
+        // instagram: "https://instagram.com/niloojayatilake",
       },
     },
   ]
@@ -351,6 +351,24 @@ export default function Home() {
       imageFit: "contain",
     },
     {
+      title: "Jendo Innovations at AsiaBerlin Summit 2025",
+      excerpt: "Jendo Innovations participated in AsiaBerlin Summit 2025, engaging German medical distributors and ecosystem leaders to expand Sri Lankan med-tech globally and strengthen collaboration between Sri Lanka and Germany.",
+      date: "2025",
+      author: "Jendo Team",
+      image: "https://i.ibb.co/zhWCvzPS/1764872070468.jpg",
+      url: "/blog/asiaberlin-summit-2025",
+      imageFit: "contain",
+    },
+    {
+      title: "Nexus-to-Connect Session at TRACE - Sri Lanka",
+      excerpt: "From Jendo's Centre of Excellence in Biomedical Engineering, the Nexus-to-Connect session brought together clinicians, engineers, and innovators to turn clinical challenges into scalable healthcare innovation.",
+      date: "2025",
+      author: "Jendo Team",
+      image: "https://i.ibb.co/v6ptxVks/1770293525892.jpg",
+      url: "/blog/nexus-to-connect-trace-neo-ventures",
+      imageFit: "contain",
+    },
+    {
       title: "Breakthrough for deep tech in Sri Lanka, Jendo closes new investment round ",
       excerpt: "Jendo secures new funding, marking a major milestone for Sri Lankan deep tech and accelerating innovation in AI-powered cardiovascular health.",
       date: "April 12, 2024",
@@ -365,6 +383,15 @@ export default function Home() {
       author: "Jendo Team",
       image: "https://i.ibb.co/B5CGB1VS/4061e00e-5407-4198-9690-080b10d33844.jpg",
       url: "/blog/innovation-production-in-progress-sri-lanka",
+      imageFit: "contain",
+    },
+    {
+      title: "Sri Lankan Innovation Meets Public Service: The Jendo Health Camp",
+      excerpt: "Over 100 Sri Lankan police officers underwent Jendo's 16-minute non-invasive vascular screening in a landmark health initiative led with senior police leadership, highlighting early cardiovascular risk detection through AI-powered local innovation.",
+      date: "July 14, 2025",
+      author: "Jendo Team",
+      image: "https://i.ibb.co/WvtJW21S/Whats-App-Image-2025-07-14-at-13-51-07-d33c7810.jpg",
+      url: "/blog/sri-lankan-innovation-meets-public-service-jendo-health-camp",
       imageFit: "contain",
     },
     {
@@ -1975,132 +2002,156 @@ export default function Home() {
 
 
       {/* Step-by-Step Section */}
-      <section className="py-20 bg-[#f9f9fb]">
+      <section className="py-24 section-scroll" style={{background:"linear-gradient(180deg,#ffffff 0%,#f8f6fb 100%)"}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          {/* Header */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-4">
               <div className="h-px w-8 bg-[#893A9F]" />
-              <span className="text-xs font-bold uppercase tracking-widest text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>How It Works</span>
+              <span className="text-xs font-bold uppercase tracking-widest text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Clinical Workflow</span>
               <div className="h-px w-8 bg-[#893A9F]" />
             </div>
-            <h2 className="text-5xl font-bold text-gray-900 mb-4" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Step-by-Step JENDO Test Procedure</h2>
-            <p className="text-xl text-gray-500 max-w-2xl mx-auto" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>A complete walkthrough of the non-invasive vascular assessment process</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-[#2d0a3e] mb-4" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+              How the JENDO Assessment Works
+            </h2>
+            <p className="text-lg md:text-xl text-gray-500 max-w-3xl mx-auto" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+              A physician-guided, end-to-end vascular assessment workflow designed for speed, comfort, and clinical clarity.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+            {[
+              { label: "Typical Session", value: "~15 Minutes" },
+              { label: "Procedure Type", value: "100% Non-Invasive" },
+              { label: "Clinical Output", value: "Structured Risk Report" },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="rounded-2xl border bg-white px-6 py-5 text-center shadow-sm"
+                style={{borderColor:"#ede8f5"}}
+              >
+                <p className="text-xs font-bold tracking-widest uppercase text-[#893A9F] mb-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                  {item.label}
+                </p>
+                <p className="text-lg font-extrabold text-[#2d0a3e]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                  {item.value}
+                </p>
+              </div>
+            ))}
           </div>
 
           {(() => {
             const steps = [
               {
                 title: "Patient Preparation",
+                description: "The assessment begins with a short resting phase in a calm clinical environment.",
                 bullets: [
-                  "Patient lies in a supine (flat) position",
-                  "Calm environment to reduce external influences"
+                  "Patient positioned comfortably in a supine posture",
+                  "Ambient conditions standardized for signal consistency"
                 ],
                 icon: BedDouble,
-                image: "https://images.unsplash.com/photo-1666214280557-f1b5022eb634?auto=format&fit=crop&w=400&h=300&q=80",
+                image: "https://i.ibb.co/G4wDD4xS/Whats-App-Image-2025-07-14-at-13-51-36-160dfb2a.jpg",
               },
               {
-                title: "Signal Extraction",
+                title: "Occlusion Protocol",
+                description: "A controlled cuff sequence is applied to stimulate measurable vascular responses.",
                 bullets: [
-                  "Pressure cuff wrapped around patient's arm",
-                  "Cuff inflated 30 mmHg above systolic for 5 min"
+                  "Upper-arm cuff applied and calibrated",
+                  "Timed pressure protocol executed under supervision"
                 ],
                 icon: Waves,
-                image: "https://images.unsplash.com/photo-1516069677018-378515003435?auto=format&fit=crop&w=400&h=300&q=80",
+                image: "https://i.ibb.co/39kCjbJw/Whats-App-Image-2025-07-14-at-13-51-35-6ef53381.jpg",
               },
               {
-                title: "Data Collection",
+                title: "Physiological Signal Capture",
+                description: "Multimodal signals are captured for deeper cardiovascular insight.",
                 bullets: [
-                  "PPG: Captures pulse signals from vascular system",
-                  "DTM: Measures temperature variations in blood flow",
-                  "ECG: Records electrical activity of the heart"
+                  "PPG for pulse waveform and vascular tone",
+                  "DTM for thermal response and microvascular behavior",
+                  "ECG for cardiac electrical activity"
                 ],
                 icon: LineChart,
-                image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=400&h=300&q=80",
+                image: "https://i.ibb.co/zYn5mwS/Whats-App-Image-2025-07-14-at-13-51-38-1604ef8d.jpg",
               },
               {
-                title: "Cloud-Based Analysis",
+                title: "Secure AI Processing",
+                description: "Signals are transferred to JENDO's analytics pipeline with secure handling controls.",
                 bullets: [
-                  "Data securely uploaded to JENDO's cloud platform",
-                  "AI algorithms evaluate vascular condition",
-                  "Encrypted handling of patient data"
+                  "Encrypted transmission to cloud infrastructure",
+                  "AI-assisted vascular pattern evaluation",
+                  "Privacy-focused data governance"
                 ],
                 icon: Cloud,
-                image: "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=400&h=300&q=80",
+                image: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=1200&q=80",
               },
               {
-                title: "Report Generation",
+                title: "Clinical Report Generation",
+                description: "A structured report is generated to support clear medical interpretation.",
                 bullets: [
-                  "Detailed Vascular Health Report generated",
-                  "Highlights current conditions and risk factors"
+                  "Risk-relevant vascular indicators summarized",
+                  "Action-oriented findings prepared for review"
                 ],
                 icon: FileText,
-                image: "https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=400&h=300&q=80",
+                image: "https://i.ibb.co/Y4tJ9dvK/Whats-App-Image-2025-07-14-at-13-51-36-5255e477.jpg",
               },
               {
-                title: "Consultation",
+                title: "Physician Consultation",
+                description: "Results are interpreted with the clinician to inform personalized next steps.",
                 bullets: [
-                  "Report reviewed with a physician",
-                  "Preventive measures or treatment recommendations"
+                  "Report explained in a patient-friendly format",
+                  "Preventive or treatment recommendations discussed"
                 ],
                 icon: Stethoscope,
-                image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&h=300&q=80",
+                image: "https://i.ibb.co/dwfnDPDT/Whats-App-Image-2025-07-14-at-13-51-08-38e09f3b.jpg",
               },
             ];
 
-            const StepRow = ({ items, startIndex }: { items: typeof steps; startIndex: number }) => (
-              <div className="relative grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                {/* Horizontal connector line — desktop only */}
-                <div className="hidden md:block absolute top-6 h-0.5 z-0" style={{left:"calc(16.66% + 24px)", right:"calc(16.66% + 24px)", background:"linear-gradient(90deg,#e8dff0,#893A9F,#e8dff0)"}} />
-                {items.map((step, i) => {
+            return (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {steps.map((step, index) => {
                   const Icon = step.icon;
-                  const num = startIndex + i + 1;
                   return (
-                    <div key={num} className="flex flex-col items-center text-center">
-                      {/* Circle number */}
-                      <div className="relative z-10 w-12 h-12 rounded-full flex items-center justify-center text-white text-base font-black shadow-md mb-5 flex-shrink-0" style={{background:"linear-gradient(135deg,#893A9F,#4a1260)", fontFamily:"var(--font-red-hat-display),sans-serif"}}>
-                        {num < 10 ? `0${num}` : num}
+                    <article
+                      key={step.title}
+                      className="group bg-white border border-[#ede8f5] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"
+                    >
+                      <div className="relative h-48 overflow-hidden">
+                        <Image
+                          src={step.image}
+                          alt={step.title}
+                          fill
+                          sizes="(max-width:768px) 100vw, (max-width:1280px) 50vw, 33vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0" style={{background:"linear-gradient(to top,rgba(45,10,62,0.55),transparent)"}} />
+                        <div className="absolute top-4 left-4 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{background:"linear-gradient(135deg,#893A9F,#4a1260)",fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                          {index + 1}
+                        </div>
                       </div>
-                      {/* Card */}
-                      <div className="bg-white border border-[#ede8f5] rounded-2xl p-5 w-full shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 text-left flex-1">
-                        {/* optional image */}
-                        {step.image && (
-                          <div className="w-full h-40 mb-4 rounded-lg overflow-hidden">
-                            <img
-                              src={step.image}
-                              alt={step.title}
-                              className="w-full h-full object-cover"
-                              loading="lazy"
-                              crossOrigin="anonymous"
-                              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                            />
-                          </div>
-                        )}
+
+                      <div className="p-6">
                         <div className="w-10 h-10 rounded-xl bg-[#f3edf8] flex items-center justify-center mb-3">
                           <Icon className="w-5 h-5" style={{color:"#893A9F"}} />
                         </div>
-                        <h4 className="text-base font-bold text-gray-900 mb-2.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{step.title}</h4>
-                        <ul className="space-y-1.5">
+                        <h3 className="text-lg font-bold text-[#2d0a3e] mb-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                          {step.title}
+                        </h3>
+                        <p className="text-sm text-gray-500 mb-4 leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                          {step.description}
+                        </p>
+                        <ul className="space-y-2">
                           {step.bullets.map((b, bi) => (
-                            <li key={bi} className="flex items-start gap-2">
-                              <div className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{background:"#893A9F"}} />
-                              <span className="text-sm text-gray-500 leading-snug" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{b}</span>
+                            <li key={bi} className="flex items-start gap-2.5">
+                              <CheckCircle className="w-4 h-4 mt-0.5 text-[#893A9F] flex-shrink-0" />
+                              <span className="text-sm text-gray-600 leading-snug" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{b}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
-                    </div>
+                    </article>
                   );
                 })}
               </div>
-            );
-
-            return (
-              <>
-                <StepRow items={steps.slice(0, 3)} startIndex={0} />
-                <StepRow items={steps.slice(3, 6)} startIndex={3} />
-              </>
             );
           })()}
 
@@ -2711,6 +2762,108 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Blog Section */}
+      <section id="blog" className="py-24 section-scroll" style={{background:"#f9f9fb"}}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-3 mb-4">
+              <div className="h-px w-8 bg-[#893A9F]" />
+              <span className="text-sm font-semibold tracking-widest text-[#893A9F] uppercase" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Latest News</span>
+              <div className="h-px w-8 bg-[#893A9F]" />
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-[#2d0a3e] mb-5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Stay in the Know</h2>
+            <p className="text-xl text-gray-500 max-w-3xl mx-auto" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Follow Jendo's breakthroughs, partnerships, and milestones as we redefine cardiovascular health.</p>
+          </div>
+
+          {/* Featured Post */}
+          {blogPosts.length > 0 && (
+            <a
+              href={blogPosts[0].url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block mb-10 rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 bg-white shadow-sm hover:shadow-md"
+              style={{border:"1px solid #ede8f5"}}
+            >
+              <div className="grid grid-cols-1 lg:grid-cols-2">
+                {/* Image */}
+                <div className="relative h-64 lg:h-auto overflow-hidden" style={{minHeight:"280px"}}>
+                  <Image
+                    src={blogPosts[0].image}
+                    alt={blogPosts[0].title}
+                    fill
+                    className={`${blogPosts[0].imageFit === "contain" ? "object-contain" : "object-cover"} group-hover:scale-105 transition-transform duration-500`}
+                    sizes="(max-width:1024px) 100vw, 50vw"
+                    quality={90}
+                    priority
+                    unoptimized={false}
+                  />
+                  <div className="absolute inset-0" style={{background:"linear-gradient(to right,transparent,rgba(255,255,255,0.15))"}} />
+                </div>
+                {/* Content */}
+                <div className="p-8 md:p-10 flex flex-col justify-center">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-[#893A9F] uppercase mb-4" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                    <Award className="w-3.5 h-3.5" /> Featured
+                  </span>
+                  <h3 className="text-2xl md:text-3xl font-bold text-[#2d0a3e] mb-4 leading-tight group-hover:text-[#893A9F] transition-colors" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                    {blogPosts[0].title}
+                  </h3>
+                  <p className="text-gray-500 mb-6 leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{blogPosts[0].excerpt}</p>
+                  <div className="flex items-center gap-6 text-sm text-gray-400 mb-6">
+                    <span className="flex items-center gap-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><User className="w-4 h-4 text-[#893A9F]" />{blogPosts[0].author}</span>
+                    <span className="flex items-center gap-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><Clock className="w-4 h-4 text-[#893A9F]" />{blogPosts[0].date}</span>
+                  </div>
+                  <div className="inline-flex items-center gap-2 text-sm font-bold text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                    Read Article <ExternalLink className="w-4 h-4" />
+                  </div>
+                </div>
+              </div>
+            </a>
+          )}
+
+          {/* Remaining Posts Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {blogPosts.slice(1).map((post, index) => (
+              <a
+                key={index}
+                href={post.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 flex flex-col bg-white shadow-sm hover:shadow-md"
+                style={{border:"1px solid #ede8f5"}}
+              >
+                {/* Image */}
+                <div className="relative h-48 overflow-hidden">
+                  <Image
+                    src={post.image}
+                    alt={post.title}
+                    fill
+                    className={`${post.imageFit === "contain" ? "object-contain" : "object-cover"} group-hover:scale-105 transition-transform duration-500`}
+                    sizes="(max-width:768px) 100vw, (max-width:1024px) 50vw, 33vw"
+                    quality={85}
+                    unoptimized={false}
+                  />
+                  <div className="absolute inset-0" style={{background:"linear-gradient(to top,rgba(45,10,62,0.4),transparent)"}} />
+                </div>
+                {/* Content */}
+                <div className="p-6 flex flex-col flex-1">
+                  <h3 className="font-bold text-[#2d0a3e] mb-3 text-sm leading-snug group-hover:text-[#893A9F] transition-colors line-clamp-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{post.title}</h3>
+                  <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-3 flex-1" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{post.excerpt}</p>
+                  <div className="flex items-center justify-between text-xs text-gray-400 mt-auto pt-4" style={{borderTop:"1px solid #ede8f5"}}>
+                    <span className="flex items-center gap-1.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><User className="w-3.5 h-3.5 text-[#893A9F]" />{post.author}</span>
+                    <span className="flex items-center gap-1.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><Clock className="w-3.5 h-3.5 text-[#893A9F]" />{post.date}</span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+
+
       {/* Research & Evidence Section */}
       <section id="research" className="py-24 section-scroll" style={{background:"#f9f9fb"}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -2851,106 +3004,6 @@ export default function Home() {
             <p className="text-[#2d0a3e] text-lg leading-relaxed text-center" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
               <strong>Endothelial dysfunction</strong> represents an early functional abnormality in the cardiovascular disease continuum, consistently shown in peer-reviewed studies to be associated with increased risk even when individuals appear clinically stable or asymptomatic.
             </p>
-          </div>
-
-        </div>
-      </section>
-
-      {/* Blog Section */}
-      <section id="blog" className="py-24 section-scroll" style={{background:"#f9f9fb"}}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-3 mb-4">
-              <div className="h-px w-8 bg-[#893A9F]" />
-              <span className="text-sm font-semibold tracking-widest text-[#893A9F] uppercase" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Latest News</span>
-              <div className="h-px w-8 bg-[#893A9F]" />
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-[#2d0a3e] mb-5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Stay in the Know</h2>
-            <p className="text-xl text-gray-500 max-w-3xl mx-auto" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Follow Jendo's breakthroughs, partnerships, and milestones as we redefine cardiovascular health.</p>
-          </div>
-
-          {/* Featured Post */}
-          {blogPosts.length > 0 && (
-            <a
-              href={blogPosts[0].url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block mb-10 rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 bg-white shadow-sm hover:shadow-md"
-              style={{border:"1px solid #ede8f5"}}
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-2">
-                {/* Image */}
-                <div className="relative h-64 lg:h-auto overflow-hidden" style={{minHeight:"280px"}}>
-                  <Image
-                    src={blogPosts[0].image}
-                    alt={blogPosts[0].title}
-                    fill
-                    className={`${blogPosts[0].imageFit === "contain" ? "object-contain" : "object-cover"} group-hover:scale-105 transition-transform duration-500`}
-                    sizes="(max-width:1024px) 100vw, 50vw"
-                    quality={90}
-                    priority
-                    unoptimized={false}
-                  />
-                  <div className="absolute inset-0" style={{background:"linear-gradient(to right,transparent,rgba(255,255,255,0.15))"}} />
-                </div>
-                {/* Content */}
-                <div className="p-8 md:p-10 flex flex-col justify-center">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-[#893A9F] uppercase mb-4" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
-                    <Award className="w-3.5 h-3.5" /> Featured
-                  </span>
-                  <h3 className="text-2xl md:text-3xl font-bold text-[#2d0a3e] mb-4 leading-tight group-hover:text-[#893A9F] transition-colors" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
-                    {blogPosts[0].title}
-                  </h3>
-                  <p className="text-gray-500 mb-6 leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{blogPosts[0].excerpt}</p>
-                  <div className="flex items-center gap-6 text-sm text-gray-400 mb-6">
-                    <span className="flex items-center gap-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><User className="w-4 h-4 text-[#893A9F]" />{blogPosts[0].author}</span>
-                    <span className="flex items-center gap-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><Clock className="w-4 h-4 text-[#893A9F]" />{blogPosts[0].date}</span>
-                  </div>
-                  <div className="inline-flex items-center gap-2 text-sm font-bold text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
-                    Read Article <ExternalLink className="w-4 h-4" />
-                  </div>
-                </div>
-              </div>
-            </a>
-          )}
-
-          {/* Remaining Posts Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogPosts.slice(1).map((post, index) => (
-              <a
-                key={index}
-                href={post.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 flex flex-col bg-white shadow-sm hover:shadow-md"
-                style={{border:"1px solid #ede8f5"}}
-              >
-                {/* Image */}
-                <div className="relative h-48 overflow-hidden">
-                  <Image
-                    src={post.image}
-                    alt={post.title}
-                    fill
-                    className={`${post.imageFit === "contain" ? "object-contain" : "object-cover"} group-hover:scale-105 transition-transform duration-500`}
-                    sizes="(max-width:768px) 100vw, (max-width:1024px) 50vw, 33vw"
-                    quality={85}
-                    unoptimized={false}
-                  />
-                  <div className="absolute inset-0" style={{background:"linear-gradient(to top,rgba(45,10,62,0.4),transparent)"}} />
-                </div>
-                {/* Content */}
-                <div className="p-6 flex flex-col flex-1">
-                  <h3 className="font-bold text-[#2d0a3e] mb-3 text-sm leading-snug group-hover:text-[#893A9F] transition-colors line-clamp-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{post.title}</h3>
-                  <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-3 flex-1" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{post.excerpt}</p>
-                  <div className="flex items-center justify-between text-xs text-gray-400 mt-auto pt-4" style={{borderTop:"1px solid #ede8f5"}}>
-                    <span className="flex items-center gap-1.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><User className="w-3.5 h-3.5 text-[#893A9F]" />{post.author}</span>
-                    <span className="flex items-center gap-1.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><Clock className="w-3.5 h-3.5 text-[#893A9F]" />{post.date}</span>
-                  </div>
-                </div>
-              </a>
-            ))}
           </div>
 
         </div>
@@ -3520,3 +3573,4 @@ export default function Home() {
     </>
   );
 }
+

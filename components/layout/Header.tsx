@@ -19,8 +19,9 @@ export function Header() {
     { name: 'Ecosystem', href: '#ecosystem' },
     { name: 'Technology', href: '#technology' },
     { name: 'Recognition', href: '#recognition' },
-    { name: 'Research', href: '#research' },
+    { name: 'Gallery', href: '#emma-gallery' },
     { name: 'News', href: '#blog' },
+    { name: 'Research', href: '#research' },
     { name: 'Our Team', href: '#team' },
     { name: 'Contact', href: '#contact' },
   ];
@@ -45,6 +46,7 @@ export function Header() {
       }
     };
 
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [pathname]);
@@ -93,8 +95,8 @@ export function Header() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled
-          ? "bg-black/60 backdrop-blur-3xl border-b border-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.5)]"
-          : "bg-black/40 backdrop-blur-2xl border-b border-white/5"
+          ? "bg-black backdrop-blur-3xl border-b border-gray-700 shadow-[0_8px_40px_rgba(0,0,0,0.5)]"
+          : "bg-black backdrop-blur-2xl border-b border-gray-800"
       )}
     >
       {/* no background overlay, keep nav fully transparent */}
@@ -128,8 +130,8 @@ export function Header() {
                 href={item.href}
                 onClick={(e) => handleNavigation(e, item.href)}
                 className={cn(
-                  "px-3 py-2 text-[13px] lg:text-[14px] tracking-[0.08em] font-[var(--font-red-hat-display)] transition-colors duration-200 whitespace-nowrap text-white/90 hover:text-purple-300",
-                  activeSection === item.href.replace('#', '') && "text-purple-300 border-b border-purple-400"
+                  "px-3 py-2 text-[13px] lg:text-[14px] tracking-[0.08em] font-[var(--font-red-hat-display)] transition-colors duration-200 whitespace-nowrap text-gray-400 hover:text-gray-200",
+                  activeSection === item.href.replace('#', '') && "text-gray-200 border-b border-gray-500"
                 )}
               >
                 <span>{item.name}</span>
@@ -190,7 +192,7 @@ export function Header() {
               onClick={() => setIsOpen(!isOpen)}
               className={cn(
                 "p-2 rounded-lg transition-colors",
-                "text-white/80 hover:text-purple-300"
+                "text-gray-400 hover:text-gray-200"
               )}
               aria-label="Toggle menu"
             >
@@ -239,13 +241,13 @@ export function Header() {
                     className={cn(
                       'flex items-center gap-3 px-4 py-3.5 rounded-lg text-[15px] font-[var(--font-red-hat-display)] transition-colors duration-200',
                       isActive
-                        ? 'text-white'
-                        : 'text-white/60 hover:text-white'
+                        ? 'text-gray-200'
+                        : 'text-gray-400 hover:text-gray-200'
                     )}
                   >
                     <span
                       className="w-1 h-4 rounded-full flex-shrink-0 transition-opacity duration-200"
-                      style={{ background: '#893A9F', opacity: isActive ? 1 : 0 }}
+                      style={{ background: '#9ca3af', opacity: isActive ? 1 : 0 }}
                     />
                     {item.name}
                   </Link>
