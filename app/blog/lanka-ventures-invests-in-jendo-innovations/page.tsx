@@ -91,7 +91,7 @@ export default function LankaVenturesInvestmentArticle() {
           the prototype stage to production. We also aim to secure regulatory approvals in Sri Lanka, Japan, and the USA,
           bringing our groundbreaking technology to patients worldwide.”
           <br />
-          <span className="text-sm text-gray-500">— Mr. Keerthi Kodithuwakku, Co-founder and CEO of Jendo Innovations</span>
+          <span className="text-sm text-gray-500">— Mr. <a href="https://www.keerthikodithuwakku.com/" target="_blank" rel="noopener noreferrer" className="text-inherit hover:underline">Keerthi Kodithuwakku</a>, Co-founder and CEO of Jendo Innovations</span>
         </blockquote>
 
         <p>
@@ -102,7 +102,7 @@ export default function LankaVenturesInvestmentArticle() {
         </p>
 
         <p className="text-sm text-gray-500">
-          <b>Caption:</b> Mr. Damith Pallwatte, Mr. Keerthi Kodithuwakku and Mr. Palitha Gamage at the signing and
+          <b>Caption:</b> Mr. Damith Pallwatte, Mr. <a href="https://www.keerthikodithuwakku.com/" target="_blank" rel="noopener noreferrer" className="text-inherit hover:underline">Keerthi Kodithuwakku</a> and Mr. Palitha Gamage at the signing and
           accepting investment to Jendo Innovations.
         </p>
       </div>

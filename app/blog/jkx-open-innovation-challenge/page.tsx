@@ -98,7 +98,7 @@ export default function JkxOpenInnovationChallenge() {
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-6 rounded-xl shadow-sm">
           <h3 className="text-lg font-bold text-yellow-700 mb-2">🥇 Team Jendo – Grand Prize Winner</h3>
           <p>
-            Co-founded by <b>Keerthi Kodithuwakku</b>, <b>Isuru Rajakaruna</b>, and <b>Charith Vithanage</b>, Team Jendo took the top prize for their breakthrough in noninvasive health tech. Their research was guided by senior medical professionals, and they walked away with a <b>Rs. 2 million</b> prize and the admiration of the judges.
+            Co-founded by <b><a href="https://www.keerthikodithuwakku.com/" target="_blank" rel="noopener noreferrer" className="text-inherit hover:underline">Keerthi Kodithuwakku</a></b>, <b>Isuru Rajakaruna</b>, and <b>Charith Vithanage</b>, Team Jendo took the top prize for their breakthrough in noninvasive health tech. Their research was guided by senior medical professionals, and they walked away with a <b>Rs. 2 million</b> prize and the admiration of the judges.
           </p>
         </div>
         <div className="bg-blue-50 border-l-4 border-blue-400 p-4 my-6 rounded-xl shadow-sm">

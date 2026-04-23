@@ -26,6 +26,24 @@ export default function Home() {
   const [isInsuranceModalOpen, setIsInsuranceModalOpen] = useState(false);
   const cart = useCart();
 
+  const keerthiLink = "https://www.keerthikodithuwakku.com/";
+
+  const renderKeerthiLink = (text: string, allowAnchor = true) =>
+    text.split(/(Keerthi Kodithuwakku)/g).map((part, index) =>
+      part === "Keerthi Kodithuwakku" ? (
+        allowAnchor ? (
+          <a key={index} href={keerthiLink} target="_blank" rel="noopener noreferrer" className="text-[#893A9F] hover:underline">
+            Keerthi Kodithuwakku
+          </a>
+        ) : (
+          <span key={index} className="text-[#893A9F] hover:underline">
+            Keerthi Kodithuwakku
+          </span>
+        )
+      ) : (
+        part
+      ),
+    );
 
   // show the payhere connect
   const [showPayhere, setShowPayhere] = useState(false);
@@ -188,6 +206,7 @@ export default function Home() {
   const boardMembers = [
     {
       name: "Keerthi Kodithuwakku",
+      link: "https://www.keerthikodithuwakku.com/",
       role: "Chairman & CEO",
       image: "https://i.ibb.co/b13kVX2/4-1.jpg",
       social: {
@@ -257,6 +276,7 @@ export default function Home() {
   const developmentTeam = [
     {
       name: "Keerthi Kodithuwakku",
+      link: "https://www.keerthikodithuwakku.com/",
       role: "Chief Executive Officer",
       credentials: "BSc. Eng",
       image: "https://i.ibb.co/b13kVX2/4-1.jpg",
@@ -838,9 +858,10 @@ export default function Home() {
     trial: 17.5         // USD
   };
 
-  const preOrderPrices = {
-    // professional: { amount: 2400, currency: "USD" },
-    enterprise: { amount: 0, currency: "USD" }, // Custom, handle as needed
+  const preOrderPrices: Record<PreOrderPackageType, { amount: number; currency: string }> = {
+    starter: { amount: 0, currency: "USD" },
+    professional: { amount: 0, currency: "USD" },
+    enterprise: { amount: 0, currency: "USD" },
   };
 
   return (
@@ -2472,7 +2493,7 @@ export default function Home() {
                   <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-2 border-white" style={{background:"linear-gradient(135deg,#893A9F,#4a1260)"}} />
                 </div>
                 {/* Info */}
-                <h3 className="text-base font-bold text-gray-900 mb-0.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{member.name}</h3>
+                <h3 className="text-base font-bold text-gray-900 mb-0.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{member.link ? <a href={member.link} target="_blank" rel="noopener noreferrer" className="text-inherit hover:underline">{member.name}</a> : member.name}</h3>
                 <p className="text-sm font-semibold mb-0.5" style={{color:"#893A9F", fontFamily:"var(--font-red-hat-display),sans-serif"}}>{member.role}</p>
                 {showCredentials && member.credentials && (
                   <p className="text-xs text-gray-500 mb-0.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{member.credentials}</p>
@@ -2809,7 +2830,7 @@ export default function Home() {
                   <h3 className="text-2xl md:text-3xl font-bold text-[#2d0a3e] mb-4 leading-tight group-hover:text-[#893A9F] transition-colors" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
                     {blogPosts[0].title}
                   </h3>
-                  <p className="text-gray-500 mb-6 leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{blogPosts[0].excerpt}</p>
+                  <p className="text-gray-500 mb-6 leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{renderKeerthiLink(blogPosts[0].excerpt, false)}</p>
                   <div className="flex items-center gap-6 text-sm text-gray-400 mb-6">
                     <span className="flex items-center gap-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><User className="w-4 h-4 text-[#893A9F]" />{blogPosts[0].author}</span>
                     <span className="flex items-center gap-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><Clock className="w-4 h-4 text-[#893A9F]" />{blogPosts[0].date}</span>
@@ -2849,7 +2870,7 @@ export default function Home() {
                 {/* Content */}
                 <div className="p-6 flex flex-col flex-1">
                   <h3 className="font-bold text-[#2d0a3e] mb-3 text-sm leading-snug group-hover:text-[#893A9F] transition-colors line-clamp-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{post.title}</h3>
-                  <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-3 flex-1" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{post.excerpt}</p>
+                  <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-3 flex-1" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{renderKeerthiLink(post.excerpt, false)}</p>
                   <div className="flex items-center justify-between text-xs text-gray-400 mt-auto pt-4" style={{borderTop:"1px solid #ede8f5"}}>
                     <span className="flex items-center gap-1.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><User className="w-3.5 h-3.5 text-[#893A9F]" />{post.author}</span>
                     <span className="flex items-center gap-1.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><Clock className="w-3.5 h-3.5 text-[#893A9F]" />{post.date}</span>
@@ -3177,7 +3198,7 @@ export default function Home() {
                     </div>
                     <div>
                       <p className="text-xs font-bold text-[#893A9F] uppercase tracking-wider mb-1" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Address</p>
-                      <p className="text-sm text-gray-600" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Bay X, Trace Expert City<br/>Colombo 10, Sri Lanka</p>
+                      <p className="text-sm text-gray-600" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Bay 09, Trace Expert City<br/>Colombo 10, Sri Lanka</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">

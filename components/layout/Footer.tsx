@@ -119,7 +119,7 @@ export function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#893A9F' }} />
                 <span className="text-sm leading-relaxed" style={{ color: '#9ca3af' }}>
-                  Bay X, Trace Expert City,<br/>Colombo 10, Sri Lanka
+                  Bay 09, Trace Expert City,<br/>Colombo 10, Sri Lanka
                 </span>
               </li>
               <li className="flex items-center gap-3">
@@ -146,9 +146,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="pt-7 flex flex-col md:flex-row items-center justify-between gap-5" style={{ borderTop: '1px solid #1f1f1f' }}>
           <p className="text-xs flex items-center gap-1.5" style={{ color: '#6b7280' }}>
-            &copy; {new Date().getFullYear()} JENDO Innovations. Made with
-            <Heart className="w-3.5 h-3.5" style={{ color: '#893A9F' }} />
-            in Sri Lanka
+            &copy; {new Date().getFullYear()} JENDO Innovations. All rights reserved.
           </p>
           <div className="flex flex-wrap items-center gap-6">
             {[

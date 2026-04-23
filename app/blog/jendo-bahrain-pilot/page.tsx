@@ -47,7 +47,7 @@ export default function JendoBahrainPilotArticle() {
           February.
         </p>
         <p>
-          Developed by engineer <b>Keerthi Kodithuwakku</b> and his team, the device enables preventive screening through
+          Developed by engineer <b><a href="https://www.keerthikodithuwakku.com/" target="_blank" rel="noopener noreferrer" className="text-inherit hover:underline">Keerthi Kodithuwakku</a></b> and his team, the device enables preventive screening through
           physiological signal analysis.
         </p>
       </div>
