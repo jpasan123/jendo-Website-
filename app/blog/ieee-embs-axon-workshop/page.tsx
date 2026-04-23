@@ -43,7 +43,7 @@ export default function IeeeEmbsAxonWorkshop() {
       <div className="prose prose-lg max-w-none text-gray-800 mx-auto">
         <p>
           We are proud to announce a significant milestone in Jendo’s journey of innovation. Our CEO,{" "}
-          <b>Mr. Keerthi Kodithuwakku</b>, was honored as a <b>distinguished guest speaker</b> at the prestigious{" "}
+          <b><a href="https://www.keerthikodithuwakku.com/" target="_blank" rel="noopener noreferrer" className="text-inherit hover:underline">Mr. Keerthi Kodithuwakku</a></b>, was honored as a <b>distinguished guest speaker</b> at the prestigious{" "}
           <b>IEEE EMBS AXON Workshop</b>—a global gathering of the brightest minds in biomedical engineering and healthcare technology.
         </p>
         <p>
@@ -52,7 +52,7 @@ export default function IeeeEmbsAxonWorkshop() {
         <div className="bg-purple-50 border-l-4 border-purple-400 p-4 my-6 rounded-xl shadow-sm">
           <h2 className="text-xl font-bold text-purple-700 mb-2">Quick Highlights</h2>
           <ul className="list-disc pl-6 text-base">
-            <li>🎤 CEO Mr. Keerthi Kodithuwakku invited as a distinguished guest speaker</li>
+            <li>🎤 CEO <a href="https://www.keerthikodithuwakku.com/" target="_blank" rel="noopener noreferrer" className="text-inherit hover:underline">Mr. Keerthi Kodithuwakku</a> invited as a distinguished guest speaker</li>
             <li>🌍 Jendo’s AI-powered vascular health monitoring showcased globally</li>
             <li>🤝 New international collaborations and partnerships initiated</li>
             <li>🏆 Recognition by IEEE EMBS for innovation in preventive healthcare</li>
@@ -74,7 +74,7 @@ export default function IeeeEmbsAxonWorkshop() {
         <blockquote className="border-l-4 border-purple-400 pl-4 italic text-gray-700 my-6">
           “The recognition from IEEE EMBS reinforces our belief that accessible, preventive healthcare powered by AI is not just the future—it’s a global need we can fulfill.”
           <br />
-          <span className="text-sm text-gray-500">— Keerthi Kodithuwakku, CEO, Jendo</span>
+          <span className="text-sm text-gray-500">— <a href="https://www.keerthikodithuwakku.com/" target="_blank" rel="noopener noreferrer" className="text-inherit hover:underline">Keerthi Kodithuwakku</a>, CEO, Jendo</span>
         </blockquote>
         <h2>🔬 Driving the Future of Healthcare Innovation</h2><br></br>
         <p>
