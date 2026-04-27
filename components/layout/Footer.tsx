@@ -90,7 +90,7 @@ export function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#893A9F' }} />
                 <span className="text-sm leading-relaxed" style={{ color: '#9ca3af' }}>
-                  251, Little Falls Drive,<br/>Wilmington, Delaware, USA
+                  8614 Mahogany Place<br/>Newark, CA 94560
                 </span>
               </li>
               <li className="flex items-center gap-3">
