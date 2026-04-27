@@ -313,7 +313,7 @@ export default function Home() {
     //   },
     // },
     {
-      name: "Dr.Danushi Hettiarachchi",
+      name: "Dr.Dhanushi Hettiarachchi",
       role: "Chief Medical Officer",
       credentials: "MBBS",
       image: "https://i.ibb.co/WQFm1hg/1707784294034.jpg",

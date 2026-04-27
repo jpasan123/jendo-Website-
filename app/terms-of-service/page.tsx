@@ -177,7 +177,7 @@ export default function TermsOfService() {
                   </div>
                   <div className="p-4 rounded-xl" style={{ background: '#f3edf8', border: '1px solid #ede8f5' }}>
                     <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#893A9F' }}>Registered Address</p>
-                    <p className="text-sm text-gray-700">251, Little Falls Drive,<br/>Wilmington, Delaware, USA</p>
+                    <p className="text-sm text-gray-700">8614 Mahogany Place<br/>Newark, CA 94560</p>
                   </div>
                 </div>
               </SectionCard>
