@@ -324,6 +324,26 @@ export default function Home() {
         instagram: "https://instagram.com/danushihettiarachchi",
       },
     },
+    {
+      name: "Rasindu Rawishanka",
+      role: "Engineer",
+      credentials: "BSc. Eng",
+      image: "https://i.ibb.co/9DYYCfw/Screenshot-2026-04-26-081730.png",
+      social: {
+        linkedin: "https://www.linkedin.com/in/rasindu-rawishanka/",
+        facebook: "https://www.facebook.com/rasindu.rawishanka.9",
+      },
+    },
+    {
+      name: "Sulandi Edirisuriya",
+      role: "Research Assistant",
+      credentials: "BEng. SE",
+      image: "https://i.ibb.co/KpPXfp9V/Whats-App-Image-2026-04-26-at-08-57-21.jpg",
+      social: {
+        linkedin: "https://www.linkedin.com/in/sulandi-edirisuriya-864212296/",
+        instagram: "https://www.instagram.com/sulandi.e/",
+      },
+    },
     // {
     //   name: "Gimantha Upasena",
     //   role: "R & D Engineer",
@@ -2203,6 +2223,7 @@ export default function Home() {
               { src: "https://i.ibb.co/9mDYzKp8/Whats-App-Image-2026-03-03-at-08-31-17.jpg", alt: "Jendo Health Camp Event" },
               { src: "https://i.ibb.co/hJ5kqKCX/Whats-App-Image-2026-03-03-at-08-31-17-1.jpg", alt: "Cardiovascular Screening Session" },
               { src: "https://i.ibb.co/3mN1mtqj/Whats-App-Image-2026-03-03-at-08-31-18.jpg", alt: "Medical Professionals Collaboration" },
+              { src: "https://i.ibb.co/qL7p1w07/Whats-App-Image-2026-04-26-at-13-37-27.jpg", alt: "Jendo Gallery Moment" },
               { src: "https://i.ibb.co/HfXt87DS/Whats-App-Image-2026-03-03-at-08-31-18-1.jpg", alt: "Community Health Initiative" },
               { src: "https://i.ibb.co/1tSm4mkJ/Whats-App-Image-2025-07-14-at-13-51-07-40106ee2.jpg", alt: "Health Camp Team Consultation" },
               { src: "https://i.ibb.co/ymS4bvYM/Whats-App-Image-2025-07-14-at-13-51-07-72813403.jpg", alt: "Healthcare Professional Assessment" },
