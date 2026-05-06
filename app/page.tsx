@@ -16,6 +16,7 @@ import { createPaymentForm } from "@/lib/payhere";
 import { PayhereForm } from '@/components/ui/payhere-form';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import bannerImage from '../images/Jendo Banner AI For Good Global Summit.jpg.jpeg';
 
 
 
@@ -995,6 +996,19 @@ export default function Home() {
         </div>
 
 
+      </section>
+
+      <section className="mt-6 w-full overflow-hidden">
+        <div className="relative w-full aspect-[21/7] min-h-[220px] sm:min-h-[320px] lg:min-h-[420px]">
+          <Image
+            src={bannerImage}
+            alt="Jendo at AI for Good Global Summit"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+        </div>
       </section>
 
       {/* Problem & Solution Section */}
