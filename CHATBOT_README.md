@@ -2,33 +2,32 @@
 
 ## 🎯 Overview
 
-A robust three-tier chatbot system for Jendo Health that provides cardiovascular health information using:
-1. **Tier 1**: Rule-Based Responses (Instant - 80%+ coverage)
-2. **Tier 2**: Hugging Face AI API (2-5 seconds)
-3. **Tier 3**: Comprehensive Fallback (Always available)
+A robust proxy-based chatbot system for Jendo Health that forwards user messages through Next.js to the hosted Spring Boot backend and falls back safely when the backend is unreachable or unauthorized.
 
 ## 🏗️ Architecture
 
 ```
 User Query → API Endpoint (/api/chatbot)
                 ↓
-    ┌─────────────────────────┐
-    │ TIER 1: Rule-Based      │ ← Primary (< 10ms)
-    │ Pattern matching        │
-    │ Pre-defined answers     │
-    └─────────────────────────┘
-                ↓ (if no match)
-    ┌─────────────────────────┐
-    │ TIER 2: Hugging Face AI │ ← Secondary (2-5s)
-    │ DialoGPT models         │
-    │ Free public API         │
-    └─────────────────────────┘
-                ↓ (if failed)
-    ┌─────────────────────────┐
-    │ TIER 3: Fallback        │ ← Tertiary (< 10ms)
-    │ Always available        │
-    │ Complete information    │
-    └─────────────────────────┘
+  Next.js Proxy (/app/api/chatbot/route.ts)
+        ↓
+  ┌──────────────────────────────────────┐
+  │ TIER 1: Spring Boot Backend          │ ← Primary
+  │ http://188.166.240.119:8090/api/...  │
+  │ Auth forwarded from request/cookie or │
+  │ CHATBOT_BACKEND_TOKEN                │
+  └──────────────────────────────────────┘
+        ↓ (if backend unavailable)
+  ┌──────────────────────────────────────┐
+  │ TIER 2: Hugging Face AI              │ ← Fallback
+  │ DialoGPT models                      │
+  │ Free public API                      │
+  └──────────────────────────────────────┘
+        ↓ (if all fails)
+  ┌──────────────────────────────────────┐
+  │ TIER 3: Simple fallback              │
+  │ Contact details + support guidance   │
+  └──────────────────────────────────────┘
 ```
 
 ## 📁 Files Created/Modified
@@ -42,15 +41,7 @@ User Query → API Endpoint (/api/chatbot)
 ## ✨ Features Implemented
 
 ### **Tier 1: Rule-Based Responses** (Instant)
-Covers 80%+ of queries with instant responses:
-- ✅ Greetings and welcomes
-- ✅ About Jendo company
-- ✅ How the test works
-- ✅ Heart health information
-- ✅ Safety and comfort details
-- ✅ Patent information
-- ✅ Booking and pricing
-- ✅ Contact information
+Handled by the Spring Boot backend. The Next.js app no longer owns chatbot knowledge rules.
 
 ### **Tier 2: AI-Powered Responses** (2-5 seconds)
 - Uses free Hugging Face Inference API
@@ -62,9 +53,7 @@ Covers 80%+ of queries with instant responses:
 
 ### **Tier 3: Comprehensive Fallback** (Always Available)
 - Never shows errors to users
-- Provides complete Jendo information
-- Lists common topics
-- Full contact details
+- Provides contact details and support guidance
 
 ### **Enhanced UI Features**
 - ✅ Markdown-style text formatting (bold, line breaks)
@@ -78,7 +67,8 @@ Covers 80%+ of queries with instant responses:
 
 ### Prerequisites
 - Next.js 15.4.0+ (already installed)
-- No API keys required (uses free Hugging Face public API)
+- Spring Boot chatbot backend reachable on `http://188.166.240.119:8090`
+- Backend URL required; optional auth token and Hugging Face token can be configured in `.env.local`
 
 ### Installation
 Everything is already set up! Just run:
@@ -189,12 +179,20 @@ Supports basic markdown-style formatting:
 
 ## 🔧 Configuration
 
-### No Configuration Required!
-The chatbot works out of the box with:
-- ✅ Free Hugging Face public API (no key needed)
-- ✅ No backend setup required
-- ✅ No database needed
-- ✅ Stateless architecture
+### Required Configuration
+The chatbot proxy expects the backend URL in `.env.local`:
+
+```
+CHATBOT_BACKEND_URL=http://188.166.240.119:8090/api/chatbot/message
+```
+
+If the backend requires authentication, provide one of these:
+
+```
+CHATBOT_BACKEND_TOKEN=your_backend_token
+```
+
+The proxy also forwards an incoming `Authorization` header or `auth-token` / `token` cookie when present.
 
 ### Optional: Add Hugging Face Token
 For higher rate limits (1000+ requests/hour):
@@ -204,7 +202,7 @@ For higher rate limits (1000+ requests/hour):
    ```
    HUGGINGFACE_TOKEN=your_token_here
    ```
-3. Update `/app/api/chatbot/route.ts`:
+3. Update `/app/api/chatbot/route.ts` if needed:
    ```typescript
    headers: {
      'Content-Type': 'application/json',
