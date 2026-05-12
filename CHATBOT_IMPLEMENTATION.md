@@ -13,7 +13,7 @@ User → Frontend (chat-bot.tsx)
          ↓
 ┌──────────────────────────────────────┐
 │ TIER 1: Spring Boot Backend          │ ← PRIMARY (Your hosted backend)
-│ http://localhost:8080/api/chatbot/   │
+│ http://188.166.240.119:8090/api/chatbot/   │
 │ message                              │
 │                                      │
 │ Your backend has:                    │
@@ -70,10 +70,10 @@ User → Frontend (chat-bot.tsx)
 
 ```bash
 # Make sure your Spring Boot backend is running on:
-http://localhost:8080
+http://188.166.240.119:8090
 
 # Test endpoint:
-curl -X POST http://localhost:8080/api/chatbot/message \
+curl -X POST http://188.166.240.119:8090/api/chatbot/message \
   -H "Content-Type: application/json" \
   -d '{"message": "Hello"}'
 ```
@@ -83,8 +83,16 @@ curl -X POST http://localhost:8080/api/chatbot/message \
 Create `.env.local`:
 
 ```bash
-# Your Spring Boot backend URL
-CHATBOT_BACKEND_URL=http://localhost:8080/api/chatbot/message
+# Auth service for getting the Bearer token
+CHATBOT_AUTH_URL=http://188.166.240.119:8080/api/auth/login
+CHATBOT_AUTH_EMAIL=your-auth-email
+CHATBOT_AUTH_PASSWORD=your-auth-password
+
+# Chatbot backend URL
+CHATBOT_BACKEND_URL=http://188.166.240.119:8090/api/chatbot/message
+
+# Optional backend auth token
+CHATBOT_BACKEND_TOKEN=
 
 # Optional: Hugging Face token for higher rate limits
 HUGGINGFACE_TOKEN=your_token_here
@@ -157,7 +165,7 @@ curl http://localhost:3001/api/chatbot
   "status": "operational",
   "service": "Jendo Health Chatbot Proxy",
   "backend": {
-    "url": "http://localhost:8080/api/chatbot/message",
+      "url": "http://188.166.240.119:8090/api/chatbot/message",
     "status": "healthy" | "unhealthy" | "unreachable"
   },
   ...
@@ -221,7 +229,7 @@ For higher rate limits (1000+/hour):
 **Check:**
 ```bash
 # Is Spring Boot running?
-curl http://localhost:8080/api/chatbot/test
+curl http://188.166.240.119:8090/api/chatbot/test
 
 # Is URL correct in .env.local?
 cat .env.local
@@ -257,7 +265,7 @@ cat .env.local
 
 ## ✅ Success Checklist
 
-- [ ] Spring Boot backend running on port 8080
+- [ ] Spring Boot backend running on port 8090
 - [ ] `.env.local` configured with correct backend URL
 - [ ] Next.js running on port 3001
 - [ ] Browser shows chatbot button

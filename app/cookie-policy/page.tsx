@@ -190,7 +190,8 @@ export default function CookiePolicy() {
                   </div>
                   <div className="p-4 rounded-xl" style={{ background: '#f3edf8', border: '1px solid #ede8f5' }}>
                     <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#893A9F' }}>Registered Address</p>
-                    <p className="text-sm text-gray-700">8614 Mahogany Place<br/>Newark, CA 94560</p>
+                    <p className="text-sm text-gray-700">Jendo Innovations INC,
+9220 Rumsey Road Suite 100<br/>Columbia MD 21045</p>
                   </div>
                 </div>
               </SectionCard>

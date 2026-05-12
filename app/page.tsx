@@ -339,7 +339,7 @@ export default function Home() {
       name: "Sulandi Edirisuriya",
       role: "Research Assistant",
       credentials: "BEng. SE",
-      image: "https://i.ibb.co/KpPXfp9V/Whats-App-Image-2026-04-26-at-08-57-21.jpg",
+      image: "https://i.ibb.co/tTrQ1wWG/Whats-App-Image-2026-04-26-at-08-57-21-1.jpg",
       social: {
         linkedin: "https://www.linkedin.com/in/sulandi-edirisuriya-864212296/",
         instagram: "https://www.instagram.com/sulandi.e/",
@@ -2239,6 +2239,7 @@ export default function Home() {
               { src: "https://i.ibb.co/3mN1mtqj/Whats-App-Image-2026-03-03-at-08-31-18.jpg", alt: "Medical Professionals Collaboration" },
               { src: "https://i.ibb.co/qL7p1w07/Whats-App-Image-2026-04-26-at-13-37-27.jpg", alt: "Jendo Gallery Moment" },
               { src: "https://i.ibb.co/HfXt87DS/Whats-App-Image-2026-03-03-at-08-31-18-1.jpg", alt: "Community Health Initiative" },
+              { src: "https://i.ibb.co/1J65q2Dm/Whats-App-Image-2026-05-12-at-10-07-37.jpg", alt: "Jendo Gallery Member Image" },
               { src: "https://i.ibb.co/1tSm4mkJ/Whats-App-Image-2025-07-14-at-13-51-07-40106ee2.jpg", alt: "Health Camp Team Consultation" },
               { src: "https://i.ibb.co/ymS4bvYM/Whats-App-Image-2025-07-14-at-13-51-07-72813403.jpg", alt: "Healthcare Professional Assessment" },
               { src: "https://i.ibb.co/fz8hvcwW/Whats-App-Image-2025-07-14-at-13-51-07-d33c7810.jpg", alt: "Cardiovascular Screening Process" },

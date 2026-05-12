@@ -90,7 +90,7 @@ export function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#893A9F' }} />
                 <span className="text-sm leading-relaxed" style={{ color: '#9ca3af' }}>
-                  8614 Mahogany Place<br/>Newark, CA 94560
+                  Jendo Innovations INC, 9220 Rumsey Road Suite 100<br/>Columbia MD 21045
                 </span>
               </li>
               <li className="flex items-center gap-3">
@@ -106,7 +106,7 @@ export function Footer() {
                 <a href="tel:+94766210120" className="text-sm transition-colors" style={{ color: '#9ca3af' }}
                   onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#c084fc'}
                   onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#9ca3af'}>
-                  +94 76 621 0120
+                  +1443-259-9354
                 </a>
               </li>
             </ul>
