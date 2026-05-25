@@ -32,7 +32,7 @@ export default function SeedstarsColombo2017Article() {
 
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-extrabold text-purple-900 mb-3 leading-tight">
-          Jendo CEO Keerthi Kodithuwakku Wins at Seedstars Colombo 2017
+          Jendo Innovations Wins Seedstars Colombo 2017
         </h1>
         <div className="flex items-center gap-3 justify-center text-gray-500 text-sm">
           <span>By Jendo Team</span>
@@ -41,7 +41,7 @@ export default function SeedstarsColombo2017Article() {
         </div>
       </div>
 
-      <div className="prose prose-lg max-w-none text-gray-800 mx-auto">
+      <div className="article-content prose prose-slate prose-lg mx-auto">
         <p>
           <a href="https://www.keerthikodithuwakku.com/" target="_blank" rel="noopener noreferrer" className="text-purple-700 hover:underline">
             Keerthi Kodithuwakku

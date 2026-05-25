@@ -40,7 +40,7 @@ export default function IeeeEmbsAxonWorkshop() {
         </div>
       </div>
       {/* Blog Content */}
-      <div className="prose prose-lg max-w-none text-gray-800 mx-auto">
+      <div className="article-content prose prose-slate prose-lg mx-auto">
         <p>
           We are proud to announce a significant milestone in Jendo’s journey of innovation. Our CEO,{" "}
           <b><a href="https://www.keerthikodithuwakku.com/" target="_blank" rel="noopener noreferrer" className="text-inherit hover:underline">Mr. Keerthi Kodithuwakku</a></b>, was honored as a <b>distinguished guest speaker</b> at the prestigious{" "}

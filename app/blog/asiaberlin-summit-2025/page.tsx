@@ -40,7 +40,7 @@ export default function AsiaBerlinSummit2025Article() {
         </div>
       </div>
 
-      <div className="prose prose-lg max-w-none text-gray-800 mx-auto">
+      <div className="article-content prose prose-slate prose-lg mx-auto">
         <p>
           It was a privilege for Jendo Innovations to take part in the AsiaBerlin Summit 2025, engaging with German
           medical product distributors and ecosystem leaders to explore pathways for global expansion of Sri Lankan
@@ -67,10 +67,6 @@ export default function AsiaBerlinSummit2025Article() {
 
         <p>
           Special thanks for the staff at Sri Lankan Embassy Germany and the H.E. Ambassador Varuni Muthukumarana.
-        </p>
-
-        <p>
-          #AsiaBerlin2025 #SriLanka #JendoInnovations #DeepTech #MedTech #GlobalPartnerships #AnIslandRising
         </p>
       </div>
 

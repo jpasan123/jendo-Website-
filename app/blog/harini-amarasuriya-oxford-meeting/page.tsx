@@ -41,32 +41,21 @@ export default function HariniAmarasuriyaOxfordMeetingArticle() {
         </div>
       </div>
 
-      <div className="prose prose-lg max-w-none text-gray-800 mx-auto">
+      <div className="article-content prose prose-slate prose-lg mx-auto">
         <p>
-          It was a special opportunity to meet Hon. Dr. Harini Amarasuriya, Prime Minister of Sri Lanka, during her
-          visit to the University of Oxford.
+          It was a great honour for the leadership of Jendo Innovations to meet Harini Amarasuriya during her visit to the University of Oxford.
         </p>
 
         <p>
-          As Chevening CRISP Fellows 2026 at St Cross College, Oxford, we met her at St Antony&apos;s College,
-          University of Oxford, and shared our thoughts on strengthening future collaboration between the UK and Sri
-          Lanka, particularly through initiatives related to innovation, Neo Ventures, Jendo Innovations Inc., and
-          the vision of building a Centre of Excellence in Biomedical Engineering.
+          As Chevening Scholarship CRISP Fellows 2026 at St Cross College the meeting took place at St Antony's College, where discussions focused on strengthening future collaboration between the UK and Sri Lanka in the areas of innovation, entrepreneurship, healthcare transformation and biomedical engineering. The conversation also highlighted the vision behind initiatives connected to Jendo Innovations, particularly the long-term goal of establishing a Centre of Excellence in Biomedical Engineering to support healthcare innovation and AI-driven solutions in Sri Lanka.
         </p>
 
         <p>
-          The meeting was facilitated by Eleanor Walton from the Foreign, Commonwealth and Development Office, with the
-          support of the Sri Lankan High Commission in the UK and the British High Commission in Colombo.
+          The meeting was facilitated by Eleanor Walton with the support of the Sri Lankan High Commission in the United Kingdom and the British High Commission Colombo. We were also pleased to meet Diego Sanchez-Ancochea and Nimal Senadheera during the occasion.
         </p>
 
         <p>
-          We were also pleased to be joined by Prof. Diego Sanchez-Ancochea and His Excellency Nimal Senadheera,
-          High Commissioner of Sri Lanka to the UK.
-        </p>
-
-        <p>
-          #Chevening #Oxford #StCrossCollege #SriLanka #UKSriLanka #BiomedicalEngineering #HealthcareInnovation
-          #AIinHealthcare
+          This meeting reflected a shared commitment towards fostering international collaboration, advancing healthcare innovation and creating meaningful impact through technology and research.
         </p>
       </div>
 

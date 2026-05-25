@@ -40,7 +40,7 @@ export default function JendoPoliceHealthCampArticle() {
         </div>
       </div>
 
-      <div className="prose prose-lg max-w-none text-gray-800 mx-auto">
+      <div className="article-content prose prose-slate prose-lg mx-auto">
         <p>
           When we see police officers on duty, we rarely consider how the stress and demands of their roles impact their
           heart health. This invisible issue has silently affected thousands of Sri Lankan officers. Thanks to Jendo,

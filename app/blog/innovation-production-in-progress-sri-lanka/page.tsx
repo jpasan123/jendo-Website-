@@ -40,7 +40,7 @@ export default function InnovationProductionInProgressSriLankaArticle() {
         </div>
       </div>
 
-      <div className="prose prose-lg max-w-none text-gray-800 mx-auto">
+      <div className="article-content prose prose-slate prose-lg mx-auto">
         <p>
           Pleased to share that a new production is currently in progress, focusing on advancing science-based
           innovations in Sri Lanka.

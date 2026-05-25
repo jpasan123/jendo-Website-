@@ -40,7 +40,7 @@ export default function LankaVenturesInvestmentArticle() {
         </div>
       </div>
 
-      <div className="prose prose-lg max-w-none text-gray-800 mx-auto">
+      <div className="article-content prose prose-slate prose-lg mx-auto">
         <h2 className="text-2xl font-bold text-purple-800">A Game-Changer in Vascular Health Assessment</h2>
         <p>
           In a groundbreaking development, Lanka Ventures PLC, a prominent Sri Lankan investment firm, has announced a
