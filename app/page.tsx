@@ -341,8 +341,7 @@ export default function Home() {
       credentials: "BEng. SE",
       image: "https://i.ibb.co/tTrQ1wWG/Whats-App-Image-2026-04-26-at-08-57-21-1.jpg",
       social: {
-        linkedin: "https://www.linkedin.com/in/sulandi-edirisuriya-864212296/",
-        instagram: "https://www.instagram.com/sulandi.e/",
+        linkedin: "https://www.linkedin.com/in/sulandi-edirisuriya-864212296/"
       },
     },
     // {
@@ -389,6 +388,15 @@ export default function Home() {
       author: "Jendo Team",
       image: "https://i.ibb.co/Q3Pmmq5z/Whats-App-Image-2026-03-03-at-08-31-39.jpg",
       url: "/blog/jendo-bahrain-pilot",
+      imageFit: "contain",
+    },
+    {
+      title: "Meeting Hon. Dr. Harini Amarasuriya at Oxford",
+      excerpt: "During her visit to the University of Oxford, we met Hon. Dr. Harini Amarasuriya, Prime Minister of Sri Lanka, and discussed future collaboration between the UK and Sri Lanka through innovation, Neo Ventures, Jendo Innovations Inc., and a Centre of Excellence in Biomedical Engineering.",
+      date: "2026",
+      author: "Jendo Team",
+      image: "https://i.ibb.co/DD77KNc8/1779534055264.jpg",
+      url: "/blog/harini-amarasuriya-oxford-meeting",
       imageFit: "contain",
     },
     {
@@ -450,6 +458,15 @@ export default function Home() {
       author: "Jendo Team",
       image: "https://i.ibb.co/KpJtFWqH/image-f336df078b.jpg",
       url: "/blog/lanka-ventures-invests-in-jendo-innovations",
+      imageFit: "contain",
+    },
+    {
+      title: "Jendo Innovations Wins at Seedstars Colombo 2017",
+      excerpt: "Keerthi Kodithuwakku, CEO of Jendo Innovations, received the winners award at Seedstars Colombo 2017. Seedstars is a global startup competition based in Switzerland that connects and invests in emerging-market startups across more than 60 countries.",
+      date: "2017",
+      author: "Jendo Team",
+      image: "https://i.ibb.co/67YC29WL/Untitled-design-28-jpg.jpg",
+      url: "/blog/seedstars-colombo-2017",
       imageFit: "contain",
     },
     {
