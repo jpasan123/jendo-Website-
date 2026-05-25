@@ -341,8 +341,7 @@ export default function Home() {
       credentials: "BEng. SE",
       image: "https://i.ibb.co/tTrQ1wWG/Whats-App-Image-2026-04-26-at-08-57-21-1.jpg",
       social: {
-        linkedin: "https://www.linkedin.com/in/sulandi-edirisuriya-864212296/",
-        instagram: "https://www.instagram.com/sulandi.e/",
+        linkedin: "https://www.linkedin.com/in/sulandi-edirisuriya-864212296/"
       },
     },
     // {
