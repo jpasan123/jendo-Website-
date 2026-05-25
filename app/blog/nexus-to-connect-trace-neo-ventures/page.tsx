@@ -40,7 +40,7 @@ export default function NexusToConnectArticle() {
         </div>
       </div>
 
-      <div className="prose prose-lg max-w-none text-gray-800 mx-auto">
+      <div className="article-content prose prose-slate prose-lg mx-auto">
         <p>
           From our Centre of Excellence in Biomedical Engineering, a program powered by Jendo Innovations, a leading
           MedTech company focused on preventing vascular diseases, we recently hosted the Nexus-to-Connect session at
@@ -69,10 +69,6 @@ export default function NexusToConnectArticle() {
           impact.
         </p>
 
-        <p>
-          #medtech #biomedicalengineering #HealthInnovation #clinicaltocommercial #entrepreneurship #deeptech #srilanka
-          #TRACE #NeoVentures #jendoinnovations
-        </p>
       </div>
 
       <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4">

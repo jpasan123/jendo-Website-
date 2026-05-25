@@ -461,7 +461,7 @@ export default function Home() {
       imageFit: "contain",
     },
     {
-      title: "Jendo Innovations Wins at Seedstars Colombo 2017",
+      title: "Jendo Innovations Wins Seedstars Colombo 2017",
       excerpt: "Keerthi Kodithuwakku, CEO of Jendo Innovations, received the winners award at Seedstars Colombo 2017. Seedstars is a global startup competition based in Switzerland that connects and invests in emerging-market startups across more than 60 countries.",
       date: "2017",
       author: "Jendo Team",

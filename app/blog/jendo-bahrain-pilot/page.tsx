@@ -40,7 +40,7 @@ export default function JendoBahrainPilotArticle() {
         </div>
       </div>
 
-      <div className="prose prose-lg max-w-none text-gray-800 mx-auto">
+      <div className="article-content prose prose-slate prose-lg mx-auto">
         <p>
           A Sri Lankan-invented medical device, <b>JENDO</b>, designed for non-invasive early detection of cardiovascular
           conditions using AI, was successfully piloted at the <b>King Hamad American Mission Hospital</b> in Bahrain in
