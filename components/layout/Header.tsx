@@ -156,7 +156,7 @@ export function Header() {
             */}
 
             {/* Visit My Jendo Portal button */}
-            <a
+            {/* <a
               href="http://188.166.240.119:5173/login"
               target="_blank"
               rel="noopener noreferrer"
@@ -165,7 +165,7 @@ export function Header() {
             >
               <ExternalLink className="w-3.5 h-3.5" />
               Visit My Jendo Portal
-            </a>
+            </a> */}
           </div>
 
           {/* Mobile Menu Button and Cart Icon */}

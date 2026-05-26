@@ -1,6 +1,6 @@
 'use client';
 
-import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone, Heart, ArrowRight } from 'lucide-react';
+import { Facebook, Linkedin, Mail, MapPin, Phone, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -35,14 +35,23 @@ export function Footer() {
             {/* Social icons */}
             <div className="flex gap-3">
               {[
-                { icon: <Facebook className="w-4 h-4" />, href: '#' },
-                { icon: <Twitter className="w-4 h-4" />, href: '#' },
-                { icon: <Instagram className="w-4 h-4" />, href: '#' },
-                { icon: <Linkedin className="w-4 h-4" />, href: '#' },
+                {
+                  icon: <Facebook className="w-4 h-4" />,
+                  href: 'https://web.facebook.com/jendoinnovations/?_rdc=1&_rdr',
+                  label: 'Facebook',
+                },
+                {
+                  icon: <Linkedin className="w-4 h-4" />,
+                  href: 'https://www.linkedin.com/company/jendohealth/posts/?feedView=all',
+                  label: 'LinkedIn',
+                },
               ].map((s, i) => (
                 <a
                   key={i}
                   href={s.href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  aria-label={s.label}
                   className="w-9 h-9 rounded-lg flex items-center justify-center transition-all hover:scale-110"
                   style={{ background: '#1a1a1a', color: '#9ca3af', border: '1px solid #2a2a2a' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#893A9F'; (e.currentTarget as HTMLElement).style.color = '#fff'; }}
