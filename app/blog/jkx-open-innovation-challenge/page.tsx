@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import mobileHeroImage from "@/images/Jendo AI Summit - mobile.png";
 
 export default function JkxOpenInnovationChallenge() {
   const router = useRouter();
@@ -19,13 +20,24 @@ export default function JkxOpenInnovationChallenge() {
         Back to News
       </button>
       {/* Header Image */}
-      <div className="mb-8 rounded-2xl overflow-hidden shadow-xl">
+      <div className="mb-8 rounded-2xl overflow-hidden shadow-xl bg-white">
+        <Image
+          src={mobileHeroImage}
+          alt="JKX Open Innovation Challenge Grand Finale"
+          width={1600}
+          height={1000}
+          priority
+          className="block w-full h-auto object-contain bg-white md:hidden"
+          sizes="100vw"
+        />
         <Image
           src="https://i.ibb.co/m5vqfsLm/277253930-4924701910944785-4382205761829635155-n.jpg"
           alt="JKX Open Innovation Challenge Grand Finale"
-          width={800}
-          height={400}
-          className="object-cover w-full h-64"
+          width={1600}
+          height={1000}
+          priority
+          className="hidden w-full h-auto object-contain bg-white md:block"
+          sizes="(min-width: 768px) 800px, 100vw"
         />
       </div>
       {/* Title & Meta */}

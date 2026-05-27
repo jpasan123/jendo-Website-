@@ -17,6 +17,8 @@ import { PayhereForm } from '@/components/ui/payhere-form';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import bannerImage from '../images/Jendo Banner AI For Good Global Summit.jpg.jpeg';
+import mobileBannerImage from '../images/Jendo AI Summit - mobile.png';
+import mobileHeroBackgroundImage from '../images/jendo-background-mobile.jpeg';
 
 
 
@@ -170,10 +172,7 @@ export default function Home() {
       additionalRole: "Honorary Consultant Physician, National Hospital, Sri Lanka",
       image: "https://i.ibb.co/CKmznk7v/th.jpg",
       social: {
-        linkedin: "https://www.linkedin.com/in/saroj-jayasinghe-54308b33/",
-        twitter: "https://twitter.com/sarojjayasinghe",
-        facebook: "https://web.facebook.com/saroj.jayasinghe.3",
-        instagram: "https://instagram.com/sarojjayasinghe",
+        linkedin: "https://www.linkedin.com/in/saroj-jayasinghe-54308b33/"
       },
     },
     {
@@ -183,10 +182,7 @@ export default function Home() {
       additionalRole: "CEO, Leomed Llc & BinLab Inc.",
       image: "https://i.ibb.co/xgW3jpR/9-1.png",
       social: {
-        linkedin: "https://www.linkedin.com/in/bandula-wijay-phd-dsc-b7581224/",
-        twitter: "https://twitter.com/bandulawijay",
-        facebook: "https://web.facebook.com/bandula.wijay",
-        instagram: "https://instagram.com/bandulawijay",
+        linkedin: "https://www.linkedin.com/in/bandula-wijay-phd-dsc-b7581224/"
       },
     },
     {
@@ -196,10 +192,7 @@ export default function Home() {
       additionalRole: "Head of Department of Clinical Medicine, University of Colombo",
       image: "https://i.ibb.co/Qv5Wf41k/Whats-App-Image-2025-02-13-at-20-44-02-649bd8d3.jpg",
       social: {
-        linkedin: "https://www.linkedin.com/in/godwin-constantine-ab751a8/",
-        twitter: "https://twitter.com/godwinconstantine",
-        facebook: "https://web.facebook.com/godwin.constantine.7",
-        instagram: "https://instagram.com/godwinconstantine",
+        linkedin: "https://www.linkedin.com/in/godwin-constantine-ab751a8/"
       },
     },
   ]
@@ -234,9 +227,9 @@ export default function Home() {
       image: "https://i.ibb.co/W5g1BHQ/3-1.jpg",
       social: {
         linkedin: "https://www.linkedin.com/in/heminda/",
-        twitter: "https://twitter.com/hemindajayaweera",
+        twitter: "https://x.com/HemindaJ",
         facebook: "https://web.facebook.com/heminda",
-        instagram: "https://instagram.com/hemindajayaweera",
+        instagram: "https://www.instagram.com/hemindaj?igsh=MWozcXlxdms3cWpiYw==",
       },
     },
     {
@@ -245,9 +238,7 @@ export default function Home() {
       image: "https://i.ibb.co/4nL9gMST/2cea9ab7-faea-476c-8bf5-5a0f3b4825cd-thumb-1.jpg",
       social: {
         linkedin: "https://www.linkedin.com/in/palitha-gamage-8b47b510b/",
-        twitter: "https://twitter.com/chandriendemel",
-        facebook: "https://www.facebook.com/palitha.gamage.1/",
-        instagram: "https://instagram.com/chandriendemel",
+        facebook: "https://www.facebook.com/palitha.gamage.1/"
       },
     },
     {
@@ -255,10 +246,7 @@ export default function Home() {
       role: "Manager Connectivity Program Meta Inc.",
       image: "https://i.ibb.co/n7xdCBm/8-1.jpg",
       social: {
-        linkedin: "https://www.linkedin.com/in/vinod-samarawickrama-767bb273/",
-        twitter: "https://twitter.com/vinodsamarawickrama",
-        facebook: "https://web.facebook.com/vinod.samarawickrama",
-        instagram: "https://instagram.com/vinodsamarawickrama",
+        linkedin: "https://www.linkedin.com/in/vinod-samarawickrama-767bb273/"
       },
     },
     {
@@ -294,10 +282,7 @@ export default function Home() {
       credentials: "BSc. Eng",
       image: "https://i.ibb.co/5gttd5PJ/1635531926171.jpg",
       social: {
-        linkedin: "https://linkedin.com/in/charith-vithanage",
-        twitter: "https://twitter.com/charithvithanage",
-        facebook: "https://facebook.com/charith.vithanage",
-        instagram: "https://instagram.com/charithvithanage",
+        linkedin: "https://www.linkedin.com/in/janith-kodithuwakku/",
 
       },
     },
@@ -320,9 +305,7 @@ export default function Home() {
       image: "https://i.ibb.co/WQFm1hg/1707784294034.jpg",
       social: {
         linkedin: "https://www.linkedin.com/in/dr-dhanushi-hettiarachchi-b0955853/",
-        twitter: "https://twitter.com/danushihettiarachchi",
-        facebook: "https://web.facebook.com/dhanushi.thathsarahettiarachchi",
-        instagram: "https://instagram.com/danushihettiarachchi",
+        facebook: "https://web.facebook.com/dhanushi.thathsarahettiarachchi"
       },
     },
     {
@@ -392,7 +375,7 @@ export default function Home() {
     },
     {
       title: "Meeting Hon. Dr. Harini Amarasuriya at Oxford",
-      excerpt: "During her visit to the University of Oxford, we met Hon. Dr. Harini Amarasuriya, Prime Minister of Sri Lanka, and discussed future collaboration between the UK and Sri Lanka through innovation, Neo Ventures, Jendo Innovations Inc., and a Centre of Excellence in Biomedical Engineering.",
+      excerpt: "During her visit to the University of Oxford, we met Sri Lankan Prime Minister Hon. Dr. Harini Amarasuriya, Prime Minister of Sri Lanka, and discussed future collaboration between the UK and Sri Lanka through innovation, Neo Ventures, Jendo Innovations Inc., and a Centre of Excellence in Biomedical Engineering.",
       date: "2026",
       author: "Jendo Team",
       image: "https://i.ibb.co/DD77KNc8/1779534055264.jpg",
@@ -909,15 +892,28 @@ export default function Home() {
       <section id="home" className="relative min-h-screen flex items-start sm:items-center section-scroll overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <Image
-            src="/images/jendo1.jpeg"
-            alt="Jendo Background"
-            fill
-            className="object-cover"
-            priority
-            quality={100}
-            unoptimized
-          />
+          <div className="absolute inset-0 md:hidden">
+            <Image
+              src={mobileHeroBackgroundImage}
+              alt="Jendo Background"
+              fill
+              className="object-cover object-center"
+              priority
+              quality={100}
+              unoptimized
+            />
+          </div>
+          <div className="absolute inset-0 hidden md:block">
+            <Image
+              src="/images/jendo1.jpeg"
+              alt="Jendo Background"
+              fill
+              className="object-cover"
+              priority
+              quality={100}
+              unoptimized
+            />
+          </div>
           {/* Left-side gradient for text legibility, right stays clear */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-transparent" />
           {/* Subtle purple accent */}
@@ -1016,7 +1012,16 @@ export default function Home() {
       </section>
 
       <section className="mt-6 w-full overflow-hidden">
-        <div className="relative w-full aspect-[21/7] min-h-[220px] sm:min-h-[320px] lg:min-h-[420px]">
+        <div className="block w-full md:hidden">
+          <Image
+            src={mobileBannerImage}
+            alt="Jendo at AI for Good Global Summit"
+            className="w-full h-auto object-contain bg-white"
+            sizes="100vw"
+            priority
+          />
+        </div>
+        <div className="relative hidden w-full aspect-[21/7] min-h-[220px] sm:min-h-[320px] lg:min-h-[420px] md:block">
           <Image
             src={bannerImage}
             alt="Jendo at AI for Good Global Summit"
