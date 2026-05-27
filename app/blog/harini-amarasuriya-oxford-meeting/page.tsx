@@ -43,7 +43,7 @@ export default function HariniAmarasuriyaOxfordMeetingArticle() {
 
       <div className="article-content prose prose-slate prose-lg mx-auto">
         <p>
-          It was a great honour for the leadership of Jendo Innovations to meet Hon. Dr. Harini Amarasuriya during her visit to the University of Oxford.
+          It was a great honour for the leadership of Jendo Innovations to meet Sri Lankan Prime Minister Hon. Dr. Harini Amarasuriya during her visit to the University of Oxford.
         </p>
 
         <p>

@@ -375,7 +375,7 @@ export default function Home() {
     },
     {
       title: "Meeting Hon. Dr. Harini Amarasuriya at Oxford",
-      excerpt: "During her visit to the University of Oxford, we met Hon. Dr. Harini Amarasuriya, Prime Minister of Sri Lanka, and discussed future collaboration between the UK and Sri Lanka through innovation, Neo Ventures, Jendo Innovations Inc., and a Centre of Excellence in Biomedical Engineering.",
+      excerpt: "During her visit to the University of Oxford, we met Sri Lankan Prime Minister Hon. Dr. Harini Amarasuriya, Prime Minister of Sri Lanka, and discussed future collaboration between the UK and Sri Lanka through innovation, Neo Ventures, Jendo Innovations Inc., and a Centre of Excellence in Biomedical Engineering.",
       date: "2026",
       author: "Jendo Team",
       image: "https://i.ibb.co/DD77KNc8/1779534055264.jpg",
