@@ -2273,6 +2273,7 @@ export default function Home() {
               { src: "https://i.ibb.co/39kCjbJw/Whats-App-Image-2025-07-14-at-13-51-35-6ef53381.jpg", alt: "Clinical Assessment Demo" },
               { src: "https://i.ibb.co/5XWpWYSZ/Whats-App-Image-2025-07-14-at-13-51-38-780c184c.jpg", alt: "Healthcare Innovation" },
               { src: "https://i.ibb.co/rf0RzYvm/Whats-App-Image-2025-07-14-at-14-22-26-621a4f6a.jpg", alt: "Team Achievement Moment" },
+              { src: "https://i.ibb.co/BH8yB2zY/Whats-App-Image-2026-06-03-at-16-38-10.jpg", alt: "Jendo Gallery Moment" },
             ];
 
             const GalleryCard = ({ image, index }: { image: typeof galleryImages[0]; index: number }) => (
