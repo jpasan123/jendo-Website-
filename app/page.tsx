@@ -63,6 +63,8 @@ export default function Home() {
   const videoRef1 = useRef<HTMLVideoElement>(null)
   const videoRef2 = useRef<HTMLVideoElement>(null)
   const awarenessVideoRef = useRef<HTMLVideoElement>(null)
+  const pharmacyVideoRef = useRef<HTMLVideoElement>(null)
+  const pharmacySectionRef = useRef<HTMLDivElement>(null)
   const videoSectionRef = useRef<HTMLDivElement>(null)
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -133,6 +135,30 @@ export default function Home() {
     );
 
     observer.observe(awarenessVideo);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const pharmacyVideo = pharmacyVideoRef.current;
+    const pharmacySection = pharmacySectionRef.current;
+    if (!pharmacyVideo || !pharmacySection) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => {
+              pharmacyVideo.play().catch(() => {});
+            }, 100);
+          } else {
+            pharmacyVideo.pause();
+          }
+        });
+      },
+      { root: null, rootMargin: "0px", threshold: 0.3 }
+    );
+
+    observer.observe(pharmacySection);
     return () => observer.disconnect();
   }, []);
 
@@ -1031,25 +1057,221 @@ export default function Home() {
 
       </section>
 
-      <section className="mt-6 w-full overflow-hidden">
-        <div className="block w-full md:hidden">
-          <Image
-            src={mobileBannerImage}
-            alt="Jendo at AI for Good Global Summit"
-            className="w-full h-auto object-contain bg-white"
-            sizes="100vw"
-            priority
-          />
+      {/* Pharmacy Health Screening Video — directly below hero */}
+      <section ref={pharmacySectionRef} className="pt-10 pb-16 sm:pt-12 sm:pb-20 bg-white overflow-hidden section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-14 items-center">
+
+            {/* Left: Video in bordered card */}
+            <div className="relative">
+              <div className="inline-flex items-center gap-2 mb-5">
+                <div className="h-px w-8 bg-[#893A9F]" />
+                <span className="text-xs font-bold uppercase tracking-widest text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Screening Available</span>
+                <div className="h-px w-8 bg-[#893A9F]" />
+              </div>
+              <div className="bg-white border border-[#ede8f5] rounded-2xl p-4 sm:p-5 shadow-sm group">
+                <div className="relative aspect-video rounded-xl overflow-hidden bg-black">
+                  <video
+                    ref={pharmacyVideoRef}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    playsInline
+                    muted
+                    loop
+                  >
+                    <source src="/pharmacy_jendo.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/25 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-black/50 backdrop-blur-sm px-3 py-1.5">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#b588d9] opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#893A9F]" />
+                    </span>
+                    <span className="text-xs font-semibold text-white" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Live Demo</span>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-3 mt-5">
+                {[
+                  { value: "15 min", label: "Quick Screening" },
+                  { value: "Non-Invasive", label: "Painless Test" },
+                  { value: "Medihelp", label: "Hospital" },
+                ].map((stat) => (
+                  <div key={stat.label} className="bg-white border border-[#ede8f5] rounded-xl px-4 py-3 text-center shadow-sm">
+                    <p className="font-black text-lg leading-tight" style={{color:"#893A9F", fontFamily:"var(--font-red-hat-display),sans-serif"}}>{stat.value}</p>
+                    <p className="text-gray-500 text-xs mt-0.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Title & description */}
+            <div className="flex flex-col">
+              <div className="inline-flex items-center gap-2 mb-5">
+                <div className="h-px w-8 bg-[#893A9F]" />
+                <span className="text-xs font-bold uppercase tracking-widest text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Medihelp Hospital</span>
+                <div className="h-px w-8 bg-[#893A9F]" />
+              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-5 leading-tight" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                Cardiovascular screening is now available
+              </h2>
+              <div className="space-y-3 mb-6">
+                <p className="text-gray-500 text-base leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                  Cardiovascular screening is now available at Medihelp Hospital through JENDO, providing convenient access to non-invasive vascular health assessments and early cardiovascular insights.
+                </p>
+                <p className="text-gray-500 text-base leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                  Designed to support preventive healthcare, the screening delivers valuable information on vascular health in just 15 minutes, helping individuals better understand their cardiovascular well-being through a simple, painless assessment.
+                </p>
+              </div>
+              <div className="space-y-2.5 mb-6">
+                {[
+                  { icon: Building2, text: "Now available at Medihelp Hospital through JENDO" },
+                  { icon: HeartPulse, text: "Non-invasive vascular health assessments with early cardiovascular insights" },
+                  { icon: ShieldCheck, text: "Simple, painless assessment completed in just 15 minutes" },
+                  { icon: Heart, text: "Supporting preventive healthcare and cardiovascular well-being" },
+                ].map((item) => (
+                  <div key={item.text} className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-[#f3edf8] flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <item.icon className="w-4 h-4 text-[#893A9F]" />
+                    </div>
+                    <p className="text-gray-600 text-base leading-snug" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{item.text}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href="#for-clinicians"
+                  className="inline-flex items-center gap-2 text-white font-bold text-sm px-7 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 shadow-md"
+                  style={{backgroundColor:"#893A9F", fontFamily:"var(--font-red-hat-display),sans-serif"}}
+                  onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#7a3390')}
+                  onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#893A9F')}
+                >
+                  <Stethoscope className="w-4 h-4" />
+                  Partner With JENDO
+                </a>
+                <a
+                  href="#contact"
+                  className="inline-flex items-center gap-2 bg-white border border-[#ede8f5] text-gray-700 font-bold text-sm px-7 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
+                  style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}
+                >
+                  Request a Demo
+                </a>
+              </div>
+            </div>
+
+          </div>
         </div>
-        <div className="relative hidden w-full aspect-[21/7] min-h-[220px] sm:min-h-[320px] lg:min-h-[420px] md:block">
-          <Image
-            src={bannerImage}
-            alt="Jendo at AI for Good Global Summit"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center"
-          />
+      </section>
+
+      {/* AI for Good Global Summit — bordered card layout (video ට පහළ) */}
+      <section className="py-16 sm:py-20 bg-[#f9f9fb] overflow-hidden section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-14 items-center">
+
+            <div className="relative">
+              <div className="inline-flex items-center gap-2 mb-5">
+                <div className="h-px w-8 bg-[#893A9F]" />
+                <span className="text-xs font-bold uppercase tracking-widest text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Upcoming Event</span>
+                <div className="h-px w-8 bg-[#893A9F]" />
+              </div>
+              <a
+                href="https://aiforgood.itu.int/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block group"
+              >
+                <div className="bg-white border border-[#ede8f5] rounded-2xl p-4 sm:p-5 shadow-sm transition-all duration-300 group-hover:shadow-lg group-hover:border-[#d4c4e8]">
+                  <div className="relative rounded-xl overflow-hidden bg-white">
+                    <Image
+                      src={mobileBannerImage}
+                      alt="JENDO at AI for Good Global Summit"
+                      width={1200}
+                      height={630}
+                      className="w-full h-auto object-contain md:hidden"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                    <div className="relative hidden md:block w-full aspect-[2.4/1] min-h-[200px] lg:min-h-[240px]">
+                      <Image
+                        src={bannerImage}
+                        alt="JENDO at AI for Good Global Summit"
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 640px"
+                        className="object-contain object-center transition-transform duration-300 group-hover:scale-[1.01]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <div className="grid grid-cols-3 gap-3 mt-4">
+                {[
+                  { value: "7–10 July", label: "2026" },
+                  { value: "Geneva", label: "Palexpo" },
+                  { value: "AI for Good", label: "Global Summit" },
+                ].map((stat) => (
+                  <div key={stat.label} className="bg-white border border-[#ede8f5] rounded-xl px-3 py-2.5 sm:px-4 sm:py-3 text-center shadow-sm">
+                    <p className="font-black text-base sm:text-lg leading-tight" style={{color:"#893A9F", fontFamily:"var(--font-red-hat-display),sans-serif"}}>{stat.value}</p>
+                    <p className="text-gray-500 text-xs mt-0.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <div className="inline-flex items-center gap-2 mb-4">
+                <div className="h-px w-8 bg-[#893A9F]" />
+                <span className="text-xs font-bold uppercase tracking-widest text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Global Summit</span>
+                <div className="h-px w-8 bg-[#893A9F]" />
+              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-5 leading-tight" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                JENDO Will Be Attending AI for Good Global Summit
+              </h2>
+              <div className="space-y-3 mb-6">
+                <p className="text-gray-500 text-base leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                  JENDO is proud to participate in the AI for Good Global Summit — the leading United Nations platform on artificial intelligence, convened by ITU in partnership with UN agencies and the international AI community.
+                </p>
+                <p className="text-gray-500 text-base leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                  Join us at Palexpo, Geneva from 7–10 July 2026 as we showcase how AI-powered, non-invasive vascular health technology is advancing preventive cardiovascular care worldwide.
+                </p>
+              </div>
+              <div className="space-y-2.5 mb-6">
+                {[
+                  { icon: Globe, text: "7–10 July 2026 · Palexpo, Geneva, Switzerland" },
+                  { icon: Cpu, text: "Showcasing AI-driven cardiovascular health innovation" },
+                  { icon: Users, text: "Connecting with global leaders in health and technology" },
+                  { icon: Award, text: "Aligned with ITU, UN, and WIPO — AI for Good mission" },
+                ].map((item) => (
+                  <div key={item.text} className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-[#f3edf8] flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <item.icon className="w-4 h-4 text-[#893A9F]" />
+                    </div>
+                    <p className="text-gray-600 text-sm sm:text-base leading-snug" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{item.text}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href="https://aiforgood.itu.int/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-white font-bold text-sm px-6 py-3 sm:px-7 sm:py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 shadow-md"
+                  style={{backgroundColor:"#893A9F", fontFamily:"var(--font-red-hat-display),sans-serif"}}
+                  onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#7a3390')}
+                  onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#893A9F')}
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Visit AI for Good Summit
+                </a>
+                <a
+                  href="#contact"
+                  className="inline-flex items-center gap-2 bg-white border border-[#ede8f5] text-gray-700 font-bold text-sm px-6 py-3 sm:px-7 sm:py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
+                  style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}
+                >
+                  Request a Meeting
+                </a>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
