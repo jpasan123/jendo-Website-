@@ -1082,20 +1082,13 @@ export default function Home() {
                     Your browser does not support the video tag.
                   </video>
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/25 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-black/50 backdrop-blur-sm px-3 py-1.5">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#b588d9] opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#893A9F]" />
-                    </span>
-                    <span className="text-xs font-semibold text-white" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Live Demo</span>
-                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-3 mt-5">
                 {[
                   { value: "15 min", label: "Quick Screening" },
                   { value: "Non-Invasive", label: "Painless Test" },
-                  { value: "Medihelp", label: "Hospital" },
+                  { value: "Medihelp", label: "Wellness Center" },
                 ].map((stat) => (
                   <div key={stat.label} className="bg-white border border-[#ede8f5] rounded-xl px-4 py-3 text-center shadow-sm">
                     <p className="font-black text-lg leading-tight" style={{color:"#893A9F", fontFamily:"var(--font-red-hat-display),sans-serif"}}>{stat.value}</p>
@@ -1109,7 +1102,7 @@ export default function Home() {
             <div className="flex flex-col">
               <div className="inline-flex items-center gap-2 mb-5">
                 <div className="h-px w-8 bg-[#893A9F]" />
-                <span className="text-xs font-bold uppercase tracking-widest text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Medihelp Hospital</span>
+                <span className="text-xs font-bold uppercase tracking-widest text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Medihelp Wellness Center</span>
                 <div className="h-px w-8 bg-[#893A9F]" />
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-5 leading-tight" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
@@ -1117,7 +1110,7 @@ export default function Home() {
               </h2>
               <div className="space-y-3 mb-6">
                 <p className="text-gray-500 text-base leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
-                  Cardiovascular screening is now available at Medihelp Hospital through JENDO, providing convenient access to non-invasive vascular health assessments and early cardiovascular insights.
+                  Cardiovascular screening is now available at Medihelp Wellness Center through JENDO, providing convenient access to non-invasive vascular health assessments and early cardiovascular insights.
                 </p>
                 <p className="text-gray-500 text-base leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
                   Designed to support preventive healthcare, the screening delivers valuable information on vascular health in just 15 minutes, helping individuals better understand their cardiovascular well-being through a simple, painless assessment.
@@ -1125,7 +1118,7 @@ export default function Home() {
               </div>
               <div className="space-y-2.5 mb-6">
                 {[
-                  { icon: Building2, text: "Now available at Medihelp Hospital through JENDO" },
+                  { icon: Building2, text: "Now available at Medihelp Wellness Center through JENDO" },
                   { icon: HeartPulse, text: "Non-invasive vascular health assessments with early cardiovascular insights" },
                   { icon: ShieldCheck, text: "Simple, painless assessment completed in just 15 minutes" },
                   { icon: Heart, text: "Supporting preventive healthcare and cardiovascular well-being" },
