@@ -62,6 +62,8 @@ export default function Home() {
   const videoRef2 = useRef<HTMLVideoElement>(null)
   const pharmacyVideoRef = useRef<HTMLVideoElement>(null)
   const pharmacySectionRef = useRef<HTMLDivElement>(null)
+  const awarenessVideoRef = useRef<HTMLVideoElement>(null)
+  const awarenessSectionRef = useRef<HTMLDivElement>(null)
   const videoSectionRef = useRef<HTMLDivElement>(null)
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -133,6 +135,30 @@ export default function Home() {
     );
 
     observer.observe(pharmacySection);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const awarenessVideo = awarenessVideoRef.current;
+    const awarenessSection = awarenessSectionRef.current;
+    if (!awarenessVideo || !awarenessSection) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => {
+              awarenessVideo.play().catch(() => {});
+            }, 100);
+          } else {
+            awarenessVideo.pause();
+          }
+        });
+      },
+      { root: null, rootMargin: "0px", threshold: 0.3 }
+    );
+
+    observer.observe(awarenessSection);
     return () => observer.disconnect();
   }, []);
 
@@ -2085,6 +2111,67 @@ export default function Home() {
             </p>
           </div>
 
+        </div>
+      </section>
+
+      {/* Awareness Video Section — Portrait */}
+      <section ref={awarenessSectionRef} className="py-20 bg-gradient-to-b from-[#f9f9fb] to-white overflow-hidden section-scroll">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+            <div className="flex justify-center lg:justify-end">
+              <div className="relative w-[280px] sm:w-[320px] md:w-[340px]">
+                <div className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-[#893A9F]/20 via-[#893A9F]/5 to-transparent blur-xl" />
+                <div className="relative rounded-[1.5rem] overflow-hidden border-2 border-[#ede8f5] shadow-2xl bg-black">
+                  <video
+                    ref={awarenessVideoRef}
+                    className="jendo-autoplay-video w-full h-auto block pointer-events-none"
+                    playsInline
+                    muted
+                    loop
+                    disablePictureInPicture
+                    controlsList="nodownload noremoteplayback"
+                    onContextMenu={(e) => e.preventDefault()}
+                  >
+                    <source src="/jendo_awareness.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+                <div className="absolute -bottom-3 -right-3 w-16 h-16 rounded-2xl bg-[#893A9F] flex items-center justify-center shadow-lg">
+                  <HeartPulse className="w-7 h-7 text-white" />
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 mb-5">
+                <div className="h-px w-8 bg-[#893A9F]" />
+                <span className="text-xs font-bold uppercase tracking-widest text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Health Awareness</span>
+                <div className="h-px w-8 bg-[#893A9F]" />
+              </div>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                Empowering Communities Through Awareness
+              </h2>
+              <p className="text-lg text-gray-500 mb-8 leading-relaxed max-w-lg mx-auto lg:mx-0" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                JENDO is committed to raising cardiovascular health awareness across communities — making preventive screening accessible, approachable, and impactful for everyone.
+              </p>
+              <div className="space-y-4 max-w-lg mx-auto lg:mx-0">
+                {[
+                  { icon: Heart, text: "Early detection saves lives — screen in just 15 minutes" },
+                  { icon: Users, text: "Community health camps reaching thousands" },
+                  { icon: Shield, text: "Non-invasive, painless cardiovascular assessment" },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3 text-left">
+                    <div className="w-9 h-9 rounded-xl bg-[#f3edf8] flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <item.icon className="w-4.5 h-4.5 text-[#893A9F]" />
+                    </div>
+                    <p className="text-base text-gray-600" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{item.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
