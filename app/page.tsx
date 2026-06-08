@@ -6,7 +6,6 @@ import { Heart, Shield, ArrowRight, Users, Activity, Download, MapPin, Mail, Clo
 import { useCart } from '@/hooks/useCart';
 import { toast } from 'sonner';
 import { FormNotification } from '@/components/ui/form-notification';
-import { Play, Pause } from "lucide-react"
 import emailjs from '@emailjs/browser';
 import { AppointmentSuccess } from '@/components/ui/appointment-success';
 import { SuccessModal } from '@/components/SuccessModal';
@@ -59,10 +58,8 @@ export default function Home() {
   const [lightboxImage, setLightboxImage] = useState({ src: '', alt: '' });
 
   //Add the vide section here
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const videoRef1 = useRef<HTMLVideoElement>(null)
   const videoRef2 = useRef<HTMLVideoElement>(null)
-  const awarenessVideoRef = useRef<HTMLVideoElement>(null)
   const pharmacyVideoRef = useRef<HTMLVideoElement>(null)
   const pharmacySectionRef = useRef<HTMLDivElement>(null)
   const videoSectionRef = useRef<HTMLDivElement>(null)
@@ -93,13 +90,11 @@ export default function Home() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setIsVideoPlaying(true);
           setTimeout(() => {
             videoElement1?.play().catch(error => console.log("Video 1 autoplay failed:", error));
             videoElement2?.play().catch(error => console.log("Video 2 autoplay failed:", error));
           }, 100);
         } else {
-          setIsVideoPlaying(false);
           videoElement1?.pause();
           videoElement2?.pause();
         }
@@ -115,27 +110,6 @@ export default function Home() {
         observer.unobserve(sectionElement);
       }
     };
-  }, []);
-
-  useEffect(() => {
-    const awarenessVideo = awarenessVideoRef.current;
-    if (!awarenessVideo) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            awarenessVideo.play().catch(() => {});
-          } else {
-            awarenessVideo.pause();
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
-
-    observer.observe(awarenessVideo);
-    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -193,22 +167,6 @@ export default function Home() {
 
     return () => observer.disconnect();
   }, [])
-
-  const toggleVideo = () => {
-    const video1 = videoRef1.current;
-    const video2 = videoRef2.current;
-    if (video1 && video2) {
-      if (isVideoPlaying) {
-        video1.pause()
-        video2.pause()
-      } else {
-        video1.play()
-        video2.play()
-      }
-      setIsVideoPlaying(!isVideoPlaying)
-    }
-  }
-
 
   const seniorAdvisors = [
     {
@@ -1073,10 +1031,13 @@ export default function Home() {
                 <div className="relative aspect-video rounded-xl overflow-hidden bg-black">
                   <video
                     ref={pharmacyVideoRef}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    className="jendo-autoplay-video w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02] pointer-events-none"
                     playsInline
                     muted
                     loop
+                    disablePictureInPicture
+                    controlsList="nodownload noremoteplayback"
+                    onContextMenu={(e) => e.preventDefault()}
                   >
                     <source src="/pharmacy_jendo.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
@@ -1132,16 +1093,6 @@ export default function Home() {
                 ))}
               </div>
               <div className="flex flex-wrap gap-3">
-                <a
-                  href="#for-clinicians"
-                  className="inline-flex items-center gap-2 text-white font-bold text-sm px-7 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 shadow-md"
-                  style={{backgroundColor:"#893A9F", fontFamily:"var(--font-red-hat-display),sans-serif"}}
-                  onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#7a3390')}
-                  onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#893A9F')}
-                >
-                  <Stethoscope className="w-4 h-4" />
-                  Partner With JENDO
-                </a>
                 <a
                   href="#contact"
                   className="inline-flex items-center gap-2 bg-white border border-[#ede8f5] text-gray-700 font-bold text-sm px-7 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
@@ -2073,20 +2024,18 @@ export default function Home() {
               <div className="relative aspect-video bg-black">
                 <video
                   ref={videoRef1}
-                  className="w-full h-full object-cover"
+                  className="jendo-autoplay-video w-full h-full object-cover pointer-events-none"
                   poster="/video-thumbnail.jpg"
                   playsInline
                   muted
                   loop
+                  disablePictureInPicture
+                  controlsList="nodownload noremoteplayback"
+                  onContextMenu={(e) => e.preventDefault()}
                 >
                   <source src="/jendo-showcase.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center shadow-lg" style={{backgroundColor:"#893A9F"}}>
-                    {isVideoPlaying ? <Pause size={24} className="text-white" /> : <Play size={24} className="text-white ml-1" />}
-                  </div>
-                </div>
               </div>
               <div className="p-5">
                 <div className="flex items-center gap-3 mb-1">
@@ -2104,20 +2053,18 @@ export default function Home() {
               <div className="relative aspect-video bg-black">
                 <video
                   ref={videoRef2}
-                  className="w-full h-full object-cover"
+                  className="jendo-autoplay-video w-full h-full object-cover pointer-events-none"
                   poster="/video_thumbnail2.png"
                   playsInline
                   muted
                   loop
+                  disablePictureInPicture
+                  controlsList="nodownload noremoteplayback"
+                  onContextMenu={(e) => e.preventDefault()}
                 >
                   <source src="/jendo_device.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center shadow-lg" style={{backgroundColor:"#893A9F"}}>
-                    {isVideoPlaying ? <Pause size={24} className="text-white" /> : <Play size={24} className="text-white ml-1" />}
-                  </div>
-                </div>
               </div>
               <div className="p-5">
                 <div className="flex items-center gap-3 mb-1">
@@ -2138,67 +2085,6 @@ export default function Home() {
             </p>
           </div>
 
-        </div>
-      </section>
-
-      {/* Awareness Video Section — Portrait */}
-      <section className="py-20 bg-gradient-to-b from-[#f9f9fb] to-white overflow-hidden section-scroll">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-
-            {/* Portrait Video */}
-            <div className="flex justify-center lg:justify-end order-1 lg:order-1">
-              <div className="relative w-[280px] sm:w-[320px] md:w-[340px]">
-                <div className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-[#893A9F]/20 via-[#893A9F]/5 to-transparent blur-xl" />
-                <div className="relative rounded-[1.5rem] overflow-hidden border-2 border-[#ede8f5] shadow-2xl bg-black">
-                  <video
-                    ref={awarenessVideoRef}
-                    className="w-full h-auto block"
-                    playsInline
-                    muted
-                    loop
-                    autoPlay
-                  >
-                    <source src="/jendo_awareness.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <div className="absolute -bottom-3 -right-3 w-16 h-16 rounded-2xl bg-[#893A9F] flex items-center justify-center shadow-lg">
-                  <HeartPulse className="w-7 h-7 text-white" />
-                </div>
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="order-2 lg:order-2 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 mb-5">
-                <div className="h-px w-8 bg-[#893A9F]" />
-                <span className="text-xs font-bold uppercase tracking-widest text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Health Awareness</span>
-                <div className="h-px w-8 bg-[#893A9F]" />
-              </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
-                Empowering Communities Through Awareness
-              </h2>
-              <p className="text-lg text-gray-500 mb-8 leading-relaxed max-w-lg mx-auto lg:mx-0" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
-                JENDO is committed to raising cardiovascular health awareness across communities — making preventive screening accessible, approachable, and impactful for everyone.
-              </p>
-              <div className="space-y-4 max-w-lg mx-auto lg:mx-0">
-                {[
-                  { icon: Heart, text: "Early detection saves lives — screen in just 15 minutes" },
-                  { icon: Users, text: "Community health camps reaching thousands" },
-                  { icon: Shield, text: "Non-invasive, painless cardiovascular assessment" },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3 text-left">
-                    <div className="w-9 h-9 rounded-xl bg-[#f3edf8] flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <item.icon className="w-4.5 h-4.5 text-[#893A9F]" />
-                    </div>
-                    <p className="text-base text-gray-600" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{item.text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-          </div>
         </div>
       </section>
 

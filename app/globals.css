@@ -423,3 +423,12 @@ section.visible {
     transition: none !important;
   }
 }
+
+/* Autoplay showcase videos — hide native browser controls */
+.jendo-autoplay-video::-webkit-media-controls {
+  display: none !important;
+}
+
+.jendo-autoplay-video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
