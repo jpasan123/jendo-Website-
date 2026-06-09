@@ -432,3 +432,11 @@ section.visible {
 .jendo-autoplay-video::-webkit-media-controls-enclosure {
   display: none !important;
 }
+
+.jendo-glass-card {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(24px);
+  border: 1px solid #ede8f5;
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(137, 58, 159, 0.12);
+}

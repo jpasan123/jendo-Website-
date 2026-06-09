@@ -898,6 +898,17 @@ export default function Home() {
           start: "top 80%",
         },
       });
+      gsap.from(".chevening-reveal", {
+        opacity: 0,
+        y: 48,
+        duration: 1,
+        stagger: 0.12,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#chevening-fellowship",
+          start: "top 80%",
+        },
+      });
     });
     return () => ctx.revert();
   }, []);
@@ -2171,6 +2182,90 @@ export default function Home() {
               </div>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* Chevening Fellowship Section */}
+      <section id="chevening-fellowship" className="py-16 md:py-20 relative overflow-hidden bg-gradient-to-b from-white via-[#f9f9fb] to-white section-scroll">
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#893A9F_1px,_transparent_1px)] bg-[size:40px_40px]" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="chevening-reveal text-center max-w-3xl mx-auto mb-10 space-y-3">
+            <span
+              className="inline-block px-4 py-2 rounded-full text-sm font-semibold"
+              style={{ background: "rgba(137, 58, 159, 0.1)", color: "#893A9F", fontFamily: "var(--font-red-hat-display), sans-serif" }}
+            >
+              Chevening Fellowship
+            </span>
+            <h2
+              className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 leading-tight"
+              style={{ fontFamily: "var(--font-red-hat-display), sans-serif" }}
+            >
+              Our CEO Selected for Chevening CRISP 2026 at University of Oxford
+            </h2>
+            <p className="text-base text-gray-500 leading-relaxed" style={{ fontFamily: "var(--font-red-hat-display), sans-serif" }}>
+              St Cross College, University of Oxford recognition and the prestigious 2026/27 Chevening CRISP Fellowship.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-[0.95fr_1.05fr] gap-6 lg:gap-8 items-start max-w-6xl mx-auto">
+            <div className="chevening-reveal h-full">
+              <div className="relative group rounded-2xl overflow-hidden jendo-glass-card border border-[#893A9F]/20 h-full">
+                <img
+                  src="https://i.ibb.co/qLftQkZQ/Whats-App-Image-2026-06-09-at-09-55-46.jpg"
+                  alt="Keerthi Kodithuwakku — Chevening CRISP Fellowship at University of Oxford"
+                  className="w-full h-56 sm:h-64 lg:h-full lg:min-h-[420px] object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+
+            <div className="chevening-reveal jendo-glass-card h-full p-6 md:p-7 space-y-4 border border-[#893A9F]/20">
+              <h3
+                className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight"
+                style={{ fontFamily: "var(--font-red-hat-display), sans-serif" }}
+              >
+                Chevening CRISP Fellowship — University of Oxford
+              </h3>
+              <p className="text-sm text-gray-500 leading-relaxed" style={{ fontFamily: "var(--font-red-hat-display), sans-serif" }}>
+                Jendo is proud to share that our CEO,{" "}
+                <a
+                  href="https://www.keerthikodithuwakku.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-[#893A9F] hover:underline transition-colors"
+                >
+                  Keerthi Kodithuwakku
+                </a>
+                , has been featured by St Cross College, University of Oxford, and selected for the prestigious 2026/27 Chevening Awards CRISP Fellowship at the University of Oxford. These recognitions reflect his contributions to innovation, leadership, and the advancement of AI-enabled healthcare technologies. We congratulate him on this achievement and look forward to the continued impact of his work in shaping the future of preventive healthcare.
+              </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                {["Oxford", "Chevening", "MedTech Leadership"].map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1 rounded-full text-xs font-medium"
+                    style={{ background: "rgba(137, 58, 159, 0.1)", color: "#893A9F", fontFamily: "var(--font-red-hat-display), sans-serif" }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <div className="pt-2 border-t border-[#ede8f5]">
+                <a
+                  href="https://www.stx.ox.ac.uk/people/keerthi-kodithuwakku"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_12px_28px_rgba(137,58,159,0.35)]"
+                  style={{ background: "linear-gradient(135deg, #893A9F 0%, #b588d9 100%)", fontFamily: "var(--font-red-hat-display), sans-serif" }}
+                >
+                  Read this article
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
