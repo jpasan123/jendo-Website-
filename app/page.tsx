@@ -404,6 +404,15 @@ export default function Home() {
       imageFit: "contain",
     },
     {
+      title: "Hear from Our CEO",
+      excerpt: "Keerthi Kodithuwakku, Chairman & CEO of Jendo Innovations, will be speaking at Imperial Business School on June 25, 2026 on building global MedTech innovation from Sri Lanka.",
+      date: "June 25, 2026",
+      author: "Jendo Team",
+      image: "https://i.ibb.co/8L9d872r/Whats-App-Image-2026-06-25-at-11-51-53.jpg",
+      url: "https://www.keerthikodithuwakku.com/",
+      imageFit: "contain",
+    },
+    {
       title: "Meeting Hon. Dr. Harini Amarasuriya at Oxford",
       excerpt: "During her visit to the University of Oxford, we met Sri Lankan Prime Minister Hon. Dr. Harini Amarasuriya, Prime Minister of Sri Lanka, and discussed future collaboration between the UK and Sri Lanka through innovation, Neo Ventures, Jendo Innovations Inc., and a Centre of Excellence in Biomedical Engineering.",
       date: "2026",
