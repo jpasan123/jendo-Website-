@@ -19,8 +19,16 @@ import bannerImage from '../images/Jendo Banner AI For Good Global Summit.jpg.jp
 import mobileBannerImage from '../images/Jendo AI Summit - mobile.png';
 import mobileHeroBackgroundImage from '../images/jendo-background-mobile.jpeg';
 
-
-
+type BlogPost = {
+  title: string;
+  excerpt: string;
+  date: string;
+  author: string;
+  image: string;
+  url: string;
+  imageFit?: "cover" | "contain";
+  openInModal?: boolean;
+};
 
 export default function Home() {
   const [isPreOrderModalOpen, setIsPreOrderModalOpen] = useState(false);
@@ -56,6 +64,7 @@ export default function Home() {
   const [currentImage, setCurrentImage] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState({ src: '', alt: '' });
+  const [newsModalPost, setNewsModalPost] = useState<BlogPost | null>(null);
 
   //Add the vide section here
   const videoRef1 = useRef<HTMLVideoElement>(null)
@@ -383,16 +392,6 @@ export default function Home() {
     // },
   ]
 
-  type BlogPost = {
-    title: string;
-    excerpt: string;
-    date: string;
-    author: string;
-    image: string;
-    url: string;
-    imageFit?: "cover" | "contain";
-  };
-
   const blogPosts: BlogPost[] = [
     {
       title: "Sri Lankan AI Medical Device JENDO Successfully Piloted in Bahrain",
@@ -411,6 +410,7 @@ export default function Home() {
       image: "https://i.ibb.co/8L9d872r/Whats-App-Image-2026-06-25-at-11-51-53.jpg",
       url: "https://www.keerthikodithuwakku.com/",
       imageFit: "contain",
+      openInModal: true,
     },
     {
       title: "Meeting Hon. Dr. Harini Amarasuriya at Oxford",
@@ -890,6 +890,19 @@ export default function Home() {
     // Initialize EmailJS with your public key
     emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '');
   }, []);
+
+  useEffect(() => {
+    if (!newsModalPost) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setNewsModalPost(null);
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [newsModalPost]);
 
   // Emma Gallery GSAP animation
   useLayoutEffect(() => {
@@ -2725,6 +2738,76 @@ export default function Home() {
         </div>
       )}
 
+      {/* Latest News Detail Modal */}
+      {newsModalPost && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/50 backdrop-blur-sm animate-in fade-in duration-300"
+          onClick={() => setNewsModalPost(null)}
+        >
+          <button
+            type="button"
+            onClick={() => setNewsModalPost(null)}
+            className="absolute top-4 right-4 z-[110] p-2 rounded-full bg-white/90 hover:bg-white text-gray-700 shadow-lg transition-all duration-300 hover:scale-110"
+            aria-label="Close news article"
+          >
+            <X className="w-5 h-5" />
+          </button>
+          <div
+            className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+            style={{ border: "1px solid #ede8f5" }}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2">
+              <div className="relative min-h-[240px] md:min-h-[360px] bg-[#f9f9fb]">
+                <img
+                  src={newsModalPost.image}
+                  alt={newsModalPost.title}
+                  className={`absolute inset-0 w-full h-full ${newsModalPost.imageFit === "contain" ? "object-contain p-4" : "object-cover"}`}
+                />
+              </div>
+              <div className="p-6 sm:p-8 flex flex-col">
+                <span
+                  className="inline-flex self-start items-center px-3 py-1 rounded-full text-xs font-semibold mb-4"
+                  style={{ background: "rgba(137, 58, 159, 0.1)", color: "#893A9F", fontFamily: "var(--font-red-hat-display), sans-serif" }}
+                >
+                  {newsModalPost.date.match(/\d{4}/)?.[0] ?? newsModalPost.date}
+                </span>
+                <h3
+                  className="text-xl sm:text-2xl font-bold text-[#2d0a3e] mb-4 leading-tight"
+                  style={{ fontFamily: "var(--font-red-hat-display), sans-serif" }}
+                >
+                  {newsModalPost.title}
+                </h3>
+                <p className="text-sm sm:text-base text-gray-500 leading-relaxed flex-1" style={{ fontFamily: "var(--font-red-hat-display), sans-serif" }}>
+                  {renderKeerthiLink(newsModalPost.excerpt, true)}
+                </p>
+                <div className="flex items-center justify-between text-xs text-gray-400 mt-6 pt-4" style={{ borderTop: "1px solid #ede8f5" }}>
+                  <span className="flex items-center gap-1.5" style={{ fontFamily: "var(--font-red-hat-display), sans-serif" }}>
+                    <User className="w-3.5 h-3.5 text-[#893A9F]" />
+                    {newsModalPost.author}
+                  </span>
+                  <span className="flex items-center gap-1.5" style={{ fontFamily: "var(--font-red-hat-display), sans-serif" }}>
+                    <Clock className="w-3.5 h-3.5 text-[#893A9F]" />
+                    {newsModalPost.date}
+                  </span>
+                </div>
+                {newsModalPost.url.startsWith('http') && (
+                  <a
+                    href={newsModalPost.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 mt-5 text-sm font-semibold text-[#893A9F] hover:underline w-fit"
+                    style={{ fontFamily: "var(--font-red-hat-display), sans-serif" }}
+                  >
+                    Visit profile <ExternalLink className="w-4 h-4" />
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* CVD Impact Section */}
       <section id="stats" className="relative py-24 overflow-hidden section-scroll" style={{background:"linear-gradient(135deg,#2d0a3e 0%,#4a1260 45%,#893A9F 100%)"}}>
         {/* Subtle background texture */}
@@ -3233,16 +3316,18 @@ export default function Home() {
 
           {/* Featured Post */}
           {blogPosts.length > 0 && (
-            <a
-              href={blogPosts[0].url}
-              target="_blank"
-              rel="noopener noreferrer"
+            <article
               className="group block mb-10 rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 bg-white shadow-sm hover:shadow-md"
               style={{border:"1px solid #ede8f5"}}
             >
               <div className="grid grid-cols-1 lg:grid-cols-2">
-                {/* Image */}
-                <div className="relative h-64 lg:h-auto overflow-hidden" style={{minHeight:"280px"}}>
+                <a
+                  href={blogPosts[0].url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative h-64 lg:h-auto overflow-hidden block"
+                  style={{minHeight:"280px"}}
+                >
                   <Image
                     src={blogPosts[0].image}
                     alt={blogPosts[0].title}
@@ -3254,41 +3339,68 @@ export default function Home() {
                     unoptimized={false}
                   />
                   <div className="absolute inset-0" style={{background:"linear-gradient(to right,transparent,rgba(255,255,255,0.15))"}} />
-                </div>
-                {/* Content */}
+                </a>
                 <div className="p-8 md:p-10 flex flex-col justify-center">
                   <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-[#893A9F] uppercase mb-4" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
                     <Award className="w-3.5 h-3.5" /> Featured
                   </span>
-                  <h3 className="text-2xl md:text-3xl font-bold text-[#2d0a3e] mb-4 leading-tight group-hover:text-[#893A9F] transition-colors" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                  <a
+                    href={blogPosts[0].url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-2xl md:text-3xl font-bold text-[#2d0a3e] mb-4 leading-tight group-hover:text-[#893A9F] transition-colors block"
+                    style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}
+                  >
                     {blogPosts[0].title}
-                  </h3>
-                  <p className="text-gray-500 mb-6 leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{renderKeerthiLink(blogPosts[0].excerpt, false)}</p>
+                  </a>
+                  <p className="text-gray-500 mb-6 leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{renderKeerthiLink(blogPosts[0].excerpt, true)}</p>
                   <div className="flex items-center gap-6 text-sm text-gray-400 mb-6">
                     <span className="flex items-center gap-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><User className="w-4 h-4 text-[#893A9F]" />{blogPosts[0].author}</span>
                     <span className="flex items-center gap-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><Clock className="w-4 h-4 text-[#893A9F]" />{blogPosts[0].date}</span>
                   </div>
-                  <div className="inline-flex items-center gap-2 text-sm font-bold text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
+                  <a
+                    href={blogPosts[0].url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-bold text-[#893A9F] w-fit"
+                    style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}
+                  >
                     Read Article <ExternalLink className="w-4 h-4" />
-                  </div>
+                  </a>
                 </div>
               </div>
-            </a>
+            </article>
           )}
 
           {/* Remaining Posts Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogPosts.slice(1).map((post, index) => (
-              <a
-                key={index}
-                href={post.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 flex flex-col bg-white shadow-sm hover:shadow-md"
-                style={{border:"1px solid #ede8f5"}}
-              >
-                {/* Image */}
-                <div className="relative h-48 overflow-hidden">
+            {blogPosts.slice(1).map((post, index) => {
+              const imageBlock = (
+                <div
+                  className={`relative h-48 overflow-hidden ${post.openInModal ? "cursor-pointer" : ""}`}
+                  onClick={
+                    post.openInModal
+                      ? (e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setNewsModalPost(post);
+                        }
+                      : undefined
+                  }
+                  role={post.openInModal ? "button" : undefined}
+                  tabIndex={post.openInModal ? 0 : undefined}
+                  onKeyDown={
+                    post.openInModal
+                      ? (e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setNewsModalPost(post);
+                          }
+                        }
+                      : undefined
+                  }
+                  aria-label={post.openInModal ? `Open ${post.title}` : undefined}
+                >
                   <Image
                     src={post.image}
                     alt={post.title}
@@ -3299,18 +3411,63 @@ export default function Home() {
                     unoptimized={false}
                   />
                   <div className="absolute inset-0" style={{background:"linear-gradient(to top,rgba(45,10,62,0.4),transparent)"}} />
+                  {post.openInModal && (
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20">
+                      <span className="text-white text-xs font-semibold px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-sm">View details</span>
+                    </div>
+                  )}
                 </div>
-                {/* Content */}
+              );
+
+              const contentBlock = (linkTitle = false) => (
                 <div className="p-6 flex flex-col flex-1">
-                  <h3 className="font-bold text-[#2d0a3e] mb-3 text-sm leading-snug group-hover:text-[#893A9F] transition-colors line-clamp-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{post.title}</h3>
-                  <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-3 flex-1" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{renderKeerthiLink(post.excerpt, false)}</p>
+                  {linkTitle ? (
+                    <a
+                      href={post.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-bold text-[#2d0a3e] mb-3 text-sm leading-snug group-hover:text-[#893A9F] transition-colors line-clamp-2 block"
+                      style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}
+                    >
+                      {post.title}
+                    </a>
+                  ) : (
+                    <h3 className="font-bold text-[#2d0a3e] mb-3 text-sm leading-snug group-hover:text-[#893A9F] transition-colors line-clamp-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{post.title}</h3>
+                  )}
+                  <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-3 flex-1" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{renderKeerthiLink(post.excerpt, true)}</p>
                   <div className="flex items-center justify-between text-xs text-gray-400 mt-auto pt-4" style={{borderTop:"1px solid #ede8f5"}}>
                     <span className="flex items-center gap-1.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><User className="w-3.5 h-3.5 text-[#893A9F]" />{post.author}</span>
                     <span className="flex items-center gap-1.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><Clock className="w-3.5 h-3.5 text-[#893A9F]" />{post.date}</span>
                   </div>
                 </div>
-              </a>
-            ))}
+              );
+
+              if (post.openInModal) {
+                return (
+                  <article
+                    key={index}
+                    className="group rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 flex flex-col bg-white shadow-sm hover:shadow-md"
+                    style={{border:"1px solid #ede8f5"}}
+                  >
+                    {imageBlock}
+                    {contentBlock(false)}
+                  </article>
+                );
+              }
+
+              return (
+                <article
+                  key={index}
+                  className="group rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 flex flex-col bg-white shadow-sm hover:shadow-md"
+                  style={{border:"1px solid #ede8f5"}}
+                >
+                  <a href={post.url} target="_blank" rel="noopener noreferrer" className="block">
+                    {imageBlock}
+                  </a>
+                  {contentBlock(true)}
+                </article>
+              );
+            })}
           </div>
 
         </div>
