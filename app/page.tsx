@@ -16,15 +16,15 @@ import { PayhereForm } from '@/components/ui/payhere-form';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import bannerImage from '../images/Jendo Banner AI For Good Global Summit.jpg.jpeg';
-import mobileBannerImage from '../images/Jendo AI Summit - mobile.png';
 import mobileHeroBackgroundImage from '../images/jendo-background-mobile.jpeg';
+import type { StaticImageData } from 'next/image';
 
 type BlogPost = {
   title: string;
   excerpt: string;
   date: string;
   author: string;
-  image: string;
+  image: string | StaticImageData;
   url: string;
   imageFit?: "cover" | "contain";
   openInModal?: boolean;
@@ -403,12 +403,12 @@ export default function Home() {
       imageFit: "contain",
     },
     {
-      title: "Hear from Our CEO",
-      excerpt: "Keerthi Kodithuwakku, Chairman & CEO of Jendo Innovations, will be speaking at Imperial Business School on June 25, 2026 on building global MedTech innovation from Sri Lanka.",
-      date: "June 25, 2026",
+      title: "AI for Good Global Summit",
+      excerpt: "JENDO is proud to participate in the AI for Good Global Summit — the leading United Nations platform on artificial intelligence, convened by ITU in partnership with UN agencies and the international AI community.",
+      date: "7–10 July 2026",
       author: "Jendo Team",
-      image: "https://i.ibb.co/8L9d872r/Whats-App-Image-2026-06-25-at-11-51-53.jpg",
-      url: "https://www.keerthikodithuwakku.com/",
+      image: bannerImage,
+      url: "https://aiforgood.itu.int/",
       imageFit: "contain",
       openInModal: true,
     },
@@ -1158,118 +1158,6 @@ export default function Home() {
                   style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}
                 >
                   Request a Demo
-                </a>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* AI for Good Global Summit — bordered card layout (video ට පහළ) */}
-      <section className="py-16 sm:py-20 bg-[#f9f9fb] overflow-hidden section-scroll">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-14 items-center">
-
-            <div className="relative">
-              <div className="inline-flex items-center gap-2 mb-5">
-                <div className="h-px w-8 bg-[#893A9F]" />
-                <span className="text-xs font-bold uppercase tracking-widest text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Upcoming Event</span>
-                <div className="h-px w-8 bg-[#893A9F]" />
-              </div>
-              <a
-                href="https://aiforgood.itu.int/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block group"
-              >
-                <div className="bg-white border border-[#ede8f5] rounded-2xl p-4 sm:p-5 shadow-sm transition-all duration-300 group-hover:shadow-lg group-hover:border-[#d4c4e8]">
-                  <div className="relative rounded-xl overflow-hidden bg-white">
-                    <Image
-                      src={mobileBannerImage}
-                      alt="JENDO at AI for Good Global Summit"
-                      width={1200}
-                      height={630}
-                      className="w-full h-auto object-contain md:hidden"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                    <div className="relative hidden md:block w-full aspect-[2.4/1] min-h-[200px] lg:min-h-[240px]">
-                      <Image
-                        src={bannerImage}
-                        alt="JENDO at AI for Good Global Summit"
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 640px"
-                        className="object-contain object-center transition-transform duration-300 group-hover:scale-[1.01]"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </a>
-              <div className="grid grid-cols-3 gap-3 mt-4">
-                {[
-                  { value: "7–10 July", label: "2026" },
-                  { value: "Geneva", label: "Palexpo" },
-                  { value: "AI for Good", label: "Global Summit" },
-                ].map((stat) => (
-                  <div key={stat.label} className="bg-white border border-[#ede8f5] rounded-xl px-3 py-2.5 sm:px-4 sm:py-3 text-center shadow-sm">
-                    <p className="font-black text-base sm:text-lg leading-tight" style={{color:"#893A9F", fontFamily:"var(--font-red-hat-display),sans-serif"}}>{stat.value}</p>
-                    <p className="text-gray-500 text-xs mt-0.5" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex flex-col">
-              <div className="inline-flex items-center gap-2 mb-4">
-                <div className="h-px w-8 bg-[#893A9F]" />
-                <span className="text-xs font-bold uppercase tracking-widest text-[#893A9F]" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>Global Summit</span>
-                <div className="h-px w-8 bg-[#893A9F]" />
-              </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-5 leading-tight" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
-                JENDO Will Be Attending AI for Good Global Summit
-              </h2>
-              <div className="space-y-3 mb-6">
-                <p className="text-gray-500 text-base leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
-                  JENDO is proud to participate in the AI for Good Global Summit — the leading United Nations platform on artificial intelligence, convened by ITU in partnership with UN agencies and the international AI community.
-                </p>
-                <p className="text-gray-500 text-base leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>
-                  Join us at Palexpo, Geneva from 7–10 July 2026 as we showcase how AI-powered, non-invasive vascular health technology is advancing preventive cardiovascular care worldwide.
-                </p>
-              </div>
-              <div className="space-y-2.5 mb-6">
-                {[
-                  { icon: Globe, text: "7–10 July 2026 · Palexpo, Geneva, Switzerland" },
-                  { icon: Cpu, text: "Showcasing AI-driven cardiovascular health innovation" },
-                  { icon: Users, text: "Connecting with global leaders in health and technology" },
-                  { icon: Award, text: "Aligned with ITU, UN, and WIPO — AI for Good mission" },
-                ].map((item) => (
-                  <div key={item.text} className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-[#f3edf8] flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <item.icon className="w-4 h-4 text-[#893A9F]" />
-                    </div>
-                    <p className="text-gray-600 text-sm sm:text-base leading-snug" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{item.text}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <a
-                  href="https://aiforgood.itu.int/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-white font-bold text-sm px-6 py-3 sm:px-7 sm:py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 shadow-md"
-                  style={{backgroundColor:"#893A9F", fontFamily:"var(--font-red-hat-display),sans-serif"}}
-                  onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#7a3390')}
-                  onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#893A9F')}
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  Visit AI for Good Summit
-                </a>
-                <a
-                  href="#contact"
-                  className="inline-flex items-center gap-2 bg-white border border-[#ede8f5] text-gray-700 font-bold text-sm px-6 py-3 sm:px-7 sm:py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
-                  style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}
-                >
-                  Request a Meeting
                 </a>
               </div>
             </div>
@@ -2760,7 +2648,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2">
               <div className="relative min-h-[240px] md:min-h-[360px] bg-[#f9f9fb]">
                 <img
-                  src={newsModalPost.image}
+                  src={typeof newsModalPost.image === "string" ? newsModalPost.image : newsModalPost.image.src}
                   alt={newsModalPost.title}
                   className={`absolute inset-0 w-full h-full ${newsModalPost.imageFit === "contain" ? "object-contain p-4" : "object-cover"}`}
                 />
@@ -2799,7 +2687,7 @@ export default function Home() {
                     className="inline-flex items-center gap-2 mt-5 text-sm font-semibold text-[#893A9F] hover:underline w-fit"
                     style={{ fontFamily: "var(--font-red-hat-display), sans-serif" }}
                   >
-                    Visit profile <ExternalLink className="w-4 h-4" />
+                    Learn more <ExternalLink className="w-4 h-4" />
                   </a>
                 )}
               </div>
