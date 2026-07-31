@@ -262,7 +262,7 @@ export default function Home() {
     // },
     {
       name: "Heminda Jayaweera",
-      role: "Executive Director - TRACE Expert City",
+      role: "Co-Founder & Director",
       image: "https://i.ibb.co/W5g1BHQ/3-1.jpg",
       social: {
         linkedin: "https://www.linkedin.com/in/heminda/",
@@ -282,7 +282,7 @@ export default function Home() {
     },
     {
       name: "Vinod Samarawickrama",
-      role: "Manager Connectivity Program Meta Inc.",
+      role: "Co-Founder & Director",
       image: "https://i.ibb.co/n7xdCBm/8-1.jpg",
       social: {
         linkedin: "https://www.linkedin.com/in/vinod-samarawickrama-767bb273/"
