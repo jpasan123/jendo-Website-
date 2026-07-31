@@ -282,7 +282,7 @@ export default function Home() {
     },
     {
       name: "Vinod Samarawickrama",
-      role: "Co-Founder & Director",
+      role: "Co-Founder",
       image: "https://i.ibb.co/n7xdCBm/8-1.jpg",
       social: {
         linkedin: "https://www.linkedin.com/in/vinod-samarawickrama-767bb273/"
