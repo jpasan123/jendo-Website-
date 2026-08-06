@@ -1,11 +1,10 @@
-upstream jendo_landing {
-    server 127.0.0.1:3002;
-    keepalive 32;
-}
+# Production: jendo.health → PM2 app on port 3002
+# Upstream `jendo_landing` is defined in esol-sites-preview.conf on the company server.
 
 server {
-    listen 8082;
-    server_name _;
+    listen 80;
+    listen [::]:80;
+    server_name jendo.health www.jendo.health;
 
     location / {
         proxy_pass http://jendo_landing;
@@ -14,5 +13,12 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
     }
 }
+
+# After DNS points to this server:
+# sudo ln -sf /etc/nginx/sites-available/jendo.health /etc/nginx/sites-enabled/
+# sudo nginx -t && sudo systemctl reload nginx
+# sudo certbot --nginx -d jendo.health -d www.jendo.health
