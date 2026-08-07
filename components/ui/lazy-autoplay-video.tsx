@@ -1,83 +1,95 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, type RefObject } from 'react';
 
 type LazyAutoplayVideoProps = {
   src: string;
   poster?: string;
   className?: string;
-  /** When the section enters view — start playback */
   playThreshold?: number;
-  /** Start buffering this far before the section is visible */
   preloadMargin?: string;
+  /** Observe a parent section for visibility (more reliable on scroll) */
+  observeRef?: RefObject<Element | null>;
 };
 
 export function LazyAutoplayVideo({
   src,
   poster,
   className = '',
-  playThreshold = 0.25,
-  preloadMargin = '480px 0px',
+  playThreshold = 0.15,
+  preloadMargin = '500px 0px',
+  observeRef,
 }: LazyAutoplayVideoProps) {
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    const wrap = wrapRef.current;
+  useLayoutEffect(() => {
+    const root = rootRef.current;
     const video = videoRef.current;
-    if (!wrap || !video) return;
+    if (!root || !video) return;
 
-    let loading = false;
-
-    const startLoad = () => {
-      if (loading || video.readyState > 0) return;
-      loading = true;
+    const ensureLoaded = () => {
+      if (video.readyState >= HTMLMediaElement.HAVE_METADATA) return;
       video.preload = 'auto';
       video.load();
     };
 
-    const playWhenReady = () => {
-      if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
-        void video.play().catch(() => {});
-        return;
-      }
-      const onReady = () => {
-        video.removeEventListener('canplay', onReady);
+    const play = () => {
+      video.muted = true;
+      video.defaultMuted = true;
+
+      const run = () => {
         void video.play().catch(() => {});
       };
-      video.addEventListener('canplay', onReady);
+
+      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        run();
+        return;
+      }
+
+      ensureLoaded();
+      video.addEventListener('canplay', run, { once: true });
     };
+
+    const target = observeRef?.current ?? root;
 
     const preloadObserver = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) startLoad();
+        if (entry?.isIntersecting) ensureLoaded();
       },
       { threshold: 0, rootMargin: preloadMargin },
     );
 
     const playObserver = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          startLoad();
-          playWhenReady();
-        } else {
-          video.pause();
-        }
+        if (entry?.isIntersecting) play();
+        else video.pause();
       },
       { threshold: playThreshold, rootMargin: '0px' },
     );
 
-    preloadObserver.observe(wrap);
-    playObserver.observe(wrap);
+    preloadObserver.observe(target);
+    playObserver.observe(target);
+
+    // Handle refresh / restored scroll position when section is already on screen.
+    const raf = requestAnimationFrame(() => {
+      const rect = target.getBoundingClientRect();
+      const visible = rect.top < window.innerHeight * 0.85 && rect.bottom > window.innerHeight * 0.15;
+      if (visible) {
+        ensureLoaded();
+        play();
+      }
+    });
 
     return () => {
+      cancelAnimationFrame(raf);
       preloadObserver.disconnect();
       playObserver.disconnect();
     };
-  }, [playThreshold, preloadMargin, src]);
+  }, [src, playThreshold, preloadMargin, observeRef]);
 
   return (
-    <div ref={wrapRef} className="contents">
+    <div ref={rootRef} className="w-full">
       <video
         ref={videoRef}
         className={className}
@@ -85,8 +97,9 @@ export function LazyAutoplayVideo({
         poster={poster}
         playsInline
         muted
+        defaultMuted
         loop
-        preload="none"
+        preload="metadata"
         disablePictureInPicture
         controlsList="nodownload noremoteplayback"
         onContextMenu={(e) => e.preventDefault()}

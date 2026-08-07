@@ -71,6 +71,7 @@ export default function Home() {
   const videoRef2 = useRef<HTMLVideoElement>(null)
   const pharmacyVideoRef = useRef<HTMLVideoElement>(null)
   const pharmacySectionRef = useRef<HTMLDivElement>(null)
+  const awarenessSectionRef = useRef<HTMLElement>(null)
   const videoSectionRef = useRef<HTMLDivElement>(null)
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -2010,7 +2011,7 @@ export default function Home() {
       </section>
 
       {/* Awareness Video Section — Portrait */}
-      <section className="py-20 bg-gradient-to-b from-[#f9f9fb] to-white overflow-hidden section-scroll">
+      <section ref={awarenessSectionRef} className="py-20 bg-gradient-to-b from-[#f9f9fb] to-white overflow-hidden section-scroll">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
@@ -2022,8 +2023,9 @@ export default function Home() {
                     src="/jendo_awareness.web.mp4"
                     poster="/jendo_awareness-poster.jpg"
                     className="jendo-autoplay-video w-full h-auto block pointer-events-none"
-                    playThreshold={0.2}
-                    preloadMargin="600px 0px"
+                    observeRef={awarenessSectionRef}
+                    playThreshold={0.12}
+                    preloadMargin="700px 0px"
                   />
                 </div>
                 <div className="absolute -bottom-3 -right-3 w-16 h-16 rounded-2xl bg-[#893A9F] flex items-center justify-center shadow-lg">
