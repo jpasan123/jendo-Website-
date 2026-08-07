@@ -17,7 +17,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import bannerImage from '../images/Jendo Banner AI For Good Global Summit.jpg.jpeg';
 import mobileHeroBackgroundImage from '../images/jendo-background-mobile.jpeg';
-import type { StaticImageData } from 'next/image';
+import { LazyAutoplayVideo } from '@/components/ui/lazy-autoplay-video';
 
 type BlogPost = {
   title: string;
@@ -71,8 +71,6 @@ export default function Home() {
   const videoRef2 = useRef<HTMLVideoElement>(null)
   const pharmacyVideoRef = useRef<HTMLVideoElement>(null)
   const pharmacySectionRef = useRef<HTMLDivElement>(null)
-  const awarenessVideoRef = useRef<HTMLVideoElement>(null)
-  const awarenessSectionRef = useRef<HTMLDivElement>(null)
   const videoSectionRef = useRef<HTMLDivElement>(null)
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -144,30 +142,6 @@ export default function Home() {
     );
 
     observer.observe(pharmacySection);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const awarenessVideo = awarenessVideoRef.current;
-    const awarenessSection = awarenessSectionRef.current;
-    if (!awarenessVideo || !awarenessSection) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setTimeout(() => {
-              awarenessVideo.play().catch(() => {});
-            }, 100);
-          } else {
-            awarenessVideo.pause();
-          }
-        });
-      },
-      { root: null, rootMargin: "0px", threshold: 0.3 }
-    );
-
-    observer.observe(awarenessSection);
     return () => observer.disconnect();
   }, []);
 
@@ -2036,7 +2010,7 @@ export default function Home() {
       </section>
 
       {/* Awareness Video Section — Portrait */}
-      <section ref={awarenessSectionRef} className="py-20 bg-gradient-to-b from-[#f9f9fb] to-white overflow-hidden section-scroll">
+      <section className="py-20 bg-gradient-to-b from-[#f9f9fb] to-white overflow-hidden section-scroll">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
@@ -2044,19 +2018,13 @@ export default function Home() {
               <div className="relative w-[280px] sm:w-[320px] md:w-[340px]">
                 <div className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-[#893A9F]/20 via-[#893A9F]/5 to-transparent blur-xl" />
                 <div className="relative rounded-[1.5rem] overflow-hidden border-2 border-[#ede8f5] shadow-2xl bg-black">
-                  <video
-                    ref={awarenessVideoRef}
+                  <LazyAutoplayVideo
+                    src="/jendo_awareness.web.mp4"
+                    poster="/jendo_awareness-poster.jpg"
                     className="jendo-autoplay-video w-full h-auto block pointer-events-none"
-                    playsInline
-                    muted
-                    loop
-                    disablePictureInPicture
-                    controlsList="nodownload noremoteplayback"
-                    onContextMenu={(e) => e.preventDefault()}
-                  >
-                    <source src="/jendo_awareness.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                    playThreshold={0.2}
+                    preloadMargin="600px 0px"
+                  />
                 </div>
                 <div className="absolute -bottom-3 -right-3 w-16 h-16 rounded-2xl bg-[#893A9F] flex items-center justify-center shadow-lg">
                   <HeartPulse className="w-7 h-7 text-white" />
