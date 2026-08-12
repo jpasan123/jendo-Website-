@@ -313,18 +313,18 @@ export async function POST(request: NextRequest) {
 
     console.log('📨 Received message:', message.substring(0, 50) + '...');
 
-    // TIER 1: Rule-based engine (same logic as jendo-admin-backend ChatbotServiceImpl)
-    const ruleBasedResponse = getRuleBasedResponse(message);
-    if (ruleBasedResponse) {
-      console.log('✅ Using local rule-based response');
-      return NextResponse.json(buildChatResponse(ruleBasedResponse));
-    }
-
-    // TIER 2: Spring Boot backend (optional — when deployed on same server)
+    // TIER 1: Spring Boot backend (jendo-admin-backend on same server)
     const backendResponse = await callBackendAPI(request, message, history);
     if (backendResponse) {
       console.log('✅ Using Spring Boot backend response');
       return NextResponse.json(backendResponse);
+    }
+
+    // TIER 2: Local rule engine fallback when backend is down
+    const ruleBasedResponse = getRuleBasedResponse(message);
+    if (ruleBasedResponse) {
+      console.log('✅ Using local rule-based fallback');
+      return NextResponse.json(buildChatResponse(ruleBasedResponse));
     }
 
     // TIER 3: Hugging Face AI
