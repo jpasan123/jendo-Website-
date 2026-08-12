@@ -1,4 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import {
+  buildChatResponse,
+  getComprehensiveFallback,
+  getRuleBasedResponse,
+} from '@/lib/chatbot-engine';
 
 interface ChatMessage {
   message: string;
@@ -290,26 +295,8 @@ const callHuggingFaceAPI = async (message: string): Promise<string | null> => {
   return null; // All AI models failed
 };
 
-// TIER 3: Simple Fallback (Always Available)
-const getFallbackResponse = (): string => {
-  return `I apologize, but I'm having trouble connecting to our AI services right now.
-
-📞 **Please contact our team directly:**
-- **Phone:** 0766210120
-- **Email:** info@jendoinnovations.com
-- **Location:** Bay 09, Trace Expert City, Colombo 10, Sri Lanka
-
-**Business Hours:**
-Monday-Friday: 9:00 AM - 5:00 PM (Sri Lanka Time)
-
-We're here to help you with:
-🫀 Jendo technology and services
-⚕️ Test procedures and booking
-💓 Cardiovascular health information
-📅 Appointments and pricing
-
-⚠️ **For medical emergencies, please call 1990 (Sri Lanka Emergency Services)**`;
-};
+// TIER 4: Simple Fallback (Always Available)
+const getFallbackResponse = (): string => getComprehensiveFallback();
 
 // Main Handler - Three-Tier System
 export async function POST(request: NextRequest) {
@@ -326,43 +313,31 @@ export async function POST(request: NextRequest) {
 
     console.log('📨 Received message:', message.substring(0, 50) + '...');
 
-    let responseContent: string;
-    let responseId: string;
-    let responseTimestamp: string;
+    // TIER 1: Rule-based engine (same logic as jendo-admin-backend ChatbotServiceImpl)
+    const ruleBasedResponse = getRuleBasedResponse(message);
+    if (ruleBasedResponse) {
+      console.log('✅ Using local rule-based response');
+      return NextResponse.json(buildChatResponse(ruleBasedResponse));
+    }
 
-    // TIER 1: Try Spring Boot Backend (Primary - has built-in three-tier system)
+    // TIER 2: Spring Boot backend (optional — when deployed on same server)
     const backendResponse = await callBackendAPI(request, message, history);
-    
     if (backendResponse) {
       console.log('✅ Using Spring Boot backend response');
       return NextResponse.json(backendResponse);
     }
 
-    // TIER 2: Try Hugging Face AI (Secondary fallback)
+    // TIER 3: Hugging Face AI
     console.log('⚠️ Backend unavailable, trying Hugging Face AI...');
     const aiResponse = await callHuggingFaceAPI(message);
-    
     if (aiResponse) {
       console.log('✅ Using Hugging Face AI response');
-      responseContent = aiResponse;
-      responseId = `assistant-hf-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      responseTimestamp = new Date().toISOString();
-    } else {
-      // TIER 3: Use simple fallback (Always works)
-      console.log('ℹ️ All services unavailable, using fallback response');
-      responseContent = getFallbackResponse();
-      responseId = `assistant-fallback-${Date.now()}`;
-      responseTimestamp = new Date().toISOString();
+      return NextResponse.json(buildChatResponse(aiResponse));
     }
 
-    const response: ChatResponse = {
-      id: responseId,
-      role: 'assistant',
-      content: responseContent,
-      timestamp: responseTimestamp,
-    };
-
-    return NextResponse.json(response);
+    // TIER 4: Comprehensive fallback (always works)
+    console.log('ℹ️ Using comprehensive fallback response');
+    return NextResponse.json(buildChatResponse(getFallbackResponse()));
   } catch (error) {
     console.error('❌ Error processing chatbot message:', error);
     
@@ -417,9 +392,10 @@ export async function GET(request: NextRequest) {
       status: backendStatus,
     },
     tiers: {
-      tier1: 'Spring Boot Backend (Primary)',
-      tier2: 'Hugging Face AI (Fallback)',
-      tier3: 'Simple Fallback (Always Available)',
+      tier1: 'Rule-based Engine (Local — jendo-admin-backend logic)',
+      tier2: 'Spring Boot Backend (Optional)',
+      tier3: 'Hugging Face AI (Fallback)',
+      tier4: 'Comprehensive Fallback (Always Available)',
     },
     timestamp: new Date().toISOString(),
   });
