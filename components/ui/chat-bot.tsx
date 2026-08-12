@@ -86,11 +86,15 @@ Just ask me anything! I'm here 24/7 to assist you.
       });
       if (!response.ok) throw new Error('Failed');
       const data = await response.json();
-      setMessages(prev => [...prev, { role: 'assistant', content: data.content, timestamp: new Date(data.timestamp) }]);
+      if (data?.content) {
+        setMessages(prev => [...prev, { role: 'assistant', content: data.content, timestamp: new Date(data.timestamp || Date.now()) }]);
+        return;
+      }
+      throw new Error('Empty response');
     } catch {
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: `I apologize for the technical difficulty. Please contact our team directly:\n\n📞 Phone: 0766210120\n📧 Email: info@jendoinnovations.com\n🏢 Location: Bay 09, Trace Expert City, Colombo\n\nBusiness Hours: Mon-Fri 9 AM - 5 PM`,
+        content: `Thank you for your question! I'm here to help with Jendo cardiovascular health technology.\n\n📞 **Contact us:** 0766210120\n📧 info@jendoinnovations.com\n🌐 https://www.jendo.health/\n\nTry asking: "About Jendo", "How it works", or "Book appointment"`,
         timestamp: new Date()
       }]);
     } finally {

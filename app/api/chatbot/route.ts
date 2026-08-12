@@ -37,8 +37,8 @@ interface CachedAccessToken {
   expiresAt: number | null;
 }
 
-// Backend API Configuration
-const BACKEND_API_URL = process.env.CHATBOT_BACKEND_URL?.trim() || 'http://188.166.240.119:8090/api/chatbot/message';
+// Optional remote backend — only used when CHATBOT_BACKEND_URL is explicitly set
+const BACKEND_API_URL = process.env.CHATBOT_BACKEND_URL?.trim() || '';
 const AUTH_SERVICE_URL = process.env.CHATBOT_AUTH_URL?.trim() || 'http://188.166.240.119:8080/api/auth/login';
 const AUTH_SERVICE_EMAIL = process.env.CHATBOT_AUTH_EMAIL?.trim() || '';
 const AUTH_SERVICE_PASSWORD = process.env.CHATBOT_AUTH_PASSWORD?.trim() || '';
@@ -165,6 +165,10 @@ const callBackendAPI = async (
   message: string,
   history?: Array<{ role: string; content: string }>
 ): Promise<ChatResponse | null> => {
+  if (!BACKEND_API_URL) {
+    return null;
+  }
+
   try {
     console.log('🔄 Calling Spring Boot backend at:', BACKEND_API_URL);
 
@@ -313,18 +317,18 @@ export async function POST(request: NextRequest) {
 
     console.log('📨 Received message:', message.substring(0, 50) + '...');
 
-    // TIER 1: Spring Boot backend (jendo-admin-backend on same server)
-    const backendResponse = await callBackendAPI(request, message, history);
-    if (backendResponse) {
-      console.log('✅ Using Spring Boot backend response');
-      return NextResponse.json(backendResponse);
-    }
-
-    // TIER 2: Local rule engine fallback when backend is down
+    // TIER 1: Local chatbot engine (chatbot-only — hosted on jendo.health server)
     const ruleBasedResponse = getRuleBasedResponse(message);
     if (ruleBasedResponse) {
-      console.log('✅ Using local rule-based fallback');
+      console.log('✅ Using local chatbot engine');
       return NextResponse.json(buildChatResponse(ruleBasedResponse));
+    }
+
+    // TIER 2: Optional remote Spring Boot backend (only if CHATBOT_BACKEND_URL is set)
+    const backendResponse = await callBackendAPI(request, message, history);
+    if (backendResponse) {
+      console.log('✅ Using remote backend response');
+      return NextResponse.json(backendResponse);
     }
 
     // TIER 3: Hugging Face AI
@@ -356,7 +360,8 @@ export async function POST(request: NextRequest) {
 // Health Check Endpoint
 export async function GET(request: NextRequest) {
   // Test backend connectivity
-  let backendStatus = 'unknown';
+  let backendStatus = BACKEND_API_URL ? 'unknown' : 'disabled';
+  if (BACKEND_API_URL) {
   try {
     const authorizationHeader = await getBackendAuthHeader(
       request.headers.get('authorization'),
@@ -383,17 +388,18 @@ export async function GET(request: NextRequest) {
   } catch {
     backendStatus = 'unreachable';
   }
+  }
 
   return NextResponse.json({
     status: 'operational',
-    service: 'Jendo Health Chatbot Proxy',
+    service: 'Jendo Health Chatbot',
     backend: {
-      url: BACKEND_API_URL,
+      url: BACKEND_API_URL || null,
       status: backendStatus,
     },
     tiers: {
-      tier1: 'Rule-based Engine (Local — jendo-admin-backend logic)',
-      tier2: 'Spring Boot Backend (Optional)',
+      tier1: 'Local Chatbot Engine (jendo.health — chatbot-only)',
+      tier2: 'Remote Backend (optional — CHATBOT_BACKEND_URL)',
       tier3: 'Hugging Face AI (Fallback)',
       tier4: 'Comprehensive Fallback (Always Available)',
     },

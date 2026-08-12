@@ -15,7 +15,7 @@ const RESPONSE_PATTERNS: Array<{ pattern: RegExp; response: string }> = [
       'What would you like to know?',
   },
   {
-    pattern: /.*(what is (the )?jendo|tell me about jendo|about jendo|jendo company).*/i,
+    pattern: /.*(what('s| is)( the)? jendo|tell me about jendo|about jendo|jendo company|explain jendo|describe jendo).*/i,
     response:
       '🫀 **About Jendo**\n\n' +
       'Jendo is an AI-powered, non-invasive cardiovascular health technology designed for early detection of vascular dysfunction.\n\n' +
