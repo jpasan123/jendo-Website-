@@ -371,6 +371,20 @@ export default function Home() {
 
   const blogPosts: BlogPost[] = [
     {
+      title: "Jendo Innovations Shares Its AI Health Journey at the WHO Global Initiative on AI for Health in Hangzhou",
+      excerpt: "Keerthi Kodithuwakku, Chairman and CEO of Jendo Innovations, presented Jendo's journey as an invited speaker at the Third Meeting of the WHO-ITU-WIPO Global Initiative on AI for Health in Hangzhou, China, while Dr. Dhanushi Hettiarachchi joined as a working-group member.",
+      date: "16–18 September 2026",
+      author: "Jendo Team",
+      image: "https://i.ibb.co/MxkQ8jd9/1790050770546.jpg",
+      url: "/blog/who-gi-ai4h-hangzhou-2026",
+      imageFit: "cover",
+      gallery: [
+        { src: "https://i.ibb.co/MxkQ8jd9/1790050770546.jpg", alt: "Jendo Innovations at the WHO Global Initiative on AI for Health, Hangzhou", fit: "cover" },
+        { src: "https://i.ibb.co/Y7tkqg88/1789903003286.jpg", alt: "Jendo vascular health technology presentation in Hangzhou", fit: "cover" },
+        { src: "https://i.ibb.co/Dg598zS3/1790050772334.jpg", alt: "Third Meeting of the Global Initiative on AI for Health, Hangzhou", fit: "cover" },
+      ],
+    },
+    {
       title: "Jendo Innovations Featured Among 20 Deep-Science Patent Holders in WIPO Global Innovation Index 2026",
       excerpt: "Jendo Innovations has been featured in WIPO's Global Innovation Index 2026 as one of only 20 deep-science patent holders from middle-income economies, representing Sri Lanka in Medical Devices and Digital Health.",
       date: "October 2026",
@@ -2513,6 +2527,25 @@ export default function Home() {
 
           {(() => {
             const galleryImages = [
+              { src: "https://i.ibb.co/vCz7b2rC/1789903000363.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/4wn9d0yQ/1789903002098.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/Y7tkqg88/1789903003286.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/Wvq0bn2t/1790050759982.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/dwH1MQ77/1790050760529.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/dJXg2KKv/1790050761875.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/RTj6nc8Z/1790050762479.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/yn0NXkfm/1790050762480.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/sddvVTC7/1790050762660.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/QFVRV6N0/1790050762835.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/bRQnS8zC/1790050762875.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/mVs1HVXr/1790050762933.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/PXF10YD/1790050763254.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/wvhr9Wp/1790050763451.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/0RR1XpfR/1790050763521.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/MxkQ8jd9/1790050770546.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/CpnM0tYq/1790050772109.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/ZpvdrdkN/1790050772196.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
+              { src: "https://i.ibb.co/Dg598zS3/1790050772334.jpg", alt: "Jendo at the WHO Global Initiative on AI for Health, Hangzhou 2026" },
               { src: "https://i.ibb.co/VcdsRgzZ/Whats-App-Image-2026-06-04-at-09-43-04.jpg", alt: "JENDO Pharmacy Health Screening Initiative" },
               { src: "https://i.ibb.co/Q3Pmmq5z/Whats-App-Image-2026-03-03-at-08-31-39.jpg", alt: "JENDO Bahrain Pilot — King Hamad American Mission Hospital" },
               { src: "https://i.ibb.co/B5CGB1VS/4061e00e-5407-4198-9690-080b10d33844.jpg", alt: "Innovation Production in Progress — Sri Lanka" },
