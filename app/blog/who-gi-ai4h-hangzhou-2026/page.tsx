@@ -6,6 +6,11 @@ import ImageSlider, { type SliderImage } from "@/components/news/ImageSlider";
 
 const HERO_IMAGES: SliderImage[] = [
   {
+    src: "https://i.ibb.co/ZpvdrdkN/1790050772196.jpg",
+    alt: "Participants of the Third Meeting of the Global Initiative on AI for Health, Hangzhou, China",
+    fit: "cover",
+  },
+  {
     src: "https://i.ibb.co/MxkQ8jd9/1790050770546.jpg",
     alt: "Jendo Innovations at the Third Meeting of the WHO Global Initiative on AI for Health, Hangzhou",
     fit: "cover",
@@ -13,11 +18,6 @@ const HERO_IMAGES: SliderImage[] = [
   {
     src: "https://i.ibb.co/Y7tkqg88/1789903003286.jpg",
     alt: "Jendo's vascular health technology presented at the GI-AI4H meeting in Hangzhou",
-    fit: "cover",
-  },
-  {
-    src: "https://i.ibb.co/Dg598zS3/1790050772334.jpg",
-    alt: "Third Meeting of the Global Initiative on AI for Health, Hangzhou, China",
     fit: "cover",
   },
 ];

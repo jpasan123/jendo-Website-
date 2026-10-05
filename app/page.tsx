@@ -379,9 +379,9 @@ export default function Home() {
       url: "/blog/who-gi-ai4h-hangzhou-2026",
       imageFit: "cover",
       gallery: [
+        { src: "https://i.ibb.co/ZpvdrdkN/1790050772196.jpg", alt: "Participants of the Third Meeting of the Global Initiative on AI for Health, Hangzhou", fit: "cover" },
         { src: "https://i.ibb.co/MxkQ8jd9/1790050770546.jpg", alt: "Jendo Innovations at the WHO Global Initiative on AI for Health, Hangzhou", fit: "cover" },
         { src: "https://i.ibb.co/Y7tkqg88/1789903003286.jpg", alt: "Jendo vascular health technology presentation in Hangzhou", fit: "cover" },
-        { src: "https://i.ibb.co/Dg598zS3/1790050772334.jpg", alt: "Third Meeting of the Global Initiative on AI for Health, Hangzhou", fit: "cover" },
       ],
     },
     {
