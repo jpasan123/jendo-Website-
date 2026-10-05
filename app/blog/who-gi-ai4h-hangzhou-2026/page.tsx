@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import ImageSlider, { type SliderImage } from "@/components/news/ImageSlider";
@@ -21,6 +22,42 @@ const HERO_IMAGES: SliderImage[] = [
     fit: "cover",
   },
 ];
+
+const BODY_PHOTOS = {
+  venue: {
+    src: "https://i.ibb.co/vCz7b2rC/1789903000363.jpg",
+    alt: "Third Meeting of the Global Initiative on AI for Health, Hangzhou, China",
+    caption: "The Third Meeting of the Global Initiative on AI for Health, Hangzhou, China.",
+  },
+  speaker: {
+    src: "https://i.ibb.co/dJXg2KKv/1790050761875.jpg",
+    alt: "Keerthi Kodithuwakku speaking at the GI-AI4H meeting",
+    caption: "Keerthi Kodithuwakku, Chairman and CEO of Jendo Innovations, at the meeting.",
+  },
+  team: {
+    src: "https://i.ibb.co/4wn9d0yQ/1789903002098.jpg",
+    alt: "Jendo Innovations team with delegates in Hangzhou",
+    caption: "Jendo Innovations with delegates in Hangzhou.",
+  },
+};
+
+function BodyPhoto({ photo }: { photo: { src: string; alt: string; caption: string } }) {
+  return (
+    <figure className="not-prose my-8">
+      <div className="rounded-2xl overflow-hidden shadow-lg bg-white">
+        <Image
+          src={photo.src}
+          alt={photo.alt}
+          width={1280}
+          height={720}
+          sizes="(max-width:768px) 100vw, 768px"
+          className="w-full h-auto"
+        />
+      </div>
+      <figcaption className="mt-2 text-center text-sm text-gray-500">{photo.caption}</figcaption>
+    </figure>
+  );
+}
 
 const LINKS = [
   {
@@ -73,6 +110,8 @@ export default function WhoGiAi4hHangzhouArticle() {
           healthcare.
         </p>
 
+        <BodyPhoto photo={BODY_PHOTOS.venue} />
+
         <h2>Presenting the Jendo Journey</h2>
         <p>
           <b>Keerthi Kodithuwakku</b>, Chairman and CEO of Jendo Innovations Inc., took part as an invited speaker and
@@ -80,6 +119,8 @@ export default function WhoGiAi4hHangzhouArticle() {
           research and early product development toward clinical validation, intellectual property protection,
           regulatory advancement and international commercialization.
         </p>
+        <BodyPhoto photo={BODY_PHOTOS.speaker} />
+
         <p>
           The presentation highlighted Jendo&rsquo;s experience in developing its non-invasive vascular health
           technology, and showed how innovation from an emerging economy can move through the complex pathway needed to
@@ -121,6 +162,8 @@ export default function WhoGiAi4hHangzhouArticle() {
           sustainable implementation, supported by appropriate governance, standards, clinical evaluation, regulatory
           frameworks and collaboration between public and private stakeholders.
         </p>
+
+        <BodyPhoto photo={BODY_PHOTOS.team} />
 
         <h2>The Journey Continues</h2>
         <p>
