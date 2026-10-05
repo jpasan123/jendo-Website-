@@ -1,5 +1,5 @@
 import { BOOKING, PAYMENT_METHODS, type PaymentMethod } from "./config";
-import { isBookableSlot } from "./time";
+import { isBookableSlot, isScheduledSlot } from "./time";
 
 export type BookingInput = {
   fullName: string;
@@ -27,7 +27,12 @@ export function normalizePhone(raw: string): string | null {
   return null;
 }
 
-export function validateBooking(raw: Partial<Record<keyof BookingInput, unknown>>, nowMs = Date.now()) {
+/** `staff: true` is used by the admin panel: no lead-time rule and no patient consent tick */
+export function validateBooking(
+  raw: Partial<Record<keyof BookingInput, unknown>>,
+  nowMs = Date.now(),
+  options: { staff?: boolean } = {}
+) {
   const errors: FieldErrors = {};
   const fullName = String(raw.fullName ?? "").trim().replace(/\s+/g, " ");
   const phoneRaw = String(raw.phone ?? "").trim();
@@ -50,11 +55,11 @@ export function validateBooking(raw: Partial<Record<keyof BookingInput, unknown>
   if (notes.length > 500) errors.notes = "Notes can be up to 500 characters.";
 
   if (!date || !time) errors.date = "Please choose a date and time.";
-  else if (!isBookableSlot(date, time, nowMs)) errors.date = "That time is no longer available. Please pick another slot.";
+  else if (!(options.staff ? isScheduledSlot(date, time, nowMs) : isBookableSlot(date, time, nowMs))) errors.date = "That time is no longer available. Please pick another slot.";
 
   if (!(PAYMENT_METHODS as readonly string[]).includes(paymentMethod)) errors.paymentMethod = "Choose how you would like to pay.";
 
-  if (!consent) errors.consent = "Please confirm that we may call you to confirm the appointment.";
+  if (!consent && !options.staff) errors.consent = "Please confirm that we may call you to confirm the appointment.";
 
   return {
     ok: Object.keys(errors).length === 0,

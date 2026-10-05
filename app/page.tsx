@@ -1077,7 +1077,7 @@ export default function Home() {
                 style={{ background: 'linear-gradient(135deg,#b45fd0,#893A9F)' }}
               >
                 <Calendar className="h-4 w-4" />
-                Book a Test
+                Jendo Test
               </a>
             </div>
           </div>

@@ -24,6 +24,7 @@ export default function BookTestPage() {
         openWeekdays={[...BOOKING.openWeekdays]}
         slipMaxMb={BOOKING.slipMaxBytes / 1024 / 1024}
         testMinutes={BOOKING.testDurationMinutes}
+        slotMinutes={BOOKING.slotMinutes}
       />
     </main>
   );

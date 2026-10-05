@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getBookingCounts, listBookings } from "@/lib/booking/store";
-import { isAdminRequest } from "@/lib/booking/security";
+import { createBooking, getBookingCounts, listBookings, SlotTakenError } from "@/lib/booking/store";
+import { validateBooking } from "@/lib/booking/validation";
+import { isAdminRequest, sameOrigin } from "@/lib/booking/security";
 import { formatTime12h } from "@/lib/booking/time";
 
 export const runtime = "nodejs";
@@ -26,6 +27,7 @@ export async function GET(request: NextRequest) {
       date: p.get("date") || undefined,
       q: (p.get("q") || "").trim().slice(0, 80) || undefined,
       upcoming: p.get("upcoming") === "1",
+      followUpDue: p.get("followup") === "1",
     });
 
     if (p.get("format") === "csv") {
@@ -51,5 +53,59 @@ export async function GET(request: NextRequest) {
   } catch (err) {
     console.error("[admin/bookings] list failed:", err instanceof Error ? err.message : err);
     return NextResponse.json({ ok: false, message: "Could not load bookings." }, { status: 500, headers: noStore });
+  }
+}
+
+/** Staff add a booking taken over the phone or in person */
+export async function POST(request: NextRequest) {
+  if (!isAdminRequest(request)) return NextResponse.json({ ok: false, message: "Unauthorized" }, { status: 401, headers: noStore });
+  if (!sameOrigin(request)) return NextResponse.json({ ok: false, message: "Request blocked." }, { status: 403 });
+
+  let body: Record<string, unknown>;
+  try {
+    body = (await request.json()) as Record<string, unknown>;
+  } catch {
+    return NextResponse.json({ ok: false, message: "Invalid JSON." }, { status: 400 });
+  }
+
+  const { ok, errors, value } = validateBooking(
+    {
+      fullName: body.fullName,
+      phone: body.phone,
+      email: body.email,
+      notes: body.notes,
+      date: body.date,
+      time: body.time,
+      paymentMethod: body.paymentMethod === "bank_transfer" ? "bank_transfer" : "pay_at_venue",
+      consent: true,
+    },
+    Date.now(),
+    { staff: true }
+  );
+  if (!ok) return NextResponse.json({ ok: false, message: "Please fix the highlighted fields.", errors }, { status: 422, headers: noStore });
+
+  try {
+    const created = await createBooking({
+      fullName: value.fullName,
+      phone: value.phone,
+      email: value.email,
+      notes: value.notes,
+      date: value.date,
+      time: value.time,
+      paymentMethod: value.paymentMethod,
+      slipFile: null,
+      slipMime: null,
+      ip: "staff",
+      staff: true,
+      status: "confirmed",
+      paymentStatus: body.paid === true ? "paid" : "unpaid",
+    });
+    return NextResponse.json({ ok: true, ref: created.ref }, { status: 201, headers: noStore });
+  } catch (err) {
+    if (err instanceof SlotTakenError) {
+      return NextResponse.json({ ok: false, message: "That slot is already booked.", errors: { date: "That slot is already booked." } }, { status: 409, headers: noStore });
+    }
+    console.error("[admin/bookings] create failed:", err instanceof Error ? err.message : err);
+    return NextResponse.json({ ok: false, message: "Could not save the booking." }, { status: 500, headers: noStore });
   }
 }

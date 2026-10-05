@@ -145,7 +145,7 @@ export function Header() {
               style={{ background: 'linear-gradient(135deg,#a24bbd,#6b1f87)', border: '1px solid rgba(192,132,252,0.35)' }}
             >
               <CalendarCheck className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-              Book a Test
+              Jendo Test
             </Link>
 
             {/* Cart Icon - hidden
@@ -203,7 +203,7 @@ export function Header() {
               style={{ background: 'linear-gradient(135deg,#a24bbd,#6b1f87)', border: '1px solid rgba(192,132,252,0.35)' }}
             >
               <CalendarCheck className="w-4 h-4" />
-              Book a Test
+              Jendo Test
             </Link>
 
             <button
@@ -292,7 +292,7 @@ export function Header() {
                 style={{ background: 'linear-gradient(135deg,#a24bbd,#6b1f87)', border: '1px solid rgba(192,132,252,0.35)' }}
               >
                 <CalendarCheck className="w-4 h-4 flex-shrink-0" />
-                Book a Test at TRACE
+                Jendo Test at TRACE
               </Link>
             </li>
 

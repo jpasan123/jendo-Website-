@@ -8,12 +8,14 @@ import {
   ArrowRight,
   CalendarDays,
   Check,
+  CalendarPlus,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Clock,
   Copy,
   CreditCard,
+  Download,
   FileText,
   Loader2,
   MapPin,
@@ -25,6 +27,7 @@ import {
 } from "lucide-react";
 import { addDays, formatDate, formatDateLong, formatTime12h, todayInColombo, weekdayOf } from "@/lib/booking/time";
 import { validateBooking, type FieldErrors } from "@/lib/booking/validation";
+import { downloadCalendarFile, downloadReceiptPdf } from "@/lib/booking/receipt";
 import type { BankDetails, PaymentMethod } from "@/lib/booking/config";
 
 type Props = {
@@ -36,6 +39,7 @@ type Props = {
   openWeekdays: number[];
   slipMaxMb: number;
   testMinutes: number;
+  slotMinutes: number;
 };
 
 type Slot = { time: string; available: boolean };
@@ -88,7 +92,7 @@ const inputClass = (invalid?: boolean) =>
     invalid ? "border-red-400 focus:border-red-500 focus:ring-red-100" : "border-gray-200 focus:border-[#893A9F] focus:ring-[#893A9F]/15"
   }`;
 
-export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAhead, openWeekdays, slipMaxMb, testMinutes }: Props) {
+export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAhead, openWeekdays, slipMaxMb, testMinutes, slotMinutes }: Props) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [done, setDone] = useState<Done | null>(null);
 
@@ -124,6 +128,14 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
   const [submitting, setSubmitting] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
+  const dialogBtnRef = useRef<HTMLButtonElement>(null);
+  const timeRef = useRef("");
+  const [conflict, setConflict] = useState<{ date: string; time: string } | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [pdfBusy, setPdfBusy] = useState(false);
+  const [pdfError, setPdfError] = useState("");
+  timeRef.current = time;
 
   const scrollToTop = () => topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
@@ -163,6 +175,41 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
   useEffect(() => {
     if (date) loadSlots(date);
   }, [date, loadSlots]);
+
+  const fetchSlots = useCallback(async (d: string): Promise<Slot[] | null> => {
+    try {
+      const res = await fetch(`/api/bookings/slots?date=${d}`, { cache: "no-store" });
+      const data = await res.json();
+      return res.ok && data.ok ? (data.slots as Slot[]) : null;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  // While choosing a time, re-check every 20s so a slot taken by someone else is flagged straight away
+  useEffect(() => {
+    if (step !== 1 || !date || done) return;
+    const id = setInterval(async () => {
+      const fresh = await fetchSlots(date);
+      if (!fresh) return;
+      setSlots(fresh);
+      const chosen = timeRef.current;
+      if (chosen && !fresh.find((s) => s.time === chosen)?.available) {
+        setTime("");
+        setConflict({ date, time: chosen });
+      }
+    }, 20_000);
+    return () => clearInterval(id);
+  }, [step, date, done, fetchSlots]);
+
+  // slot-taken dialog: focus the button, close on Escape
+  useEffect(() => {
+    if (!conflict) return;
+    dialogBtnRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setConflict(null);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [conflict]);
 
   // slip preview URL lifecycle
   useEffect(() => {
@@ -216,7 +263,7 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
     return picked;
   }
 
-  function goNext() {
+  async function goNext() {
     setServerError("");
     if (step === 1) {
       const e = fieldErrorsFor(["date"]);
@@ -225,6 +272,19 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
         return;
       }
       setErrors({});
+      // make sure nobody took this slot while the page was open
+      setChecking(true);
+      const fresh = await fetchSlots(date);
+      setChecking(false);
+      if (fresh) {
+        setSlots(fresh);
+        if (!fresh.find((s) => s.time === time)?.available) {
+          setConflict({ date, time });
+          setTime("");
+          loadAvailability();
+          return;
+        }
+      }
       setStep(2);
       scrollToTop();
     } else if (step === 2) {
@@ -331,7 +391,7 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
         setErrors({ slip: `The slip is too large. Please upload a file under ${slipMaxMb} MB.` });
         setServerError("The slip file is too large.");
       } else if (res.status === 409) {
-        setServerError(data.message || "That time slot was just taken. Please choose another time.");
+        setConflict({ date, time });
         setTime("");
         setStep(1);
         loadAvailability();
@@ -368,9 +428,29 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
       "Take the ~15 minute test, with a doctor present where possible.",
       "We share your report and feedback, and follow up if needed.",
     ];
+    const receipt = {
+      ref: done.ref,
+      fullName,
+      phone,
+      date: done.date,
+      time: done.time,
+      venueName,
+      venueAddress,
+      priceLkr,
+      paymentLabel: done.slipUploaded ? "Slip uploaded, pending verification" : done.paymentMethod === "bank_transfer" ? "Bank transfer" : "Pay at the venue",
+      slotMinutes,
+    };
     return (
       <div ref={topRef} className="mx-auto max-w-2xl px-4 sm:px-6">
-        <div className="overflow-hidden rounded-3xl border border-[#ede8f5] bg-white shadow-xl shadow-purple-900/5">
+        <div ref={successRef} className="overflow-hidden rounded-3xl border border-[#ede8f5] bg-white shadow-xl shadow-purple-900/5">
+          <div className="flex justify-center bg-white pb-4 pt-7">
+            <div
+              role="img"
+              aria-label="Jendo"
+              className="h-[40px] w-[160px]"
+              style={{ backgroundImage: "url(/jendo-icon.png)", backgroundSize: "222px 222px", backgroundPosition: "-31px -89px", backgroundRepeat: "no-repeat" }}
+            />
+          </div>
           <div className="px-6 py-10 text-center sm:px-10" style={{ background: "linear-gradient(135deg,#2d0a3e 0%,#4a1260 50%,#893A9F 100%)" }}>
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/15">
               <CheckCircle2 className="h-9 w-9 text-white" />
@@ -422,6 +502,37 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
               </ol>
             </div>
 
+            <div className="grid gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                disabled={pdfBusy}
+                onClick={async () => {
+                  setPdfBusy(true);
+                  setPdfError("");
+                  try {
+                    await downloadReceiptPdf(receipt, getComputedStyle(successRef.current ?? document.body).fontFamily);
+                  } catch {
+                    setPdfError("We could not create the PDF on this device. Please take a screenshot of this page instead.");
+                  } finally {
+                    setPdfBusy(false);
+                  }
+                }}
+                className="flex items-center justify-center gap-2 rounded-full border-2 border-[#893A9F] px-5 py-3 text-sm font-bold text-[#893A9F] transition hover:bg-[#f6f1fa] disabled:opacity-60"
+                style={font}
+              >
+                {pdfBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />} Download PDF
+              </button>
+              <button
+                type="button"
+                onClick={() => downloadCalendarFile(receipt)}
+                className="flex items-center justify-center gap-2 rounded-full border-2 border-gray-200 px-5 py-3 text-sm font-bold text-gray-700 transition hover:bg-gray-50"
+                style={font}
+              >
+                <CalendarPlus className="h-4 w-4" /> Add to calendar
+              </button>
+            </div>
+            {pdfError && <p role="alert" className="text-sm text-red-600">{pdfError}</p>}
+
             <Link
               href="/"
               className="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5"
@@ -449,6 +560,37 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
           A non-invasive, AI-powered screening at {venueName}. It takes about {testMinutes} minutes. Pick a time, tell us how to reach you, and our team will call to confirm.
         </p>
       </div>
+
+      {conflict && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm" onClick={() => setConflict(null)}>
+          <div
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="taken-title"
+            aria-describedby="taken-desc"
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md rounded-3xl bg-white p-7 text-center shadow-2xl"
+          >
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-50">
+              <AlertCircle className="h-7 w-7 text-red-600" />
+            </div>
+            <h2 id="taken-title" className="!text-xl !font-extrabold text-[#2d0a3e]" style={font}>That time is already booked</h2>
+            <p id="taken-desc" className="mt-2 !text-sm text-gray-600" style={font}>
+              Someone else has just booked <strong>{formatDateLong(conflict.date)}</strong> at <strong>{formatTime12h(conflict.time)}</strong>.
+              Please choose another time. Your details are kept, so you will not need to type them again.
+            </p>
+            <button
+              ref={dialogBtnRef}
+              type="button"
+              onClick={() => { setConflict(null); setStep(1); scrollToTop(); }}
+              className="mt-6 w-full rounded-full px-6 py-3 text-sm font-bold text-white"
+              style={{ background: "linear-gradient(135deg,#893A9F,#4a1260)", ...font }}
+            >
+              Choose another time
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Stepper */}
       <ol className="mb-8 grid grid-cols-3 gap-2 sm:gap-4" aria-label="Booking progress">
@@ -775,8 +917,8 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
             ) : <span />}
 
             {step < 3 ? (
-              <button type="button" onClick={goNext} disabled={step === 1 && (!date || !time)} className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-bold text-white shadow-md transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-40 disabled:shadow-none" style={{ background: "linear-gradient(135deg,#893A9F,#4a1260)", ...font }}>
-                Continue <ArrowRight className="h-4 w-4" />
+              <button type="button" onClick={goNext} disabled={(step === 1 && (!date || !time)) || checking} className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-bold text-white shadow-md transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-40 disabled:shadow-none" style={{ background: "linear-gradient(135deg,#893A9F,#4a1260)", ...font }}>
+                {checking ? <><Loader2 className="h-4 w-4 animate-spin" /> Checking…</> : <>Continue <ArrowRight className="h-4 w-4" /></>}
               </button>
             ) : (
               <button type="button" onClick={submit} disabled={submitting} className="inline-flex min-w-[170px] items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-bold text-white shadow-md transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-70" style={{ background: "linear-gradient(135deg,#893A9F,#4a1260)", ...font }}>

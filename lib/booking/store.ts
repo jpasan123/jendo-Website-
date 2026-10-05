@@ -1,5 +1,5 @@
 import { randomInt } from "crypto";
-import { ensureSchema, getPool } from "./db";
+import { ensureSchema, query } from "./db";
 import {
   BOOKING,
   BOOKING_STATUSES,
@@ -72,37 +72,41 @@ type NewBooking = {
   slipFile: string | null;
   slipMime: string | null;
   ip: string;
+  /** staff entries (phone bookings): skip the per-phone limit and set the starting status */
+  staff?: boolean;
+  status?: BookingStatus;
+  paymentStatus?: PaymentStatus;
 };
 
 const MAX_UPCOMING_PER_PHONE = 3;
 
 export async function createBooking(input: NewBooking): Promise<{ id: string; ref: string }> {
   await ensureSchema();
-  const pool = getPool();
 
-  const upcoming = await pool.query(
+  const upcoming = input.staff ? { rows: [{ n: 0 }] } : await query(
     `SELECT count(*)::int AS n FROM test_bookings
       WHERE phone = $1 AND appointment_date >= $2::date AND status IN ('new','confirmed')`,
     [input.phone, todayInColombo()]
   );
   if (upcoming.rows[0].n >= MAX_UPCOMING_PER_PHONE) throw new TooManyBookingsError();
 
-  const paymentStatus: PaymentStatus = input.slipFile ? "slip_uploaded" : "unpaid";
+  const paymentStatus: PaymentStatus = input.paymentStatus ?? (input.slipFile ? "slip_uploaded" : "unpaid");
+  const status: BookingStatus = input.status ?? "new";
 
   for (let attempt = 0; attempt < 5; attempt++) {
     const ref = newRef();
     try {
-      const res = await pool.query(
+      const res = await query(
         `INSERT INTO test_bookings
            (ref, full_name, phone, email, notes, appointment_date, slot_time, amount_lkr,
-            payment_status, payment_method, slip_file, slip_mime, slip_uploaded_at, created_ip)
+            payment_status, payment_method, slip_file, slip_mime, slip_uploaded_at, created_ip, status)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,
-                 CASE WHEN $11::text IS NULL THEN NULL ELSE now() END,$13)
+                 CASE WHEN $11::text IS NULL THEN NULL ELSE now() END,$13,$14)
          RETURNING id, ref`,
         [
           ref, input.fullName, input.phone, input.email || null, input.notes || null,
           input.date, input.time, BOOKING.priceLkr, paymentStatus, input.paymentMethod,
-          input.slipFile, input.slipMime, input.ip,
+          input.slipFile, input.slipMime, input.ip, status,
         ]
       );
       return res.rows[0];
@@ -120,7 +124,7 @@ type BookedMap = Map<string, number>; // "YYYY-MM-DD HH:MM" -> count
 
 async function bookedCounts(from: string, to: string): Promise<BookedMap> {
   await ensureSchema();
-  const res = await getPool().query(
+  const res = await query(
     `SELECT to_char(appointment_date,'YYYY-MM-DD') AS d, slot_time AS t, count(*)::int AS n
        FROM test_bookings
       WHERE appointment_date BETWEEN $1::date AND $2::date AND status = ANY($3)
@@ -159,7 +163,7 @@ export async function getAvailability(nowMs = Date.now()) {
 
 // ------------------------- admin -------------------------
 
-export type ListFilter = { status?: string; date?: string; q?: string; paymentStatus?: string; upcoming?: boolean };
+export type ListFilter = { status?: string; date?: string; q?: string; paymentStatus?: string; upcoming?: boolean; followUpDue?: boolean };
 
 export async function listBookings(filter: ListFilter): Promise<BookingRow[]> {
   await ensureSchema();
@@ -172,6 +176,7 @@ export async function listBookings(filter: ListFilter): Promise<BookingRow[]> {
   if (filter.status && (BOOKING_STATUSES as readonly string[]).includes(filter.status)) add("status = ?", filter.status);
   if (filter.paymentStatus && (PAYMENT_STATUSES as readonly string[]).includes(filter.paymentStatus)) add("payment_status = ?", filter.paymentStatus);
   if (filter.date && isDateString(filter.date)) add("appointment_date = ?::date", filter.date);
+  if (filter.followUpDue) add("follow_up_on IS NOT NULL AND status = 'completed' AND follow_up_on <= ?::date", todayInColombo());
   if (filter.upcoming) add("appointment_date >= ?::date", todayInColombo());
   if (filter.q) {
     const like = `%${filter.q.replace(/[%_\\]/g, (c) => `\\${c}`)}%`;
@@ -179,7 +184,7 @@ export async function listBookings(filter: ListFilter): Promise<BookingRow[]> {
     const i = params.length;
     where.push(`(full_name ILIKE $${i} OR phone ILIKE $${i} OR ref ILIKE $${i} OR coalesce(email,'') ILIKE $${i})`);
   }
-  const res = await getPool().query(
+  const res = await query(
     `SELECT ${COLUMNS} FROM test_bookings
       ${where.length ? "WHERE " + where.join(" AND ") : ""}
       ORDER BY appointment_date ASC, slot_time ASC, created_at ASC
@@ -191,7 +196,7 @@ export async function listBookings(filter: ListFilter): Promise<BookingRow[]> {
 
 export async function getBookingCounts() {
   await ensureSchema();
-  const res = await getPool().query(
+  const res = await query(
     `SELECT
        count(*) FILTER (WHERE status = 'new')::int AS new_count,
        count(*) FILTER (WHERE status IN ('new','confirmed') AND appointment_date >= $1::date)::int AS upcoming,
@@ -205,7 +210,7 @@ export async function getBookingCounts() {
 
 export async function getBookingSlip(id: string) {
   await ensureSchema();
-  const res = await getPool().query(`SELECT slip_file, slip_mime, ref FROM test_bookings WHERE id = $1`, [id]);
+  const res = await query(`SELECT slip_file, slip_mime, ref FROM test_bookings WHERE id = $1`, [id]);
   return res.rows[0] as { slip_file: string | null; slip_mime: string | null; ref: string } | undefined;
 }
 
@@ -251,7 +256,7 @@ export async function updateBooking(id: string, patch: BookingPatch): Promise<Bo
 
   params.push(id);
   try {
-    const res = await getPool().query(
+    const res = await query(
       `UPDATE test_bookings SET ${sets.join(", ")}, updated_at = now()
         WHERE id = $${params.length}
         RETURNING ${COLUMNS}`,

@@ -13,11 +13,13 @@ import {
   Loader2,
   LogOut,
   MessageCircle,
+  Plus,
   Phone,
   RefreshCw,
   Search,
+  X,
 } from "lucide-react";
-import { formatDateLong, formatTime12h } from "@/lib/booking/time";
+import { addDays, formatDateLong, formatTime12h, todayInColombo } from "@/lib/booking/time";
 
 type Booking = {
   id: string;
@@ -87,6 +89,8 @@ export function AdminBookings({ slotTimes }: { slotTimes: string[] }) {
   const [payment, setPayment] = useState("");
   const [date, setDate] = useState("");
   const [upcoming, setUpcoming] = useState(true);
+  const [followup, setFollowup] = useState(false);
+  const [showNew, setShowNew] = useState(false);
   const [openId, setOpenId] = useState<string | null>(null);
   const knownNew = useRef<number | null>(null);
   const [newAlert, setNewAlert] = useState(0);
@@ -98,8 +102,9 @@ export function AdminBookings({ slotTimes }: { slotTimes: string[] }) {
     if (payment) p.set("payment", payment);
     if (date) p.set("date", date);
     else if (upcoming) p.set("upcoming", "1");
+    if (followup) p.set("followup", "1");
     return p.toString();
-  }, [q, status, payment, date, upcoming]);
+  }, [q, status, payment, date, upcoming, followup]);
 
   const load = useCallback(
     async (silent = false) => {
@@ -256,6 +261,9 @@ export function AdminBookings({ slotTimes }: { slotTimes: string[] }) {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={() => setShowNew((v) => !v)} className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold text-white" style={{ background: "linear-gradient(135deg,#893A9F,#4a1260)" }}>
+            {showNew ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />} {showNew ? "Close" : "New booking"}
+          </button>
           <button type="button" onClick={() => load()} className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} /> Refresh
           </button>
@@ -276,10 +284,37 @@ export function AdminBookings({ slotTimes }: { slotTimes: string[] }) {
       )}
 
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {stat("New (to call)", counts?.new_count, "text-amber-600", () => { setStatus("new"); setPayment(""); setDate(""); setUpcoming(false); })}
-        {stat("Upcoming", counts?.upcoming, "text-[#893A9F]", () => { setStatus(""); setPayment(""); setDate(""); setUpcoming(true); })}
-        {stat("Slips to verify", counts?.slips_to_verify, "text-purple-700", () => { setStatus(""); setPayment("slip_uploaded"); setDate(""); setUpcoming(false); })}
-        {stat("Follow-ups due", counts?.follow_ups_due, "text-emerald-600")}
+        {stat("New (to call)", counts?.new_count, "text-amber-600", () => { setStatus("new"); setPayment(""); setDate(""); setUpcoming(false); setFollowup(false); })}
+        {stat("Upcoming", counts?.upcoming, "text-[#893A9F]", () => { setStatus(""); setPayment(""); setDate(""); setUpcoming(true); setFollowup(false); })}
+        {stat("Slips to verify", counts?.slips_to_verify, "text-purple-700", () => { setStatus(""); setPayment("slip_uploaded"); setDate(""); setUpcoming(false); setFollowup(false); })}
+        {stat("Follow-ups due", counts?.follow_ups_due, "text-emerald-600", () => { setStatus(""); setPayment(""); setDate(""); setUpcoming(false); setFollowup(true); })}
+      </div>
+
+      {showNew && (
+        <NewBookingForm
+          slotTimes={slotTimes}
+          onClose={() => setShowNew(false)}
+          onCreated={() => { setShowNew(false); load(true); }}
+          onExpired={() => setAuthed(false)}
+        />
+      )}
+
+      <div className="mb-3 flex flex-wrap items-center gap-2" aria-label="Quick filters">
+        {([
+          ["Today", todayInColombo()],
+          ["Tomorrow", addDays(todayInColombo(), 1)],
+        ] as const).map(([label, d]) => (
+          <button key={label} type="button" onClick={() => { setDate(d); setFollowup(false); }}
+            className={`rounded-full border px-3.5 py-1.5 text-xs font-bold transition ${date === d ? "border-[#893A9F] bg-[#893A9F] text-white" : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50"}`}>
+            {label}
+          </button>
+        ))}
+        {(date || followup || status || payment || q) && (
+          <button type="button" onClick={() => { setDate(""); setStatus(""); setPayment(""); setQ(""); setFollowup(false); setUpcoming(true); }} className="rounded-full px-3 py-1.5 text-xs font-bold text-[#893A9F] underline">
+            Clear filters
+          </button>
+        )}
+        {followup && <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">Showing follow-ups due</span>}
       </div>
 
       <div className="mb-6 grid gap-3 rounded-2xl border border-[#ede8f5] bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_auto]">
@@ -296,7 +331,7 @@ export function AdminBookings({ slotTimes }: { slotTimes: string[] }) {
           <option value="">All payments</option>
           {Object.entries(PAY_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
-        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} aria-label="Filter by date" className="rounded-xl border border-gray-200 px-3 py-2.5 text-sm outline-none focus:border-[#893A9F]" />
+        <input type="date" value={date} onChange={(e) => { setDate(e.target.value); setFollowup(false); }} aria-label="Filter by date" className="rounded-xl border border-gray-200 px-3 py-2.5 text-sm outline-none focus:border-[#893A9F]" />
         <label className="flex items-center gap-2 text-sm text-gray-700">
           <input type="checkbox" checked={upcoming && !date} disabled={!!date} onChange={(e) => setUpcoming(e.target.checked)} className="h-4 w-4 accent-[#893A9F]" />
           Upcoming only
@@ -483,5 +518,88 @@ function BookingRowItem({
         </div>
       )}
     </li>
+  );
+}
+
+function NewBookingForm({
+  slotTimes, onClose, onCreated, onExpired,
+}: {
+  slotTimes: string[];
+  onClose: () => void;
+  onCreated: () => void;
+  onExpired: () => void;
+}) {
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [notes, setNotes] = useState("");
+  const [date, setDate] = useState(todayInColombo());
+  const [time, setTime] = useState(slotTimes[0] ?? "09:00");
+  const [paymentMethod, setPaymentMethod] = useState("pay_at_venue");
+  const [paid, setPaid] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [message, setMessage] = useState("");
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setSaving(true);
+    setErrors({});
+    setMessage("");
+    try {
+      const res = await fetch("/api/admin/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullName, phone, email, notes, date, time, paymentMethod, paid }),
+      });
+      if (res.status === 401) return onExpired();
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setErrors(data.errors ?? {});
+        setMessage(data.message || "Could not save the booking.");
+        return;
+      }
+      onCreated();
+    } catch {
+      setMessage("Could not reach the server.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const input = (invalid?: boolean) =>
+    `w-full rounded-xl border bg-white px-3 py-2.5 text-sm outline-none focus:border-[#893A9F] ${invalid ? "border-red-400" : "border-gray-200"}`;
+  const err = (k: string) => (errors[k] ? <p role="alert" className="mt-1 text-xs text-red-600">{errors[k]}</p> : null);
+
+  return (
+    <form onSubmit={submit} className="mb-6 space-y-4 rounded-2xl border border-[#ede8f5] bg-white p-5 shadow-sm">
+      <div className="flex items-center justify-between">
+        <h2 className="!text-base !font-bold text-[#2d0a3e]" style={font}>New booking (phone / walk-in)</h2>
+        <button type="button" onClick={onClose} aria-label="Close" className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100"><X className="h-4 w-4" /></button>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div><label className="mb-1 block text-xs font-bold uppercase tracking-wider text-gray-500" htmlFor="nb-name">Full name</label><input id="nb-name" value={fullName} onChange={(e) => setFullName(e.target.value)} className={input(!!errors.fullName)} maxLength={80} />{err("fullName")}</div>
+        <div><label className="mb-1 block text-xs font-bold uppercase tracking-wider text-gray-500" htmlFor="nb-phone">Phone</label><input id="nb-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className={input(!!errors.phone)} maxLength={20} />{err("phone")}</div>
+        <div><label className="mb-1 block text-xs font-bold uppercase tracking-wider text-gray-500" htmlFor="nb-email">Email (optional)</label><input id="nb-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={input(!!errors.email)} maxLength={120} />{err("email")}</div>
+        <div className="grid grid-cols-2 gap-3">
+          <div><label className="mb-1 block text-xs font-bold uppercase tracking-wider text-gray-500" htmlFor="nb-date">Date</label><input id="nb-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} className={input(!!errors.date)} /></div>
+          <div><label className="mb-1 block text-xs font-bold uppercase tracking-wider text-gray-500" htmlFor="nb-time">Time</label>
+            <select id="nb-time" value={time} onChange={(e) => setTime(e.target.value)} className={input(!!errors.date)}>{slotTimes.map((t) => <option key={t} value={t}>{formatTime12h(t)}</option>)}</select></div>
+          <div className="col-span-2">{err("date")}</div>
+        </div>
+        <div><label className="mb-1 block text-xs font-bold uppercase tracking-wider text-gray-500" htmlFor="nb-pay">Payment</label>
+          <select id="nb-pay" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className={input()}><option value="pay_at_venue">At TRACE</option><option value="bank_transfer">Bank transfer</option></select>
+          <label className="mt-2 flex items-center gap-2 text-sm text-gray-700"><input type="checkbox" checked={paid} onChange={(e) => setPaid(e.target.checked)} className="h-4 w-4 accent-[#893A9F]" /> Already paid</label></div>
+        <div><label className="mb-1 block text-xs font-bold uppercase tracking-wider text-gray-500" htmlFor="nb-notes">Notes</label><textarea id="nb-notes" rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} className={input(!!errors.notes)} maxLength={500} />{err("notes")}</div>
+      </div>
+      {message && <p role="alert" className="flex items-center gap-1.5 text-sm text-red-600"><AlertCircle className="h-4 w-4" /> {message}</p>}
+      <div className="flex gap-2">
+        <button type="submit" disabled={saving} className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold text-white disabled:opacity-60" style={{ background: "linear-gradient(135deg,#893A9F,#4a1260)" }}>
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />} Save booking
+        </button>
+        <button type="button" onClick={onClose} className="rounded-full border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-700">Cancel</button>
+      </div>
+      <p className="text-xs text-gray-500">Saved as confirmed. Staff bookings ignore the 12-hour notice rule but cannot double-book a slot.</p>
+    </form>
   );
 }

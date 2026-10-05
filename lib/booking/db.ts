@@ -86,3 +86,18 @@ export function ensureSchema(): Promise<void> {
   }
   return globalThis.__jendoBookingSchema;
 }
+
+/**
+ * pool.query with one automatic recovery: if the tables are missing (database recreated or
+ * restored empty while the server kept running), build the schema again and retry once.
+ */
+export async function query(text: string, params?: unknown[]) {
+  try {
+    return await getPool().query(text, params);
+  } catch (err) {
+    if ((err as { code?: string }).code !== "42P01") throw err;
+    globalThis.__jendoBookingSchema = undefined;
+    await ensureSchema();
+    return getPool().query(text, params);
+  }
+}
