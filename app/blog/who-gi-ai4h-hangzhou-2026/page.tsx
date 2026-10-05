@@ -12,7 +12,7 @@ const HERO_IMAGES: SliderImage[] = [
     fit: "cover",
   },
   {
-    src: "https://i.ibb.co/MxkQ8jd9/1790050770546.jpg",
+    src: "https://i.ibb.co/nq19bQ7w/Whats-App-Image-2026-10-05-at-11-50-33.jpg",
     alt: "Jendo Innovations at the Third Meeting of the WHO Global Initiative on AI for Health, Hangzhou",
     fit: "cover",
   },
