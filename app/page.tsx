@@ -3221,30 +3221,31 @@ export default function Home() {
           </div>
 
           {/* Featured Post */}
-          {blogPosts.length > 0 && (
+          {blogPosts.slice(0, 2).map((featured, fi) => (
             <article
+              key={featured.url}
               className="group block mb-10 rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 bg-white shadow-sm hover:shadow-md"
               style={{border:"1px solid #ede8f5"}}
             >
               <div className="grid grid-cols-1 lg:grid-cols-2">
                 <a
-                  href={blogPosts[0].url}
+                  href={featured.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="relative h-64 lg:h-auto overflow-hidden block"
                   style={{minHeight:"280px"}}
                 >
-                  {blogPosts[0].gallery ? (
-                    <ImageSlider images={blogPosts[0].gallery} sizes="(max-width:1024px) 100vw, 50vw" priority />
+                  {featured.gallery ? (
+                    <ImageSlider images={featured.gallery} sizes="(max-width:1024px) 100vw, 50vw" priority={fi === 0} />
                   ) : (
                   <Image
-                    src={blogPosts[0].image}
-                    alt={blogPosts[0].title}
+                    src={featured.image}
+                    alt={featured.title}
                     fill
-                    className={`${blogPosts[0].imageFit === "contain" ? "object-contain" : "object-cover"} group-hover:scale-105 transition-transform duration-500`}
+                    className={`${featured.imageFit === "contain" ? "object-contain" : "object-cover"} group-hover:scale-105 transition-transform duration-500`}
                     sizes="(max-width:1024px) 100vw, 50vw"
                     quality={90}
-                    priority
+                    priority={fi === 0}
                     unoptimized={false}
                   />
                   )}
@@ -3255,21 +3256,21 @@ export default function Home() {
                     <Award className="w-3.5 h-3.5" /> Featured
                   </span>
                   <a
-                    href={blogPosts[0].url}
+                    href={featured.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-2xl md:text-3xl font-bold text-[#2d0a3e] mb-4 leading-tight group-hover:text-[#893A9F] transition-colors block"
                     style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}
                   >
-                    {blogPosts[0].title}
+                    {featured.title}
                   </a>
-                  <p className="text-gray-500 mb-6 leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{renderKeerthiLink(blogPosts[0].excerpt, true)}</p>
+                  <p className="text-gray-500 mb-6 leading-relaxed" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}>{renderKeerthiLink(featured.excerpt, true)}</p>
                   <div className="flex items-center gap-6 text-sm text-gray-400 mb-6">
-                    <span className="flex items-center gap-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><User className="w-4 h-4 text-[#893A9F]" />{blogPosts[0].author}</span>
-                    <span className="flex items-center gap-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><Clock className="w-4 h-4 text-[#893A9F]" />{blogPosts[0].date}</span>
+                    <span className="flex items-center gap-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><User className="w-4 h-4 text-[#893A9F]" />{featured.author}</span>
+                    <span className="flex items-center gap-2" style={{fontFamily:"var(--font-red-hat-display),sans-serif"}}><Clock className="w-4 h-4 text-[#893A9F]" />{featured.date}</span>
                   </div>
                   <a
-                    href={blogPosts[0].url}
+                    href={featured.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-sm font-bold text-[#893A9F] w-fit"
@@ -3280,11 +3281,11 @@ export default function Home() {
                 </div>
               </div>
             </article>
-          )}
+          ))}
 
           {/* Remaining Posts Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogPosts.slice(1).map((post, index) => {
+            {blogPosts.slice(2).map((post, index) => {
               const imageBlock = (
                 <div
                   className={`relative h-48 overflow-hidden ${post.openInModal ? "cursor-pointer" : ""}`}
