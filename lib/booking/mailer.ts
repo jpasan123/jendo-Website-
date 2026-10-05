@@ -4,8 +4,8 @@ import { buildIcs } from "./ics";
 import { formatDateLong, formatTime12h } from "./time";
 import { logEmail, type BookingRow } from "./store";
 
-export type EmailKind = "received" | "confirmed" | "cancelled" | "rescheduled" | "payment_received";
-export const EMAIL_KINDS: EmailKind[] = ["received", "confirmed", "cancelled", "rescheduled", "payment_received"];
+export type EmailKind = "received" | "confirmed" | "cancelled" | "rescheduled" | "payment_received" | "completed";
+export const EMAIL_KINDS: EmailKind[] = ["received", "confirmed", "cancelled", "rescheduled", "payment_received", "completed"];
 
 export type SendResult = { status: "sent" | "failed" | "skipped"; reason?: "not_configured" | "no_email" | "error"; to?: string; error?: string };
 
@@ -118,6 +118,18 @@ function contentFor(kind: EmailKind, b: BookingRow): Content {
           `If this is unexpected, or you would like to rebook, call us on ${esc(contactPhone())} or book again at <a href="${siteUrl()}/book-test" style="color:#893A9F">${siteUrl().replace(/^https?:\/\//, "")}/book-test</a>.`,
           b.payment_status !== "unpaid" ? "If you have already paid, our team will contact you about your payment." : "",
         ].filter(Boolean),
+        showDetails: true,
+        ics: false,
+      };
+    case "completed":
+      return {
+        subject: `Thank you for taking the Jendo test (${b.ref})`,
+        heading: "Thank you",
+        intro: `Hi ${first}, thank you for visiting ${venue} for your Jendo vascular health test.`,
+        lines: [
+          "Our team will share your report and feedback with you shortly.",
+          "If you have any questions about your test, just reply to this email.",
+        ],
         showDetails: true,
         ics: false,
       };

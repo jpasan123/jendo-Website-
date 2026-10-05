@@ -474,7 +474,7 @@ function BookingRowItem({
                 </button>
               )}
               {b.status !== "no_show" && (
-                <button type="button" disabled={!!busy} onClick={() => run("noshow", { status: "no_show" }, "Mark as no-show? The time slot will be released. (No email is sent for no-shows.)")} className={`${actionBtn} border-gray-400 text-gray-700`}>No-show</button>
+                <button type="button" disabled={!!busy} onClick={() => run("noshow", { status: "no_show" }, "Mark as no-show? The time slot will be released. (No email is sent for no-shows: please call them.)")} className={`${actionBtn} border-gray-400 text-gray-700`}>No-show</button>
               )}
               {b.status !== "cancelled" && (
                 <button type="button" disabled={!!busy} onClick={() => run("cancel", { status: "cancelled" }, `Cancel this booking? The time slot will be released.${b.email ? ` A cancellation email will be sent to ${b.email}.` : " This patient has no email address, so they will not be notified: please call them."}`)} className={`${actionBtn} border-red-400 text-red-700`}>Cancel booking</button>
@@ -629,6 +629,7 @@ function describeEmail(e: NonNullable<EmailInfo>) {
     cancelled: "cancellation",
     rescheduled: "new time",
     payment_received: "payment received",
+    completed: "thank you",
   };
   const what = label[e.kind] ?? e.kind;
   if (e.status === "sent") return `Email (${what}) sent${e.to ? ` to ${e.to}` : ""}.`;
@@ -684,6 +685,7 @@ const EMAIL_LABEL: Record<string, string> = {
   rescheduled: "Rescheduled",
   cancelled: "Cancelled",
   payment_received: "Payment received",
+  completed: "Thank you (test completed)",
 };
 
 function EmailPanel({ booking, tick, onResult }: { booking: Booking; tick: number; onResult: (text: string, ok: boolean) => void }) {

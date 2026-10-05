@@ -50,6 +50,7 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
     const moved = before.appointment_date !== item.appointment_date || before.slot_time !== item.slot_time;
     if (item.status === "cancelled" && before.status !== "cancelled") kind = "cancelled";
     else if (moved && item.status !== "cancelled") kind = "rescheduled";
+    else if (item.status === "completed" && before.status !== "completed") kind = "completed";
     else if (item.status === "confirmed" && before.status !== "confirmed") kind = "confirmed";
     else if (item.payment_status === "paid" && before.payment_status !== "paid") kind = "payment_received";
 
