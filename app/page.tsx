@@ -1071,6 +1071,14 @@ export default function Home() {
                 <ShoppingCart className="h-4 w-4" />
                 Pre-Order Now
               </button>
+              <a
+                href="/book-test"
+                className="inline-flex items-center gap-2 text-white text-sm font-bold px-7 py-3.5 rounded-full border border-white/40 transition-all duration-300 hover:-translate-y-0.5 shadow-lg shadow-purple-900/30"
+                style={{ background: 'linear-gradient(135deg,#b45fd0,#893A9F)' }}
+              >
+                <Calendar className="h-4 w-4" />
+                Book a Test
+              </a>
             </div>
           </div>
         </div>

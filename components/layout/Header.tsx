@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, ShoppingCart, ExternalLink } from 'lucide-react';
+import { Menu, X, ShoppingCart, ExternalLink, CalendarCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/hooks/useCart';
 import { usePathname } from 'next/navigation';
@@ -138,7 +138,17 @@ export function Header() {
               </Link>
             ))}
 
-{/* Cart Icon - hidden
+{/* Book a test */}
+            <Link
+              href="/book-test"
+              className="ml-2 lg:ml-3 flex items-center gap-1.5 px-3.5 lg:px-4 py-2 rounded-full text-[12px] lg:text-[14px] font-semibold font-[var(--font-red-hat-display)] text-white whitespace-nowrap transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 active:scale-95"
+              style={{ background: 'linear-gradient(135deg,#a24bbd,#6b1f87)', border: '1px solid rgba(192,132,252,0.35)' }}
+            >
+              <CalendarCheck className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+              Book a Test
+            </Link>
+
+            {/* Cart Icon - hidden
             <Link 
               href="/cart"
               className={cn(
@@ -187,6 +197,15 @@ export function Header() {
             </Link>
             */}
 
+            <Link
+              href="/book-test"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[13px] font-semibold font-[var(--font-red-hat-display)] text-white whitespace-nowrap active:scale-95 transition-transform"
+              style={{ background: 'linear-gradient(135deg,#a24bbd,#6b1f87)', border: '1px solid rgba(192,132,252,0.35)' }}
+            >
+              <CalendarCheck className="w-4 h-4" />
+              Book a Test
+            </Link>
+
             <button
               id="mobile-menu-button"
               onClick={() => setIsOpen(!isOpen)}
@@ -220,7 +239,7 @@ export function Header() {
             'md:hidden fixed left-0 right-0 top-[88px] z-40',
             'bg-[#0c0c0c]/95 backdrop-blur-xl border-b border-white/10 shadow-2xl',
             'transition-all duration-300 ease-in-out overflow-hidden',
-            isOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
+            isOpen ? 'max-h-[760px] opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
           )}
         >
           <ul className="flex flex-col px-4 pt-4 pb-6">
@@ -257,6 +276,25 @@ export function Header() {
                 </li>
               );
             })}
+
+            {/* Book a test CTA */}
+            <li
+              className={cn(
+                'mt-4 transition-all duration-300',
+                isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+              )}
+              style={{ transitionDelay: isOpen ? `${navigation.length * 60}ms` : '0ms' }}
+            >
+              <Link
+                href="/book-test"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center justify-center gap-2.5 w-full px-5 py-3.5 rounded-xl text-[15px] font-semibold font-[var(--font-red-hat-display)] text-white transition-all duration-200 active:scale-[0.97]"
+                style={{ background: 'linear-gradient(135deg,#a24bbd,#6b1f87)', border: '1px solid rgba(192,132,252,0.35)' }}
+              >
+                <CalendarCheck className="w-4 h-4 flex-shrink-0" />
+                Book a Test at TRACE
+              </Link>
+            </li>
 
             {/* Portal CTA */}
             <li
