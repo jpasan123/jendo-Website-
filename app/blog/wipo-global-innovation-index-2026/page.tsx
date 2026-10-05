@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import ImageSlider, { type SliderImage } from "@/components/news/ImageSlider";
 
@@ -23,28 +23,25 @@ const HERO_IMAGES: SliderImage[] = [
 ];
 
 export default function WipoGlobalInnovationIndexArticle() {
-  const router = useRouter();
-
   return (
-    <div className="max-w-3xl mx-auto px-4 py-16">
-      <button
-        type="button"
-        onClick={() => router.back()}
-        className="mb-8 flex items-center gap-2 text-purple-700 hover:text-purple-900 font-medium transition-colors"
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-16">
+      <Link
+        href="/#blog"
+        className="mb-6 sm:mb-8 inline-flex items-center gap-2 text-purple-700 hover:text-purple-900 font-medium transition-colors"
       >
         <ArrowLeft className="w-5 h-5" />
         Back to News
-      </button>
+      </Link>
 
       <div className="relative mb-8 rounded-2xl overflow-hidden shadow-xl bg-white aspect-video">
-        <ImageSlider images={HERO_IMAGES} sizes="(max-width:768px) 100vw, 768px" priority />
+        <ImageSlider images={HERO_IMAGES} intervalMs={6500} sizes="(max-width:768px) 100vw, 768px" priority />
       </div>
 
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-extrabold text-purple-900 mb-3 leading-tight">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-purple-900 mb-3 leading-tight">
           Jendo Innovations Featured Among 20 Deep-Science Patent Holders in WIPO Global Innovation Index 2026
         </h1>
-        <p className="text-lg text-gray-600 mb-4">
+        <p className="text-base sm:text-lg text-gray-600 mb-4">
           Sri Lankan MedTech company recognized in WIPO&rsquo;s global deep-science landscape
         </p>
         <div className="flex items-center gap-3 justify-center text-gray-500 text-sm">
@@ -54,7 +51,7 @@ export default function WipoGlobalInnovationIndexArticle() {
         </div>
       </div>
 
-      <div className="article-content prose prose-slate prose-lg mx-auto prose-headings:text-purple-800">
+      <div className="article-content prose prose-slate sm:prose-lg mx-auto prose-headings:text-purple-800 prose-img:rounded-xl break-words">
         <p>
           <b>Jendo Innovations Inc.</b> has been featured in the World Intellectual Property Organization (WIPO)
           <b> Global Innovation Index 2026</b>, marking an important milestone for the company and for Sri

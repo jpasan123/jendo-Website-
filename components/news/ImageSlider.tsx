@@ -21,7 +21,7 @@ type ImageSliderProps = {
 /** Auto-sliding cross-fade gallery. Fills its parent, which must be `relative` and sized. */
 export default function ImageSlider({
   images,
-  intervalMs = 4000,
+  intervalMs = 6500,
   sizes = "100vw",
   priority = false,
   className = "",
@@ -50,7 +50,7 @@ export default function ImageSlider({
           sizes={sizes}
           quality={90}
           priority={priority && i === 0}
-          className={`transition-opacity duration-700 ${
+          className={`transition-opacity duration-1000 ease-in-out ${
             img.fit === "cover" ? "object-cover" : "object-contain"
           } ${i === active ? "opacity-100" : "opacity-0"}`}
           style={img.position ? { objectPosition: img.position } : undefined}
