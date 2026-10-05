@@ -177,8 +177,46 @@ ${c.lines.map((l) => `<p style="margin:0 0 12px">${l}</p>`).join("")}
 
 type Attachment = { filename: string; content: string; contentType: string };
 
-/** Sends one email through Brevo's HTTPS API (used when BREVO_API_KEY is set) */
-async function sendViaBrevoApi(to: string, subject: string, html: string, text: string, attachments?: Attachment[], replyTo?: string) {
+const brevoEventsUrl = () => process.env.BREVO_EVENTS_URL?.trim() || "https://api.brevo.com/v3/smtp/statistics/events";
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+export type Delivery = { state: "delivered" | "rejected" | "pending"; reason?: string };
+
+/**
+ * Brevo accepts a message (HTTP 201) before it validates the sender, so "accepted" is not
+ * "delivered". This asks Brevo what happened to one message (delivered / rejected / still pending).
+ */
+export async function brevoDelivery(messageId: string): Promise<Delivery> {
+  try {
+    const res = await fetch(`${brevoEventsUrl()}?messageId=${encodeURIComponent(messageId)}&limit=20&sort=asc`, {
+      headers: { "api-key": brevoKey(), accept: "application/json" },
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!res.ok) return { state: "pending" };
+    const data = (await res.json()) as { events?: { event: string; reason?: string }[] };
+    const events = data.events ?? [];
+    if (events.some((e) => e.event === "delivered")) return { state: "delivered" };
+    const bad = events.find((e) => ["error", "blocked", "hardBounces", "invalid", "spam"].includes(e.event));
+    if (bad) return { state: "rejected", reason: (bad.reason || bad.event).slice(0, 250) };
+    return { state: "pending" };
+  } catch {
+    return { state: "pending" };
+  }
+}
+
+/** Waits a few seconds for Brevo to either deliver or reject the message */
+async function brevoOutcome(messageId: string): Promise<Delivery> {
+  let last: Delivery = { state: "pending" };
+  for (let i = 0; i < 4; i++) {
+    await sleep(i === 0 ? 700 : 1300);
+    last = await brevoDelivery(messageId);
+    if (last.state !== "pending") return last;
+  }
+  return last;
+}
+
+/** Sends one email through Brevo's HTTPS API (used when BREVO_API_KEY is set). Returns Brevo's message id. */
+async function sendViaBrevoApi(to: string, subject: string, html: string, text: string, attachments?: Attachment[], replyTo?: string): Promise<string | undefined> {
   const sender = senderAddress();
   if (!sender) throw new Error("No sender address configured (set BREVO_SENDER_EMAIL or SMTP_FROM)");
   const res = await fetch(brevoUrl(), {
@@ -205,13 +243,19 @@ async function sendViaBrevoApi(to: string, subject: string, html: string, text: 
     }
     throw new Error(`Brevo ${res.status}${detail ? ` ${detail}` : ""}`.slice(0, 280));
   }
+  try {
+    return ((await res.json()) as { messageId?: string }).messageId;
+  } catch {
+    return undefined;
+  }
 }
 
 /** Single entry point used by every email in the booking system */
-export async function sendMail(to: string, subject: string, html: string, text: string, attachments?: Attachment[]) {
+export async function sendMail(to: string, subject: string, html: string, text: string, attachments?: Attachment[]): Promise<string | undefined> {
   const replyTo = process.env.BOOKING_NOTIFY_EMAIL?.trim() || undefined;
   if (brevoKey()) return sendViaBrevoApi(to, subject, html, text, attachments, replyTo);
   await getTransport().sendMail({ from: smtpFrom(), to, replyTo, subject, html, text, attachments });
+  return undefined;
 }
 
 const deliver = sendMail;
@@ -237,8 +281,16 @@ export async function sendBookingEmail(kind: EmailKind, b: BookingRow): Promise<
           contentType: "text/calendar; charset=utf-8; method=PUBLISH",
         }]
       : undefined;
-    await deliver(to, c.subject, html, text, attachments);
-    await logEmail(b.id, kind, to, "sent");
+    const messageId = await deliver(to, c.subject, html, text, attachments);
+    if (messageId) {
+      const outcome = await brevoOutcome(messageId);
+      if (outcome.state === "rejected") {
+        console.error(`[booking-email] ${kind} to ${maskEmail(to)} rejected by Brevo:`, outcome.reason);
+        await logEmail(b.id, kind, to, "failed", `Rejected by Brevo: ${outcome.reason}`, messageId);
+        return { status: "failed", reason: "error", to, error: outcome.reason };
+      }
+    }
+    await logEmail(b.id, kind, to, "sent", undefined, messageId);
     return { status: "sent", to };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
@@ -258,12 +310,16 @@ export async function sendBookingEmailWithin(kind: EmailKind, b: BookingRow, ms 
 export async function sendTestEmail(to: string): Promise<SendResult> {
   if (!emailConfigured()) return { status: "skipped", reason: "not_configured", to };
   try {
-    await deliver(
+    const messageId = await deliver(
       to,
       "Jendo booking emails are working",
       `<p style="font-family:Arial,sans-serif">This is a test email from the Jendo booking system. If you can read this, patient emails will be delivered.</p>`,
       "This is a test email from the Jendo booking system. If you can read this, patient emails will be delivered."
     );
+    if (messageId) {
+      const outcome = await brevoOutcome(messageId);
+      if (outcome.state === "rejected") return { status: "failed", reason: "error", to, error: outcome.reason };
+    }
     return { status: "sent", to };
   } catch (err) {
     return { status: "failed", reason: "error", to, error: err instanceof Error ? err.message : String(err) };

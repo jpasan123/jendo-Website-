@@ -276,14 +276,14 @@ export async function getBooking(id: string): Promise<BookingRow | null> {
   return res.rows[0] ?? null;
 }
 
-export type EmailLogRow = { id: string; kind: string; to_email: string | null; status: "sent" | "failed" | "skipped"; error: string | null; created_at: string };
+export type EmailLogRow = { id: string; kind: string; to_email: string | null; status: "sent" | "failed" | "skipped"; error: string | null; created_at: string; message_id: string | null };
 
-export async function logEmail(bookingId: string | null, kind: string, to: string | null, status: EmailLogRow["status"], error?: string) {
+export async function logEmail(bookingId: string | null, kind: string, to: string | null, status: EmailLogRow["status"], error?: string, messageId?: string) {
   try {
     await ensureSchema();
     await query(
-      `INSERT INTO booking_emails (booking_id, kind, to_email, status, error) VALUES ($1,$2,$3,$4,$5)`,
-      [bookingId, kind, to, status, error ? error.slice(0, 300) : null]
+      `INSERT INTO booking_emails (booking_id, kind, to_email, status, error, message_id) VALUES ($1,$2,$3,$4,$5,$6)`,
+      [bookingId, kind, to, status, error ? error.slice(0, 300) : null, messageId ?? null]
     );
   } catch (err) {
     console.error("[booking-email] could not write log:", err instanceof Error ? err.message : err);
@@ -293,7 +293,7 @@ export async function logEmail(bookingId: string | null, kind: string, to: strin
 export async function listEmails(bookingId: string): Promise<EmailLogRow[]> {
   await ensureSchema();
   const res = await query(
-    `SELECT id::text, kind, to_email, status, error, created_at FROM booking_emails
+    `SELECT id::text, kind, to_email, status, error, created_at, message_id FROM booking_emails
       WHERE booking_id = $1 ORDER BY created_at DESC LIMIT 20`,
     [bookingId]
   );

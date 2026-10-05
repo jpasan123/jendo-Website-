@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS booking_emails (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS booking_emails_booking_idx ON booking_emails (booking_id, created_at DESC);
+ALTER TABLE booking_emails ADD COLUMN IF NOT EXISTS message_id text;
 `;
 
 /** Creates the tables on first use. Safe to call on every request. */

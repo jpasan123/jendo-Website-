@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getBooking, listEmails } from "@/lib/booking/store";
-import { EMAIL_KINDS, maskEmail, sendBookingEmailWithin, type EmailKind } from "@/lib/booking/mailer";
+import { brevoDelivery, EMAIL_KINDS, maskEmail, sendBookingEmailWithin, type Delivery, type EmailKind } from "@/lib/booking/mailer";
 import { isAdminRequest, rateLimit, sameOrigin } from "@/lib/booking/security";
 
 export const runtime = "nodejs";
@@ -15,7 +15,14 @@ export async function GET(request: NextRequest, ctx: { params: Promise<{ id: str
   const { id } = await ctx.params;
   if (!UUID_RE.test(id)) return NextResponse.json({ ok: false, message: "Invalid booking id." }, { status: 400 });
   try {
-    return NextResponse.json({ ok: true, items: await listEmails(id) }, { headers: noStore });
+    const rows = await listEmails(id);
+    // ask Brevo what really happened to the latest messages (accepted is not the same as delivered)
+    const items = await Promise.all(
+      rows.map(async (r, i): Promise<(typeof rows)[number] & { delivery?: Delivery }> =>
+        r.status === "sent" && r.message_id && i < 6 && process.env.BREVO_API_KEY ? { ...r, delivery: await brevoDelivery(r.message_id) } : r
+      )
+    );
+    return NextResponse.json({ ok: true, items }, { headers: noStore });
   } catch (err) {
     console.error("[admin/email] history failed:", err instanceof Error ? err.message : err);
     return NextResponse.json({ ok: false, message: "Could not load the email history." }, { status: 500, headers: noStore });

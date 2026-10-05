@@ -43,7 +43,7 @@ type Booking = {
   created_at: string;
 };
 type EmailInfo = { kind: string; status: string; to?: string; reason?: string } | null;
-type EmailLog = { id: string; kind: string; to_email: string | null; status: "sent" | "failed" | "skipped"; error: string | null; created_at: string };
+type EmailLog = { id: string; kind: string; to_email: string | null; status: "sent" | "failed" | "skipped"; error: string | null; created_at: string; delivery?: { state: "delivered" | "rejected" | "pending"; reason?: string } };
 type Counts = { new_count: number; upcoming: number; slips_to_verify: number; follow_ups_due: number };
 
 const font = { fontFamily: "var(--font-red-hat-display),sans-serif" } as const;
@@ -740,10 +740,18 @@ function EmailPanel({ booking, tick, onResult }: { booking: Booking; tick: numbe
             <ul className="mt-3 space-y-1 text-xs text-gray-600">
               {log.slice(0, 5).map((l) => (
                 <li key={l.id} className="flex flex-wrap items-center gap-2">
-                  <span className={`rounded-full px-2 py-0.5 font-semibold ${l.status === "sent" ? "bg-emerald-100 text-emerald-800" : l.status === "failed" ? "bg-red-100 text-red-700" : "bg-gray-100 text-gray-600"}`}>{l.status}</span>
+                  {l.delivery?.state === "rejected" ? (
+                    <span className="rounded-full bg-red-100 px-2 py-0.5 font-semibold text-red-700">rejected</span>
+                  ) : l.delivery?.state === "delivered" ? (
+                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 font-semibold text-emerald-800">delivered</span>
+                  ) : l.delivery?.state === "pending" ? (
+                    <span className="rounded-full bg-amber-100 px-2 py-0.5 font-semibold text-amber-800">sent, delivery unconfirmed</span>
+                  ) : (
+                    <span className={`rounded-full px-2 py-0.5 font-semibold ${l.status === "sent" ? "bg-emerald-100 text-emerald-800" : l.status === "failed" ? "bg-red-100 text-red-700" : "bg-gray-100 text-gray-600"}`}>{l.status}</span>
+                  )}
                   <span>{EMAIL_LABEL[l.kind] ?? l.kind}</span>
                   <span className="text-gray-400">{new Date(l.created_at).toLocaleString("en-GB", { dateStyle: "short", timeStyle: "short" })}</span>
-                  {l.error && <span className="text-gray-400">· {l.error}</span>}
+                  {(l.error || l.delivery?.reason) && <span className="text-gray-400">· {l.error || l.delivery?.reason}</span>}
                 </li>
               ))}
             </ul>
