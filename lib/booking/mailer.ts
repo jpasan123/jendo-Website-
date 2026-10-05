@@ -12,12 +12,25 @@ export type SendResult = { status: "sent" | "failed" | "skipped"; reason?: "not_
 const esc = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] as string);
 
+const brevoKey = () => process.env.BREVO_API_KEY?.trim() || "";
+const brevoUrl = () => process.env.BREVO_API_URL?.trim() || "https://api.brevo.com/v3/smtp/email";
+
+/** Either a Brevo API key (HTTPS) or classic SMTP settings */
 export function emailConfigured() {
+  if (brevoKey()) return !!senderAddress();
   return !!(process.env.SMTP_HOST?.trim() && process.env.SMTP_USER?.trim() && process.env.SMTP_PASSWORD);
 }
 
+/** "Name <address>" or a bare address from SMTP_FROM / BREVO_SENDER_EMAIL / SMTP_USER */
 export function smtpFrom() {
-  return process.env.SMTP_FROM?.trim() || (process.env.SMTP_USER?.trim() ? `Jendo <${process.env.SMTP_USER.trim()}>` : "");
+  return process.env.SMTP_FROM?.trim() || (process.env.BREVO_SENDER_EMAIL?.trim() ? `Jendo <${process.env.BREVO_SENDER_EMAIL.trim()}>` : process.env.SMTP_USER?.trim() ? `Jendo <${process.env.SMTP_USER.trim()}>` : "");
+}
+
+function senderAddress() {
+  const from = smtpFrom();
+  const m = from.match(/^\s*(?:"?([^"<]*?)"?\s*)?<([^>]+)>\s*$/);
+  if (m) return { name: (m[1] || "Jendo").trim() || "Jendo", email: m[2].trim() };
+  return from ? { name: "Jendo", email: from.trim() } : null;
 }
 
 let cached: { key: string; transport: Transporter } | null = null;
@@ -162,10 +175,46 @@ ${c.lines.map((l) => `<p style="margin:0 0 12px">${l}</p>`).join("")}
   return { html, text };
 }
 
-async function deliver(to: string, subject: string, html: string, text: string, attachments?: { filename: string; content: string; contentType: string }[]) {
+type Attachment = { filename: string; content: string; contentType: string };
+
+/** Sends one email through Brevo's HTTPS API (used when BREVO_API_KEY is set) */
+async function sendViaBrevoApi(to: string, subject: string, html: string, text: string, attachments?: Attachment[], replyTo?: string) {
+  const sender = senderAddress();
+  if (!sender) throw new Error("No sender address configured (set BREVO_SENDER_EMAIL or SMTP_FROM)");
+  const res = await fetch(brevoUrl(), {
+    method: "POST",
+    headers: { "api-key": brevoKey(), "content-type": "application/json", accept: "application/json" },
+    body: JSON.stringify({
+      sender,
+      to: [{ email: to }],
+      ...(replyTo ? { replyTo: { email: replyTo } } : {}),
+      subject,
+      htmlContent: html,
+      textContent: text,
+      ...(attachments?.length ? { attachment: attachments.map((a) => ({ name: a.filename, content: Buffer.from(a.content, "utf8").toString("base64") })) } : {}),
+    }),
+    signal: AbortSignal.timeout(15000),
+  });
+  if (!res.ok) {
+    let detail = "";
+    try {
+      const body = (await res.json()) as { message?: string; code?: string };
+      detail = [body.code, body.message].filter(Boolean).join(": ");
+    } catch {
+      /* non-JSON error body */
+    }
+    throw new Error(`Brevo ${res.status}${detail ? ` ${detail}` : ""}`.slice(0, 280));
+  }
+}
+
+/** Single entry point used by every email in the booking system */
+export async function sendMail(to: string, subject: string, html: string, text: string, attachments?: Attachment[]) {
   const replyTo = process.env.BOOKING_NOTIFY_EMAIL?.trim() || undefined;
+  if (brevoKey()) return sendViaBrevoApi(to, subject, html, text, attachments, replyTo);
   await getTransport().sendMail({ from: smtpFrom(), to, replyTo, subject, html, text, attachments });
 }
+
+const deliver = sendMail;
 
 /** Emails the patient and records the outcome. Never throws: a mail problem must not break a booking action. */
 export async function sendBookingEmail(kind: EmailKind, b: BookingRow): Promise<SendResult> {

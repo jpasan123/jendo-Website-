@@ -1,4 +1,4 @@
-import { emailConfigured, getTransport, smtpFrom } from "./mailer";
+import { emailConfigured, sendMail } from "./mailer";
 import { BOOKING } from "./config";
 import { formatDateLong, formatTime12h } from "./time";
 
@@ -33,11 +33,10 @@ export async function notifyTeam(n: Notice): Promise<void> {
       : n.paymentMethod === "bank_transfer"
         ? "Bank transfer selected"
         : "Will pay at TRACE";
-    await getTransport().sendMail({
-      from: smtpFrom(),
+    await sendMail(
       to,
-      subject: `New Jendo test booking ${n.ref}: ${n.fullName}, ${n.date} ${n.time}`,
-      html: `
+      `New Jendo test booking ${n.ref}: ${n.fullName}, ${n.date} ${n.time}`,
+      `
         <h2>New Jendo test booking (${esc(n.ref)})</h2>
         <p>Please call the patient back to confirm the appointment.</p>
         <table cellpadding="6">
@@ -48,7 +47,8 @@ export async function notifyTeam(n: Notice): Promise<void> {
           <tr><td><b>Payment</b></td><td>${esc(payment)} (LKR ${BOOKING.priceLkr.toLocaleString("en-US")})</td></tr>
           <tr><td><b>Notes</b></td><td>${esc(n.notes || "-")}</td></tr>
         </table>`,
-    });
+      `New Jendo test booking ${n.ref} from ${n.fullName} (${n.phone}) for ${when}. Please call to confirm.`
+    );
   } catch (err) {
     console.error("[booking-notify] email failed:", err instanceof Error ? err.message : err);
   }
