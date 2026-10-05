@@ -269,3 +269,33 @@ export async function updateBooking(id: string, patch: BookingPatch): Promise<Bo
     throw err;
   }
 }
+
+export async function getBooking(id: string): Promise<BookingRow | null> {
+  await ensureSchema();
+  const res = await query(`SELECT ${COLUMNS} FROM test_bookings WHERE id = $1`, [id]);
+  return res.rows[0] ?? null;
+}
+
+export type EmailLogRow = { id: string; kind: string; to_email: string | null; status: "sent" | "failed" | "skipped"; error: string | null; created_at: string };
+
+export async function logEmail(bookingId: string | null, kind: string, to: string | null, status: EmailLogRow["status"], error?: string) {
+  try {
+    await ensureSchema();
+    await query(
+      `INSERT INTO booking_emails (booking_id, kind, to_email, status, error) VALUES ($1,$2,$3,$4,$5)`,
+      [bookingId, kind, to, status, error ? error.slice(0, 300) : null]
+    );
+  } catch (err) {
+    console.error("[booking-email] could not write log:", err instanceof Error ? err.message : err);
+  }
+}
+
+export async function listEmails(bookingId: string): Promise<EmailLogRow[]> {
+  await ensureSchema();
+  const res = await query(
+    `SELECT id::text, kind, to_email, status, error, created_at FROM booking_emails
+      WHERE booking_id = $1 ORDER BY created_at DESC LIMIT 20`,
+    [bookingId]
+  );
+  return res.rows;
+}

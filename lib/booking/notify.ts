@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import { emailConfigured, getTransport, smtpFrom } from "./mailer";
 import { BOOKING } from "./config";
 import { formatDateLong, formatTime12h } from "./time";
 
@@ -24,27 +24,17 @@ const esc = (s: string) =>
  */
 export async function notifyTeam(n: Notice): Promise<void> {
   const to = process.env.BOOKING_NOTIFY_EMAIL?.trim();
-  const host = process.env.SMTP_HOST?.trim();
-  const user = process.env.SMTP_USER?.trim();
-  const pass = process.env.SMTP_PASSWORD;
-  if (!to || !host || !user || !pass) return;
+  if (!to || !emailConfigured()) return;
 
   try {
-    const port = Number(process.env.SMTP_PORT) || 587;
-    const transporter = nodemailer.createTransport({
-      host,
-      port,
-      secure: port === 465,
-      auth: { user, pass },
-    });
     const when = `${formatDateLong(n.date)} at ${formatTime12h(n.time)}`;
     const payment = n.hasSlip
       ? "Payment slip uploaded (please verify)"
       : n.paymentMethod === "bank_transfer"
         ? "Bank transfer selected"
         : "Will pay at TRACE";
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM?.trim() || user,
+    await getTransport().sendMail({
+      from: smtpFrom(),
       to,
       subject: `New Jendo test booking ${n.ref}: ${n.fullName}, ${n.date} ${n.time}`,
       html: `

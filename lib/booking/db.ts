@@ -61,6 +61,18 @@ CREATE UNIQUE INDEX IF NOT EXISTS test_bookings_active_slot
 CREATE INDEX IF NOT EXISTS test_bookings_date_idx ON test_bookings (appointment_date);
 CREATE INDEX IF NOT EXISTS test_bookings_created_idx ON test_bookings (created_at DESC);
 CREATE INDEX IF NOT EXISTS test_bookings_phone_idx ON test_bookings (phone);
+
+-- Every email the system tries to send (sent / failed / skipped), for the admin panel
+CREATE TABLE IF NOT EXISTS booking_emails (
+  id         bigserial PRIMARY KEY,
+  booking_id uuid REFERENCES test_bookings(id) ON DELETE CASCADE,
+  kind       text NOT NULL,
+  to_email   text,
+  status     text NOT NULL CHECK (status IN ('sent','failed','skipped')),
+  error      text,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS booking_emails_booking_idx ON booking_emails (booking_id, created_at DESC);
 `;
 
 /** Creates the tables on first use. Safe to call on every request. */

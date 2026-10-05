@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SlotTakenError, updateBooking, type BookingPatch } from "@/lib/booking/store";
+import { getBooking, SlotTakenError, updateBooking, type BookingPatch } from "@/lib/booking/store";
+import { maskEmail, sendBookingEmailWithin, type EmailKind } from "@/lib/booking/mailer";
 import { isAdminRequest, sameOrigin } from "@/lib/booking/security";
 import { isScheduledSlot } from "@/lib/booking/time";
 
@@ -40,9 +41,24 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
   }
 
   try {
+    const before = await getBooking(id);
     const item = await updateBooking(id, patch);
-    if (!item) return NextResponse.json({ ok: false, message: "Booking not found." }, { status: 404, headers: noStore });
-    return NextResponse.json({ ok: true, item }, { headers: noStore });
+    if (!item || !before) return NextResponse.json({ ok: false, message: "Booking not found." }, { status: 404, headers: noStore });
+
+    // Which email (if any) does this change warrant? One email per action, most important first.
+    let kind: EmailKind | null = null;
+    const moved = before.appointment_date !== item.appointment_date || before.slot_time !== item.slot_time;
+    if (item.status === "cancelled" && before.status !== "cancelled") kind = "cancelled";
+    else if (moved && item.status !== "cancelled") kind = "rescheduled";
+    else if (item.status === "confirmed" && before.status !== "confirmed") kind = "confirmed";
+    else if (item.payment_status === "paid" && before.payment_status !== "paid") kind = "payment_received";
+
+    let email: { kind: EmailKind; status: string; to?: string } | null = null;
+    if (kind) {
+      const result = await sendBookingEmailWithin(kind, item);
+      email = { kind, status: result.status, to: item.email ? maskEmail(item.email) : undefined };
+    }
+    return NextResponse.json({ ok: true, item, email }, { headers: noStore });
   } catch (err) {
     if (err instanceof SlotTakenError) {
       return NextResponse.json({ ok: false, message: "That slot is already booked." }, { status: 409, headers: noStore });

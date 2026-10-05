@@ -764,7 +764,7 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
                 />
               </Field>
 
-              <Field label="Email" htmlFor="email" error={errors.email} optional>
+              <Field label="Email" htmlFor="email" error={errors.email} optional hint="We will email your booking confirmation and updates here.">
                 <input
                   id="email" name="email" type="email" autoComplete="email" value={email}
                   onChange={(e) => { setEmail(e.target.value); if (errors.email) setErrors((x) => ({ ...x, email: undefined })); }}

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { BOOKING } from "@/lib/booking/config";
 import { validateBooking, sniffSlip, type FieldErrors } from "@/lib/booking/validation";
-import { createBooking, SlotTakenError, TooManyBookingsError } from "@/lib/booking/store";
+import { createBooking, getBooking, SlotTakenError, TooManyBookingsError } from "@/lib/booking/store";
+import { sendBookingEmail } from "@/lib/booking/mailer";
 import { deleteSlip, saveSlip } from "@/lib/booking/storage";
 import { notifyTeam } from "@/lib/booking/notify";
 import { clientIp, rateLimit, sameOrigin } from "@/lib/booking/security";
@@ -84,6 +85,9 @@ export async function POST(request: NextRequest) {
       slipMime: slipKind?.mime ?? null,
       ip,
     });
+
+    // patient confirmation email (if they gave an address); runs in the background
+    void getBooking(created.id).then((row) => (row ? sendBookingEmail("received", row) : undefined)).catch(() => undefined);
 
     void notifyTeam({
       ref: created.ref,

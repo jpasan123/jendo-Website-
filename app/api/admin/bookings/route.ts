@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createBooking, getBookingCounts, listBookings, SlotTakenError } from "@/lib/booking/store";
+import { createBooking, getBooking, getBookingCounts, listBookings, SlotTakenError } from "@/lib/booking/store";
+import { emailConfigured, sendBookingEmailWithin, maskEmail } from "@/lib/booking/mailer";
 import { validateBooking } from "@/lib/booking/validation";
 import { isAdminRequest, sameOrigin } from "@/lib/booking/security";
 import { formatTime12h } from "@/lib/booking/time";
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({ ok: true, items, counts: await getBookingCounts() }, { headers: noStore });
+    return NextResponse.json({ ok: true, items, counts: await getBookingCounts(), emailConfigured: emailConfigured() }, { headers: noStore });
   } catch (err) {
     console.error("[admin/bookings] list failed:", err instanceof Error ? err.message : err);
     return NextResponse.json({ ok: false, message: "Could not load bookings." }, { status: 500, headers: noStore });
@@ -100,7 +101,12 @@ export async function POST(request: NextRequest) {
       status: "confirmed",
       paymentStatus: body.paid === true ? "paid" : "unpaid",
     });
-    return NextResponse.json({ ok: true, ref: created.ref }, { status: 201, headers: noStore });
+    const row = await getBooking(created.id);
+    const email = row && row.email ? await sendBookingEmailWithin("confirmed", row) : null;
+    return NextResponse.json(
+      { ok: true, ref: created.ref, email: email ? { kind: "confirmed", status: email.status, to: row?.email ? maskEmail(row.email) : undefined } : null },
+      { status: 201, headers: noStore }
+    );
   } catch (err) {
     if (err instanceof SlotTakenError) {
       return NextResponse.json({ ok: false, message: "That slot is already booked.", errors: { date: "That slot is already booked." } }, { status: 409, headers: noStore });

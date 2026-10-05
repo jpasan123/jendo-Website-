@@ -6,6 +6,7 @@ import {
   BellRing,
   CalendarClock,
   Check,
+  Mail,
   ChevronDown,
   Download,
   ExternalLink,
@@ -41,6 +42,8 @@ type Booking = {
   follow_up_on: string | null;
   created_at: string;
 };
+type EmailInfo = { kind: string; status: string; to?: string; reason?: string } | null;
+type EmailLog = { id: string; kind: string; to_email: string | null; status: "sent" | "failed" | "skipped"; error: string | null; created_at: string };
 type Counts = { new_count: number; upcoming: number; slips_to_verify: number; follow_ups_due: number };
 
 const font = { fontFamily: "var(--font-red-hat-display),sans-serif" } as const;
@@ -91,6 +94,8 @@ export function AdminBookings({ slotTimes }: { slotTimes: string[] }) {
   const [upcoming, setUpcoming] = useState(true);
   const [followup, setFollowup] = useState(false);
   const [showNew, setShowNew] = useState(false);
+  const [emailOn, setEmailOn] = useState<boolean | null>(null);
+  const [notice, setNotice] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
   const knownNew = useRef<number | null>(null);
   const [newAlert, setNewAlert] = useState(0);
@@ -120,6 +125,7 @@ export function AdminBookings({ slotTimes }: { slotTimes: string[] }) {
         setAuthed(true);
         setItems(data.items);
         setCounts(data.counts);
+        setEmailOn(!!data.emailConfigured);
         setError("");
         setLastLoaded(new Date());
         // alert when new bookings arrive while the panel is open
@@ -185,7 +191,7 @@ export function AdminBookings({ slotTimes }: { slotTimes: string[] }) {
     knownNew.current = null;
   }
 
-  async function patch(id: string, body: Record<string, unknown>): Promise<string | null> {
+  async function patch(id: string, body: Record<string, unknown>): Promise<{ error: string | null; email: EmailInfo }> {
     try {
       const res = await fetch(`/api/admin/bookings/${id}`, {
         method: "PATCH",
@@ -194,15 +200,15 @@ export function AdminBookings({ slotTimes }: { slotTimes: string[] }) {
       });
       if (res.status === 401) {
         setAuthed(false);
-        return "Your session expired. Please sign in again.";
+        return { error: "Your session expired. Please sign in again.", email: null };
       }
       const data = await res.json();
-      if (!res.ok || !data.ok) return data.message || "Update failed.";
+      if (!res.ok || !data.ok) return { error: data.message || "Update failed.", email: null };
       setItems((list) => list.map((b) => (b.id === id ? data.item : b)));
       load(true);
-      return null;
+      return { error: null, email: (data.email ?? null) as EmailInfo };
     } catch {
-      return "Could not reach the server.";
+      return { error: "Could not reach the server.", email: null };
     }
   }
 
@@ -290,11 +296,19 @@ export function AdminBookings({ slotTimes }: { slotTimes: string[] }) {
         {stat("Follow-ups due", counts?.follow_ups_due, "text-emerald-600", () => { setStatus(""); setPayment(""); setDate(""); setUpcoming(false); setFollowup(true); })}
       </div>
 
+      {emailOn !== null && <EmailBanner on={emailOn} onExpired={() => setAuthed(false)} />}
+      {notice && (
+        <div role="status" className="mb-4 flex items-center justify-between gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+          <span>{notice}</span>
+          <button type="button" onClick={() => setNotice("")} className="font-semibold underline">Dismiss</button>
+        </div>
+      )}
+
       {showNew && (
         <NewBookingForm
           slotTimes={slotTimes}
           onClose={() => setShowNew(false)}
-          onCreated={() => { setShowNew(false); load(true); }}
+          onCreated={(info) => { setShowNew(false); load(true); setNotice(info); }}
           onExpired={() => setAuthed(false)}
         />
       )}
@@ -372,7 +386,7 @@ function BookingRowItem({
   b: Booking;
   open: boolean;
   onToggle: () => void;
-  patch: (id: string, body: Record<string, unknown>) => Promise<string | null>;
+  patch: (id: string, body: Record<string, unknown>) => Promise<{ error: string | null; email: EmailInfo }>;
   slotTimes: string[];
 }) {
   const [notes, setNotes] = useState(b.admin_notes ?? "");
@@ -381,6 +395,7 @@ function BookingRowItem({
   const [rTime, setRTime] = useState(b.slot_time);
   const [busy, setBusy] = useState("");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [logTick, setLogTick] = useState(0);
 
   useEffect(() => {
     setNotes(b.admin_notes ?? "");
@@ -393,9 +408,10 @@ function BookingRowItem({
     if (confirmText && !window.confirm(confirmText)) return;
     setBusy(label);
     setMsg(null);
-    const err = await patch(b.id, body);
+    const { error, email } = await patch(b.id, body);
     setBusy("");
-    setMsg(err ? { ok: false, text: err } : { ok: true, text: "Saved" });
+    setMsg(error ? { ok: false, text: error } : { ok: true, text: email ? `Saved. ${describeEmail(email)}` : "Saved" });
+    if (!error && email) setLogTick((t) => t + 1);
   }
 
   const actionBtn = "inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-xs font-bold transition disabled:opacity-50";
@@ -458,10 +474,10 @@ function BookingRowItem({
                 </button>
               )}
               {b.status !== "no_show" && (
-                <button type="button" disabled={!!busy} onClick={() => run("noshow", { status: "no_show" }, "Mark as no-show? The time slot will be released.")} className={`${actionBtn} border-gray-400 text-gray-700`}>No-show</button>
+                <button type="button" disabled={!!busy} onClick={() => run("noshow", { status: "no_show" }, "Mark as no-show? The time slot will be released. (No email is sent for no-shows.)")} className={`${actionBtn} border-gray-400 text-gray-700`}>No-show</button>
               )}
               {b.status !== "cancelled" && (
-                <button type="button" disabled={!!busy} onClick={() => run("cancel", { status: "cancelled" }, "Cancel this booking? The time slot will be released.")} className={`${actionBtn} border-red-400 text-red-700`}>Cancel booking</button>
+                <button type="button" disabled={!!busy} onClick={() => run("cancel", { status: "cancelled" }, `Cancel this booking? The time slot will be released.${b.email ? ` A cancellation email will be sent to ${b.email}.` : " This patient has no email address, so they will not be notified: please call them."}`)} className={`${actionBtn} border-red-400 text-red-700`}>Cancel booking</button>
               )}
               {(b.status === "cancelled" || b.status === "no_show") && (
                 <button type="button" disabled={!!busy} onClick={() => run("restore", { status: "new" })} className={`${actionBtn} border-amber-500 text-amber-700`}>Restore</button>
@@ -498,11 +514,13 @@ function BookingRowItem({
               </select>
               <button
                 type="button" disabled={!!busy || (rDate === b.appointment_date && rTime === b.slot_time)}
-                onClick={() => run("resched", { appointment_date: rDate, slot_time: rTime }, `Move this booking to ${formatDateLong(rDate)} at ${formatTime12h(rTime)}?`)}
+                onClick={() => run("resched", { appointment_date: rDate, slot_time: rTime }, `Move this booking to ${formatDateLong(rDate)} at ${formatTime12h(rTime)}?${b.email ? " The patient will be emailed the new time." : " This patient has no email address: please call them."}`)}
                 className={`${actionBtn} border-gray-300 text-gray-700`}
               >Move</button>
             </div>
           </div>
+
+          <EmailPanel booking={b} tick={logTick} onResult={(t, ok) => setMsg({ ok, text: t })} />
 
           <div>
             <label htmlFor={`notes-${b.id}`} className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-500">Internal notes</label>
@@ -526,7 +544,7 @@ function NewBookingForm({
 }: {
   slotTimes: string[];
   onClose: () => void;
-  onCreated: () => void;
+  onCreated: (info: string) => void;
   onExpired: () => void;
 }) {
   const [fullName, setFullName] = useState("");
@@ -559,7 +577,7 @@ function NewBookingForm({
         setMessage(data.message || "Could not save the booking.");
         return;
       }
-      onCreated();
+      onCreated(`Booking ${data.ref} saved.${data.email ? ` ${describeEmail(data.email)}` : email ? "" : " No email address given, so no email was sent."}`);
     } catch {
       setMessage("Could not reach the server.");
     } finally {
@@ -601,5 +619,137 @@ function NewBookingForm({
       </div>
       <p className="text-xs text-gray-500">Saved as confirmed. Staff bookings ignore the 12-hour notice rule but cannot double-book a slot.</p>
     </form>
+  );
+}
+
+function describeEmail(e: NonNullable<EmailInfo>) {
+  const label: Record<string, string> = {
+    received: "booking received",
+    confirmed: "appointment confirmed",
+    cancelled: "cancellation",
+    rescheduled: "new time",
+    payment_received: "payment received",
+  };
+  const what = label[e.kind] ?? e.kind;
+  if (e.status === "sent") return `Email (${what}) sent${e.to ? ` to ${e.to}` : ""}.`;
+  if (e.status === "pending") return `Email (${what}) is being sent${e.to ? ` to ${e.to}` : ""}.`;
+  if (e.status === "failed") return `The email (${what}) could not be sent. Please call the patient.`;
+  if (e.reason === "no_email") return "No email address on file, so nothing was emailed. Please call the patient.";
+  return "Emails are not set up on the server yet, so nothing was emailed. Please call the patient.";
+}
+
+function EmailBanner({ on, onExpired }: { on: boolean; onExpired: () => void }) {
+  const [to, setTo] = useState("");
+  const [sending, setSending] = useState(false);
+  const [result, setResult] = useState<{ ok: boolean; text: string } | null>(null);
+
+  async function sendTest(e: React.FormEvent) {
+    e.preventDefault();
+    setSending(true);
+    setResult(null);
+    try {
+      const res = await fetch("/api/admin/email-test", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ to }) });
+      if (res.status === 401) return onExpired();
+      const data = await res.json();
+      setResult(res.ok && data.ok ? { ok: true, text: `Test email sent to ${to}. Check the inbox (and spam).` } : { ok: false, text: data.message || "Could not send." });
+    } catch {
+      setResult({ ok: false, text: "Could not reach the server." });
+    } finally {
+      setSending(false);
+    }
+  }
+
+  if (!on) {
+    return (
+      <div role="status" className="mb-4 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+        <Mail className="mt-0.5 h-4 w-4 shrink-0" />
+        <span><strong>Patient emails are OFF.</strong> The mail server (SMTP) is not set up yet. Bookings and this panel work normally, but patients are not emailed when you confirm or cancel, so please call them.</span>
+      </div>
+    );
+  }
+  return (
+    <form onSubmit={sendTest} className="mb-4 flex flex-wrap items-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+      <Mail className="h-4 w-4 shrink-0" />
+      <span className="mr-auto"><strong>Patient emails are ON.</strong> Patients are emailed when a booking is received, confirmed, moved, cancelled or paid.</span>
+      <input type="email" required value={to} onChange={(e) => setTo(e.target.value)} placeholder="Send a test to…" aria-label="Test email address" className="w-48 rounded-full border border-emerald-300 bg-white px-3 py-1.5 text-sm outline-none" />
+      <button type="submit" disabled={sending} className="rounded-full bg-emerald-700 px-4 py-1.5 text-xs font-bold text-white disabled:opacity-60">{sending ? "Sending…" : "Send test"}</button>
+      {result && <span role="status" className={`w-full text-xs ${result.ok ? "text-emerald-800" : "text-red-700"}`}>{result.text}</span>}
+    </form>
+  );
+}
+
+const EMAIL_LABEL: Record<string, string> = {
+  received: "Booking received",
+  confirmed: "Appointment confirmed",
+  rescheduled: "Rescheduled",
+  cancelled: "Cancelled",
+  payment_received: "Payment received",
+};
+
+function EmailPanel({ booking, tick, onResult }: { booking: Booking; tick: number; onResult: (text: string, ok: boolean) => void }) {
+  const [log, setLog] = useState<EmailLog[] | null>(null);
+  const [kind, setKind] = useState("confirmed");
+  const [sending, setSending] = useState(false);
+
+  const loadLog = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/admin/bookings/${booking.id}/email`, { cache: "no-store" });
+      const data = await res.json();
+      if (res.ok && data.ok) setLog(data.items);
+    } catch {
+      /* the history is a convenience; ignore */
+    }
+  }, [booking.id]);
+
+  useEffect(() => {
+    loadLog();
+  }, [loadLog, tick]);
+
+  async function send() {
+    setSending(true);
+    try {
+      const res = await fetch(`/api/admin/bookings/${booking.id}/email`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ kind }) });
+      const data = await res.json();
+      if (!res.ok || !data.ok) onResult(data.message || "Could not send the email.", false);
+      else onResult(describeEmail(data.email), data.email.status === "sent" || data.email.status === "pending");
+      loadLog();
+    } catch {
+      onResult("Could not reach the server.", false);
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <div>
+      <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-500"><Mail className="h-3.5 w-3.5" /> Patient email</p>
+      {!booking.email ? (
+        <p className="rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-800">No email address on file for this patient, so no emails are sent. Please phone them.</p>
+      ) : (
+        <>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="break-all text-sm font-semibold text-gray-800">{booking.email}</span>
+            <select value={kind} onChange={(e) => setKind(e.target.value)} aria-label="Email to send" className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-[#893A9F]">
+              {Object.entries(EMAIL_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+            </select>
+            <button type="button" onClick={send} disabled={sending} className="inline-flex items-center gap-1.5 rounded-full border border-[#893A9F] px-3.5 py-2 text-xs font-bold text-[#893A9F] disabled:opacity-50">
+              {sending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Mail className="h-3.5 w-3.5" />} Send / resend
+            </button>
+          </div>
+          {log && log.length > 0 && (
+            <ul className="mt-3 space-y-1 text-xs text-gray-600">
+              {log.slice(0, 5).map((l) => (
+                <li key={l.id} className="flex flex-wrap items-center gap-2">
+                  <span className={`rounded-full px-2 py-0.5 font-semibold ${l.status === "sent" ? "bg-emerald-100 text-emerald-800" : l.status === "failed" ? "bg-red-100 text-red-700" : "bg-gray-100 text-gray-600"}`}>{l.status}</span>
+                  <span>{EMAIL_LABEL[l.kind] ?? l.kind}</span>
+                  <span className="text-gray-400">{new Date(l.created_at).toLocaleString("en-GB", { dateStyle: "short", timeStyle: "short" })}</span>
+                  {l.error && <span className="text-gray-400">· {l.error}</span>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
+      )}
+    </div>
   );
 }

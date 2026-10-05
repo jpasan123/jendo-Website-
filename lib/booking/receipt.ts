@@ -3,7 +3,8 @@
  * The page is drawn on a canvas (so any script, e.g. Sinhala/Tamil names, renders correctly)
  * and wrapped into a minimal PDF; no PDF library is needed.
  */
-import { formatDateLong, formatTime12h, slotStartMs } from "./time";
+import { buildIcs } from "./ics";
+import { formatDateLong, formatTime12h } from "./time";
 
 export type Receipt = {
   ref: string;
@@ -231,32 +232,6 @@ export async function downloadReceiptPdf(r: Receipt, fontFamily: string) {
   saveBlob(jpegToPdf(bytes, canvas.width, canvas.height), `Jendo-Test-Booking-${r.ref}.pdf`);
 }
 
-const icsStamp = (ms: number) => new Date(ms).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-const icsEscape = (s: string) => s.replace(/[\;,]/g, (c) => `\\${c}`).replace(/\n/g, "\\n");
-
 export function downloadCalendarFile(r: Receipt) {
-  const start = slotStartMs(r.date, r.time);
-  const end = start + r.slotMinutes * 60_000;
-  const lines = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//Jendo//Test Booking//EN",
-    "CALSCALE:GREGORIAN",
-    "BEGIN:VEVENT",
-    `UID:${r.ref}@jendo.health`,
-    `DTSTAMP:${icsStamp(Date.now())}`,
-    `DTSTART:${icsStamp(start)}`,
-    `DTEND:${icsStamp(end)}`,
-    `SUMMARY:${icsEscape("Jendo vascular health test")}`,
-    `LOCATION:${icsEscape(`${r.venueName}, ${r.venueAddress}`)}`,
-    `DESCRIPTION:${icsEscape(`Booking reference ${r.ref}. Our team will call to confirm your appointment.`)}`,
-    "BEGIN:VALARM",
-    "TRIGGER:-PT2H",
-    "ACTION:DISPLAY",
-    "DESCRIPTION:Jendo test appointment",
-    "END:VALARM",
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ];
-  saveBlob(new Blob([lines.join("\r\n")], { type: "text/calendar;charset=utf-8" }), `Jendo-Test-${r.ref}.ics`);
+  saveBlob(new Blob([buildIcs(r)], { type: "text/calendar;charset=utf-8" }), `Jendo-Test-${r.ref}.ics`);
 }
