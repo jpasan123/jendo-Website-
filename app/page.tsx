@@ -369,6 +369,15 @@ export default function Home() {
 
   const blogPosts: BlogPost[] = [
     {
+      title: "Jendo Innovations Featured Among 20 Deep-Science Patent Holders in WIPO Global Innovation Index 2026",
+      excerpt: "Jendo Innovations has been featured in WIPO's Global Innovation Index 2026 as one of only 20 deep-science patent holders from middle-income economies, representing Sri Lanka in Medical Devices and Digital Health.",
+      date: "October 2026",
+      author: "Jendo Team",
+      image: "https://i.ibb.co/m501bTRT/Global-Innovation-Index-2026-Invitation.png",
+      url: "/blog/wipo-global-innovation-index-2026",
+      imageFit: "contain",
+    },
+    {
       title: "Sri Lankan AI Medical Device JENDO Successfully Piloted in Bahrain",
       excerpt: "A Sri Lankan‑invented medical device, JENDO, designed for non‑invasive early detection of cardiovascular conditions using AI, was successfully piloted at the King Hamad American Mission Hospital in Bahrain in February. Developed by engineer Keerthi Kodithuwakku and his team, the device enables preventive screening through physiological signal analysis.",
       date: "February 2026",
