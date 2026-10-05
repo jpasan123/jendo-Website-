@@ -3,9 +3,24 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
+import ImageSlider, { type SliderImage } from "@/components/news/ImageSlider";
 
 const GII_URL =
   "https://www.wipo.int/web-publications/global-innovation-index-2026/en/gii-2026-at-a-glance.html";
+
+const HERO_IMAGES: SliderImage[] = [
+  {
+    src: "https://i.ibb.co/m501bTRT/Global-Innovation-Index-2026-Invitation.png",
+    alt: "WIPO Global Innovation Index 2026 — Powering entrepreneurs at the frontier of science",
+    fit: "contain",
+  },
+  {
+    src: "https://i.ibb.co/V7F7kBz/Whats-App-Image-2026-10-05-at-10-19-27.jpg",
+    alt: "Jendo Innovations listed in the WIPO table of top deep-science patent holders",
+    fit: "cover",
+    position: "center 52%",
+  },
+];
 
 export default function WipoGlobalInnovationIndexArticle() {
   const router = useRouter();
@@ -21,15 +36,8 @@ export default function WipoGlobalInnovationIndexArticle() {
         Back to News
       </button>
 
-      <div className="mb-8 rounded-2xl overflow-hidden shadow-xl bg-white">
-        <Image
-          src="https://i.ibb.co/m501bTRT/Global-Innovation-Index-2026-Invitation.png"
-          alt="WIPO Global Innovation Index 2026 — Powering entrepreneurs at the frontier of science"
-          width={1200}
-          height={675}
-          className="object-contain w-full h-auto"
-          priority
-        />
+      <div className="relative mb-8 rounded-2xl overflow-hidden shadow-xl bg-white aspect-video">
+        <ImageSlider images={HERO_IMAGES} sizes="(max-width:768px) 100vw, 768px" priority />
       </div>
 
       <div className="text-center mb-8">

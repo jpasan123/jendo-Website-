@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import { useEffect, useState, useRef, useLayoutEffect } from 'react';
+import ImageSlider, { type SliderImage } from "@/components/news/ImageSlider";
 import Image from 'next/image';
 import { Heart, Shield, ArrowRight, Users, Activity, Download, MapPin, Mail, Clock, User, LineChart, FlaskRound as Flask, Building2, Stethoscope, FileHeart, ChartBar, Brain, Microscope, BarChart3, ShieldCheck, PieChart, HandHeart, Facebook, Twitter, Linkedin, CreditCard, Package, CheckCircle, ShoppingCart, X, Calendar, FileText, BedDouble, Waves, Cloud, Instagram, FacebookIcon, Award, Globe, BookOpen, Lock, Eye, Database, Cpu, TrendingUp, Target, Zap, Fingerprint, HeartPulse, ClipboardCheck, UserCheck, Building, Share2, BarChart2, ExternalLink, AlertTriangle, ScanLine, Ban } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
@@ -28,6 +29,7 @@ type BlogPost = {
   url: string;
   imageFit?: "cover" | "contain";
   openInModal?: boolean;
+  gallery?: SliderImage[];
 };
 
 export default function Home() {
@@ -376,6 +378,10 @@ export default function Home() {
       image: "https://i.ibb.co/m501bTRT/Global-Innovation-Index-2026-Invitation.png",
       url: "/blog/wipo-global-innovation-index-2026",
       imageFit: "contain",
+      gallery: [
+        { src: "https://i.ibb.co/m501bTRT/Global-Innovation-Index-2026-Invitation.png", alt: "WIPO Global Innovation Index 2026", fit: "contain" },
+        { src: "https://i.ibb.co/V7F7kBz/Whats-App-Image-2026-10-05-at-10-19-27.jpg", alt: "Jendo Innovations listed in the WIPO deep-science patent holders table", fit: "cover", position: "center 52%" },
+      ],
     },
     {
       title: "Sri Lankan AI Medical Device JENDO Successfully Piloted in Bahrain",
@@ -3195,6 +3201,9 @@ export default function Home() {
                   className="relative h-64 lg:h-auto overflow-hidden block"
                   style={{minHeight:"280px"}}
                 >
+                  {blogPosts[0].gallery ? (
+                    <ImageSlider images={blogPosts[0].gallery} sizes="(max-width:1024px) 100vw, 50vw" priority />
+                  ) : (
                   <Image
                     src={blogPosts[0].image}
                     alt={blogPosts[0].title}
@@ -3205,6 +3214,7 @@ export default function Home() {
                     priority
                     unoptimized={false}
                   />
+                  )}
                   <div className="absolute inset-0" style={{background:"linear-gradient(to right,transparent,rgba(255,255,255,0.15))"}} />
                 </a>
                 <div className="p-8 md:p-10 flex flex-col justify-center">
