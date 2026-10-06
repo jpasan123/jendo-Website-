@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter, Red_Hat_Display } from 'next/font/google';
 import Script from 'next/script';
+import { SessionProviderClient } from '@/components/auth/SessionProviderClient';
 
 const inter = Inter({ subsets: ['latin'] });
 const redHatDisplay = Red_Hat_Display({
@@ -60,7 +61,9 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={`${inter.className} ${redHatDisplay.variable}`} suppressHydrationWarning>{children}</body>
+      <body className={`${inter.className} ${redHatDisplay.variable}`} suppressHydrationWarning>
+        <SessionProviderClient>{children}</SessionProviderClient>
+      </body>
     </html>
   );
 }

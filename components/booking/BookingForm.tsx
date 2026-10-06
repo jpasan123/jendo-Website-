@@ -40,6 +40,9 @@ type Props = {
   slipMaxMb: number;
   testMinutes: number;
   slotMinutes: number;
+  /** Prefilled from the signed-in user's account, if any - fields stay editable. */
+  defaultFullName?: string;
+  defaultEmail?: string;
 };
 
 type Slot = { time: string; available: boolean };
@@ -106,7 +109,7 @@ const inputClass = (invalid?: boolean) =>
     invalid ? "border-red-400 focus:border-red-500 focus:ring-red-100" : "border-gray-200 focus:border-[#893A9F] focus:ring-[#893A9F]/15"
   }`;
 
-export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAhead, openWeekdays, slipMaxMb, testMinutes, slotMinutes }: Props) {
+export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAhead, openWeekdays, slipMaxMb, testMinutes, slotMinutes, defaultFullName, defaultEmail }: Props) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [done, setDone] = useState<Done | null>(null);
 
@@ -123,9 +126,9 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
   const [slotsError, setSlotsError] = useState("");
 
   // step 2
-  const [fullName, setFullName] = useState("");
+  const [fullName, setFullName] = useState(defaultFullName ?? "");
   const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(defaultEmail ?? "");
   const [notes, setNotes] = useState("");
 
   // step 3
