@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { User, Mail, Lock, AlertCircle, Loader2, Check } from "lucide-react";
+import { User, Mail, Lock, AlertCircle, Loader2, Eye, EyeOff, Check } from "lucide-react";
 
 const font = { fontFamily: "var(--font-red-hat-display),sans-serif" } as const;
 const PURPLE = "#893A9F";
@@ -13,6 +13,7 @@ export function SignUpForm({ callbackUrl, googleEnabled }: { callbackUrl: string
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState<"form" | "google" | null>(null);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -107,10 +108,19 @@ export function SignUpForm({ callbackUrl, googleEnabled }: { callbackUrl: string
           <div className="relative">
             <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <input
-              id="password" type="password" required minLength={8} autoComplete="new-password" value={password}
+              id="password" type={showPassword ? "text" : "password"} required minLength={8} autoComplete="new-password" value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-xl border-2 border-gray-200 py-2.5 pl-10 pr-3 text-sm outline-none transition focus:border-[#893A9F]"
+              className="w-full rounded-xl border-2 border-gray-200 py-2.5 pl-10 pr-10 text-sm outline-none transition focus:border-[#893A9F]"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-pressed={showPassword}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition hover:text-[#893A9F]"
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
           </div>
           <p className="mt-1.5 flex items-center gap-1.5 text-xs text-gray-500">
             {password.length >= 8 && <Check className="h-3.5 w-3.5 text-emerald-600" />} At least 8 characters
