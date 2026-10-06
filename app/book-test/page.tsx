@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { AccountBar } from "@/components/auth/AccountBar";
 import { BookingForm } from "@/components/booking/BookingForm";
 import { BOOKING, getBankDetails } from "@/lib/booking/config";
 
@@ -20,6 +21,7 @@ export default async function BookTestPage() {
   const bank = getBankDetails();
   return (
     <main className="min-h-screen pt-28 pb-20" style={{ background: "linear-gradient(180deg,#f6f1fa 0%,#f9f9fb 320px)" }}>
+      <AccountBar name={session.user.name ?? ""} email={session.user.email ?? ""} />
       <BookingForm
         priceLkr={BOOKING.priceLkr}
         venueName={BOOKING.venueName}
