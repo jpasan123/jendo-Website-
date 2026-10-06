@@ -884,13 +884,13 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
                       <p className="text-sm font-bold text-gray-900" style={font}>1. Transfer {money(priceLkr)} to</p>
                       <dl className="mt-3 space-y-2 text-sm">
                         {[
-                          ["Bank", bank.bankName, "bank"],
+                          ...(bank.bankName ? [["Bank", bank.bankName, "bank"]] : []),
                           ["Account name", bank.accountName, "name"],
                           ["Account number", bank.accountNumber, "number"],
                           ...(bank.branch ? [["Branch", bank.branch, "branch"]] : []),
                         ].map(([k, v, key]) => (
                           <div key={key} className="flex items-center justify-between gap-3 rounded-lg bg-white px-3 py-2">
-                            <div><dt className="text-xs text-gray-500">{k}</dt><dd className="font-semibold text-gray-900">{v}</dd></div>
+                            <div><dt className="text-xs text-gray-500">{k}</dt><dd className={`font-semibold text-gray-900 ${key === "number" ? "text-base tracking-wider" : ""}`}>{v}</dd></div>
                             <button type="button" onClick={() => copy(v, key)} aria-label={`Copy ${k}`} className="flex items-center gap-1 text-xs font-semibold text-[#893A9F]">
                               {copied === key ? <><Check className="h-3.5 w-3.5" /> Copied</> : <><Copy className="h-3.5 w-3.5" /> Copy</>}
                             </button>

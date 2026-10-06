@@ -54,10 +54,10 @@ export type BankDetails = {
 export function getBankDetails(): BankDetails {
   const accountNumber = process.env.BOOKING_BANK_ACCOUNT_NUMBER?.trim();
   const accountName = process.env.BOOKING_BANK_ACCOUNT_NAME?.trim();
-  const bankName = process.env.BOOKING_BANK_NAME?.trim();
-  if (!accountNumber || !accountName || !bankName) return null;
+  // account number + account name are enough; bank name and branch are shown when set
+  if (!accountNumber || !accountName) return null;
   return {
-    bankName,
+    bankName: process.env.BOOKING_BANK_NAME?.trim() || "",
     accountName,
     accountNumber,
     branch: process.env.BOOKING_BANK_BRANCH?.trim() || "",
