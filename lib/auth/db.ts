@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS app_users (
 );
 
 CREATE INDEX IF NOT EXISTS app_users_email_idx ON app_users (lower(email));
+ALTER TABLE app_users ADD COLUMN IF NOT EXISTS last_signin_email_at timestamptz;
 `;
 
 /** Creates the users table on first use. Safe to call on every request. */
@@ -67,8 +68,8 @@ export async function findUserByEmail(email: string): Promise<AppUser | null> {
 export async function createUserWithPassword(email: string, name: string, passwordHash: string): Promise<AppUser> {
   await ensureAuthSchema();
   const { rows } = await getPool().query(
-    `INSERT INTO app_users (email, name, password_hash)
-     VALUES ($1, $2, $3)
+    `INSERT INTO app_users (email, name, password_hash, last_signin_email_at)
+     VALUES ($1, $2, $3, now())
      RETURNING id, email, name, password_hash, google_id, image`,
     [email, name, passwordHash]
   );
@@ -76,7 +77,7 @@ export async function createUserWithPassword(email: string, name: string, passwo
 }
 
 /** Finds a user by Google account, or creates one on first Google sign-in (linking by email if it already exists). */
-export async function findOrCreateGoogleUser(params: { googleId: string; email: string; name: string | null; image: string | null }): Promise<AppUser> {
+export async function findOrCreateGoogleUser(params: { googleId: string; email: string; name: string | null; image: string | null }): Promise<{ user: AppUser; created: boolean }> {
   await ensureAuthSchema();
   const pool = getPool();
 
@@ -84,7 +85,7 @@ export async function findOrCreateGoogleUser(params: { googleId: string; email: 
     "SELECT id, email, name, password_hash, google_id, image FROM app_users WHERE google_id = $1 LIMIT 1",
     [params.googleId]
   );
-  if (byGoogleId.rows[0]) return byGoogleId.rows[0];
+  if (byGoogleId.rows[0]) return { user: byGoogleId.rows[0], created: false };
 
   // Same email already registered manually - link the Google account to it.
   const byEmail = await pool.query(
@@ -98,14 +99,30 @@ export async function findOrCreateGoogleUser(params: { googleId: string; email: 
        RETURNING id, email, name, password_hash, google_id, image`,
       [params.googleId, params.image, byEmail.rows[0].id]
     );
-    return rows[0];
+    return { user: rows[0], created: false };
   }
 
   const { rows } = await pool.query(
-    `INSERT INTO app_users (email, name, google_id, image)
-     VALUES ($1, $2, $3, $4)
+    `INSERT INTO app_users (email, name, google_id, image, last_signin_email_at)
+     VALUES ($1, $2, $3, $4, now())
      RETURNING id, email, name, password_hash, google_id, image`,
     [params.email, params.name, params.googleId, params.image]
   );
-  return rows[0];
+  return { user: rows[0], created: true };
+}
+
+/**
+ * Atomically claims the right to send a "you signed in" email for this user: true only if no
+ * such email went out in the last `gapMinutes`. Stops double sends (double-click, welcome email
+ * followed by the automatic first sign-in) without any race between concurrent requests.
+ */
+export async function claimSignInEmail(email: string, gapMinutes = 1): Promise<boolean> {
+  await ensureAuthSchema();
+  const res = await getPool().query(
+    `UPDATE app_users SET last_signin_email_at = now()
+     WHERE lower(email) = lower($1)
+       AND (last_signin_email_at IS NULL OR last_signin_email_at < now() - make_interval(mins => $2::int))`,
+    [email, gapMinutes]
+  );
+  return (res.rowCount ?? 0) > 0;
 }

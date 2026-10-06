@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import { findUserByEmail, findOrCreateGoogleUser } from "@/lib/auth/db";
+import { sendSignInEmail, sendWelcomeEmail } from "@/lib/auth/mailer";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
@@ -36,11 +37,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       ? [Google({ clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET })]
       : []),
   ],
+  events: {
+    // Fires after every successful sign-in (password or Google). Not awaited: a slow or failing
+    // mail server must never delay or break signing in.
+    async signIn({ user, account }) {
+      if (!user?.email) return;
+      void sendSignInEmail(user.email, user.name, account?.provider === "google" ? "google" : "password");
+    },
+  },
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === "google") {
         if (!user.email) return false;
-        const dbUser = await findOrCreateGoogleUser({
+        const { user: dbUser, created } = await findOrCreateGoogleUser({
           googleId: account.providerAccountId,
           email: user.email,
           name: user.name ?? null,
@@ -48,6 +57,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         });
         // Re-key the user object to our own DB id, used below in the jwt callback.
         user.id = dbUser.id;
+        // First ever Google sign-in = new account: welcome email (not awaited, never blocks sign-in).
+        if (created) void sendWelcomeEmail(dbUser.email, dbUser.name);
       }
       return true;
     },

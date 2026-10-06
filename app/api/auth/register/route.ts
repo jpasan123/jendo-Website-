@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { findUserByEmail, createUserWithPassword } from "@/lib/auth/db";
 import { clientIp, rateLimit, sameOrigin } from "@/lib/booking/security";
+import { sendWelcomeEmail } from "@/lib/auth/mailer";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -43,6 +44,8 @@ export async function POST(request: NextRequest) {
 
   const passwordHash = await bcrypt.hash(password, 10);
   await createUserWithPassword(email, name, passwordHash);
+  // Not awaited: the account exists either way, a mail hiccup must not fail the sign-up.
+  void sendWelcomeEmail(email, name);
 
   return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
 }
