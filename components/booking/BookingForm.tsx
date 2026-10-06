@@ -26,7 +26,7 @@ import {
   User,
 } from "lucide-react";
 import { addDays, formatDate, formatDateLong, formatTime12h, todayInColombo, weekdayOf } from "@/lib/booking/time";
-import { validateBooking, type FieldErrors } from "@/lib/booking/validation";
+import { formatPhoneInput, suggestEmailFix, validateBooking, type FieldErrors } from "@/lib/booking/validation";
 import { downloadCalendarFile, downloadReceiptPdf } from "@/lib/booking/receipt";
 import type { BankDetails, PaymentMethod } from "@/lib/booking/config";
 
@@ -43,6 +43,7 @@ type Props = {
 };
 
 type Slot = { time: string; available: boolean };
+type TextKey = "fullName" | "phone" | "email" | "notes";
 type Done = { ref: string; date: string; time: string; paymentMethod: PaymentMethod; slipUploaded: boolean };
 
 const font = { fontFamily: "var(--font-red-hat-display),sans-serif" } as const;
@@ -59,6 +60,8 @@ function Field({
   error,
   hint,
   optional,
+  required,
+  valid,
   children,
 }: {
   label: string;
@@ -66,13 +69,24 @@ function Field({
   error?: string;
   hint?: string;
   optional?: boolean;
+  required?: boolean;
+  valid?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div>
       <label htmlFor={htmlFor} className="mb-1.5 flex items-center justify-between text-sm font-semibold text-gray-800" style={font}>
-        <span>{label}</span>
+        <span>
+          {label}
+          {required && (
+            <>
+              <span className="ml-0.5 text-red-600" aria-hidden="true">*</span>
+              <span className="sr-only"> (required)</span>
+            </>
+          )}
+        </span>
         {optional && <span className="text-xs font-normal text-gray-400">Optional</span>}
+        {valid && !error && <Check className="h-4 w-4 text-emerald-600" aria-label="Looks good" />}
       </label>
       {children}
       {error ? (
@@ -124,6 +138,7 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
   const [copied, setCopied] = useState("");
 
   const [errors, setErrors] = useState<FieldErrors>({});
+  const [touched, setTouched] = useState<Partial<Record<TextKey, boolean>>>({});
   const [serverError, setServerError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
@@ -263,6 +278,37 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
     return picked;
   }
 
+  /** Validates one text field against the same rules the server uses */
+  function validateOne(key: TextKey, overrides: Partial<Record<TextKey, string>> = {}) {
+    const result = validateBooking({ fullName, phone, email, notes, date: "x", time: "x", paymentMethod, consent, ...overrides });
+    return result.errors[key];
+  }
+
+  function onChangeText(key: TextKey, value: string, set: (v: string) => void) {
+    set(value);
+    // once a field has been visited (or flagged), re-check on every keystroke so errors clear as soon as it is fixed
+    if (touched[key] || errors[key]) setErrors((e) => ({ ...e, [key]: validateOne(key, { [key]: value }) }));
+  }
+
+  function onBlurText(key: TextKey) {
+    let value = { fullName, phone, email, notes }[key];
+    if (key === "fullName") {
+      value = fullName.trim().replace(/\s+/g, " ");
+      // all-lowercase Latin names get capital letters; names typed with their own capitals are left alone
+      if (/^[a-z .'-]+$/.test(value)) value = value.replace(/(^|[\s'-])([a-z])/g, (_m, sep: string, ch: string) => sep + ch.toUpperCase());
+      setFullName(value);
+    } else if (key === "email") {
+      value = email.trim().toLowerCase();
+      setEmail(value);
+    } else if (key === "notes") {
+      value = notes.trim();
+      setNotes(value);
+    }
+    setTouched((t) => ({ ...t, [key]: true }));
+    // an untouched optional field that is still empty is not an error
+    setErrors((e) => ({ ...e, [key]: value || key !== "notes" ? validateOne(key, { [key]: value }) : undefined }));
+  }
+
   async function goNext() {
     setServerError("");
     if (step === 1) {
@@ -288,6 +334,7 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
       setStep(2);
       scrollToTop();
     } else if (step === 2) {
+      setTouched({ fullName: true, phone: true, email: true, notes: true });
       const e = fieldErrorsFor(["fullName", "phone", "email", "notes"]);
       if (Object.keys(e).length) {
         setErrors(e);
@@ -743,40 +790,57 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
             <section aria-labelledby="step2-title" className="space-y-5">
               <div>
                 <h2 id="step2-title" className="!text-xl !font-bold text-[#2d0a3e]" style={font}>Your details</h2>
-                <p className="mt-1 text-sm text-gray-500">We will call this number to confirm your appointment.</p>
+                <p className="mt-1 text-sm text-gray-500">
+                  We will call you to confirm your appointment. Fields marked <span className="font-bold text-red-600">*</span> are required.
+                </p>
               </div>
 
-              <Field label="Full name" htmlFor="fullName" error={errors.fullName}>
+              <Field label="Full name" htmlFor="fullName" required error={errors.fullName} valid={!!touched.fullName && !!fullName}>
                 <input
-                  id="fullName" name="fullName" type="text" autoComplete="name" value={fullName}
-                  onChange={(e) => { setFullName(e.target.value); if (errors.fullName) setErrors((x) => ({ ...x, fullName: undefined })); }}
+                  id="fullName" name="fullName" type="text" autoComplete="name" autoCapitalize="words" value={fullName}
+                  onChange={(e) => onChangeText("fullName", e.target.value, setFullName)}
+                  onBlur={() => onBlurText("fullName")}
                   className={inputClass(!!errors.fullName)} placeholder="e.g. Nimal Perera" maxLength={80}
-                  aria-invalid={!!errors.fullName} aria-describedby={errors.fullName ? "fullName-error" : undefined}
+                  required aria-required="true" aria-invalid={!!errors.fullName} aria-describedby={errors.fullName ? "fullName-error" : undefined}
                 />
               </Field>
 
-              <Field label="Phone number" htmlFor="phone" error={errors.phone} hint="A mobile number we can call, e.g. 077 123 4567.">
+              <Field label="Mobile number" htmlFor="phone" required error={errors.phone} hint="We will call this number, e.g. 077 123 4567." valid={!!touched.phone && !!phone}>
                 <input
                   id="phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" value={phone}
-                  onChange={(e) => { setPhone(e.target.value); if (errors.phone) setErrors((x) => ({ ...x, phone: undefined })); }}
+                  onChange={(e) => onChangeText("phone", formatPhoneInput(e.target.value), setPhone)}
+                  onBlur={() => onBlurText("phone")}
                   className={inputClass(!!errors.phone)} placeholder="077 123 4567" maxLength={20}
-                  aria-invalid={!!errors.phone} aria-describedby={errors.phone ? "phone-error" : undefined}
+                  required aria-required="true" aria-invalid={!!errors.phone} aria-describedby={errors.phone ? "phone-error" : undefined}
                 />
               </Field>
 
-              <Field label="Email" htmlFor="email" error={errors.email} optional hint="We will email your booking confirmation and updates here.">
-                <input
-                  id="email" name="email" type="email" autoComplete="email" value={email}
-                  onChange={(e) => { setEmail(e.target.value); if (errors.email) setErrors((x) => ({ ...x, email: undefined })); }}
-                  className={inputClass(!!errors.email)} placeholder="you@example.com" maxLength={120}
-                  aria-invalid={!!errors.email} aria-describedby={errors.email ? "email-error" : undefined}
-                />
-              </Field>
+              <div>
+                <Field label="Email" htmlFor="email" required error={errors.email} hint="We will email your booking confirmation and updates here." valid={!!touched.email && !!email}>
+                  <input
+                    id="email" name="email" type="email" inputMode="email" autoComplete="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} value={email}
+                    onChange={(e) => onChangeText("email", e.target.value, setEmail)}
+                    onBlur={() => onBlurText("email")}
+                    className={inputClass(!!errors.email)} placeholder="you@example.com" maxLength={120}
+                    required aria-required="true" aria-invalid={!!errors.email} aria-describedby={errors.email ? "email-error" : undefined}
+                  />
+                </Field>
+                {!errors.email && touched.email && suggestEmailFix(email) && (
+                  <p className="mt-1.5 text-sm text-amber-700">
+                    Did you mean{" "}
+                    <button type="button" className="font-semibold underline" onClick={() => { const fix = suggestEmailFix(email)!; setEmail(fix); setErrors((e) => ({ ...e, email: undefined })); }}>
+                      {suggestEmailFix(email)}
+                    </button>
+                    ?
+                  </p>
+                )}
+              </div>
 
               <Field label="Anything we should know?" htmlFor="notes" error={errors.notes} optional hint={`${notes.length}/500`}>
                 <textarea
                   id="notes" name="notes" rows={3} value={notes} maxLength={500}
-                  onChange={(e) => { setNotes(e.target.value); if (errors.notes) setErrors((x) => ({ ...x, notes: undefined })); }}
+                  onChange={(e) => onChangeText("notes", e.target.value, setNotes)}
+                  onBlur={() => onBlurText("notes")}
                   className={inputClass(!!errors.notes)} placeholder="Medical history, medications, or questions for the doctor"
                 />
               </Field>
