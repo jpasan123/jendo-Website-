@@ -12,6 +12,7 @@ type Notice = {
   paymentMethod: string;
   hasSlip: boolean;
   notes: string;
+  amountLkr?: number;
 };
 
 const esc = (s: string) =>
@@ -44,7 +45,7 @@ export async function notifyTeam(n: Notice): Promise<void> {
           <tr><td><b>Phone</b></td><td>${esc(n.phone)}</td></tr>
           <tr><td><b>Email</b></td><td>${esc(n.email || "-")}</td></tr>
           <tr><td><b>Appointment</b></td><td>${esc(when)} at ${esc(BOOKING.venueName)}</td></tr>
-          <tr><td><b>Payment</b></td><td>${esc(payment)} (LKR ${BOOKING.priceLkr.toLocaleString("en-US")})</td></tr>
+          <tr><td><b>Payment</b></td><td>${esc(payment)} (LKR ${(n.amountLkr ?? BOOKING.priceLkr).toLocaleString("en-US")})</td></tr>
           <tr><td><b>Notes</b></td><td>${esc(n.notes || "-")}</td></tr>
         </table>`,
       `New Jendo test booking ${n.ref} from ${n.fullName} (${n.phone}) for ${when}. Please call to confirm.`
@@ -55,7 +56,7 @@ export async function notifyTeam(n: Notice): Promise<void> {
 }
 
 /** Tells the team that a card payment arrived (and flags the rare "paid but slot lost" case) */
-export async function notifyTeamPaid(b: { ref: string; full_name: string; phone: string; appointment_date: string; slot_time: string }, slotLost: boolean): Promise<void> {
+export async function notifyTeamPaid(b: { ref: string; full_name: string; phone: string; appointment_date: string; slot_time: string; amount_lkr: number }, slotLost: boolean): Promise<void> {
   const to = process.env.BOOKING_NOTIFY_EMAIL?.trim();
   if (!to || !emailConfigured()) return;
   try {
@@ -74,7 +75,7 @@ export async function notifyTeamPaid(b: { ref: string; full_name: string; phone:
           <tr><td><b>Name</b></td><td>${esc(b.full_name)}</td></tr>
           <tr><td><b>Phone</b></td><td>${esc(b.phone)}</td></tr>
           <tr><td><b>Appointment</b></td><td>${esc(when)} at ${esc(BOOKING.venueName)}</td></tr>
-          <tr><td><b>Paid</b></td><td>LKR ${BOOKING.priceLkr.toLocaleString("en-US")} by card (PayHere)</td></tr>
+          <tr><td><b>Paid</b></td><td>LKR ${b.amount_lkr.toLocaleString("en-US")} by card (PayHere)</td></tr>
         </table>`,
       `Card payment received for ${b.ref} from ${b.full_name} (${b.phone}) for ${when}.${slotLost ? " ACTION NEEDED: the slot was lost, please rebook or refund." : ""}`
     );

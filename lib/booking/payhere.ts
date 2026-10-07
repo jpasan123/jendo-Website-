@@ -3,7 +3,7 @@ import { BOOKING } from "./config";
 
 /**
  * PayHere card payments for test bookings (server-side only: the merchant secret never leaves the server).
- * The amount is always taken from BOOKING.priceLkr, never from the browser.
+ * The amount comes from the booking row (set by the server when the booking was made), never from the browser.
  */
 
 const md5Upper = (value: string) => createHash("md5").update(value).digest("hex").toUpperCase();
@@ -30,10 +30,10 @@ function checkoutUrl() {
 
 export type CheckoutPayload = { action: string; fields: Record<string, string> };
 
-type CheckoutBooking = { ref: string; full_name: string; email: string | null; phone: string };
+type CheckoutBooking = { ref: string; full_name: string; email: string | null; phone: string; amountLkr: number };
 
 export function buildCheckout(b: CheckoutBooking, payToken: string): CheckoutPayload {
-  const amount = BOOKING.priceLkr.toFixed(2);
+  const amount = b.amountLkr.toFixed(2);
   const currency = BOOKING.currency;
   const hash = md5Upper(`${merchantId()}${b.ref}${amount}${currency}${md5Upper(merchantSecret())}`);
   const [first, ...rest] = b.full_name.trim().split(/\s+/);
@@ -99,7 +99,7 @@ export function isOurMerchant(id: string) {
   return !!id && id === merchantId();
 }
 
-/** The amount PayHere charged must equal our price exactly (to the cent) in LKR */
-export function amountMatches(n: PayhereNotice) {
-  return n.payhere_currency === BOOKING.currency && Math.abs(Number(n.payhere_amount) - BOOKING.priceLkr) < 0.005;
+/** The amount PayHere charged must equal the amount stored on the booking when it was made (to the cent), in LKR */
+export function amountMatches(n: PayhereNotice, expectedLkr: number) {
+  return n.payhere_currency === BOOKING.currency && Math.abs(Number(n.payhere_amount) - expectedLkr) < 0.005;
 }

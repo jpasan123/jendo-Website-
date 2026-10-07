@@ -40,9 +40,9 @@ export async function POST(request: NextRequest) {
 
   // status_code: 2 = success, 0 = pending, -1 = cancelled, -2 = failed, -3 = charged back
   if (n.status_code === "2") {
-    if (!amountMatches(n)) {
+    if (!amountMatches(n, booking.amount_lkr)) {
       await recordPaymentEvent({ ...base, bookingId: booking.id, signatureOk: true, outcome: "rejected: amount or currency mismatch" });
-      await addAdminNote(booking.id, `PayHere reported ${n.payhere_currency} ${n.payhere_amount} for this booking: amount does not match the test price. Check the PayHere dashboard.`);
+      await addAdminNote(booking.id, `PayHere reported ${n.payhere_currency} ${n.payhere_amount} for this booking: amount does not match this booking (expected ${booking.amount_lkr}). Check the PayHere dashboard.`);
       return bad(400, "Amount mismatch");
     }
     try {

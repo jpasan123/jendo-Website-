@@ -74,6 +74,8 @@ type NewBooking = {
   slipFile: string | null;
   slipMime: string | null;
   ip: string;
+  /** fee for this booking; defaults to the standard price */
+  amountLkr?: number;
   /** staff entries (phone bookings): skip the per-phone limit and set the starting status */
   staff?: boolean;
   status?: BookingStatus;
@@ -110,7 +112,7 @@ export async function createBooking(input: NewBooking): Promise<{ id: string; re
          RETURNING id, ref`,
         [
           ref, input.fullName, input.phone, input.email || null, input.notes || null,
-          input.date, input.time, BOOKING.priceLkr, paymentStatus, input.paymentMethod,
+          input.date, input.time, input.amountLkr ?? BOOKING.priceLkr, paymentStatus, input.paymentMethod,
           input.slipFile, input.slipMime, input.ip, status, payToken,
         ]
       );

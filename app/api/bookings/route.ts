@@ -4,6 +4,8 @@ import { validateBooking, sniffSlip, type FieldErrors } from "@/lib/booking/vali
 import { createBooking, getBooking, SlotTakenError, TooManyBookingsError } from "@/lib/booking/store";
 import { sendBookingEmail } from "@/lib/booking/mailer";
 import { buildCheckout, cardPaymentsEnabled } from "@/lib/booking/payhere";
+import { priceFor } from "@/lib/booking/config";
+import { auth } from "@/auth";
 import { deleteSlip, saveSlip } from "@/lib/booking/storage";
 import { notifyTeam } from "@/lib/booking/notify";
 import { clientIp, rateLimit, sameOrigin } from "@/lib/booking/security";
@@ -74,6 +76,15 @@ export async function POST(request: NextRequest) {
     return fail(422, "Please fix the highlighted fields.", errors);
   }
 
+  // the fee is decided here on the server (the browser cannot choose it)
+  let accountEmail: string | null = null;
+  try {
+    accountEmail = (await auth())?.user?.email ?? null;
+  } catch {
+    /* not signed in / auth unavailable: standard price */
+  }
+  const amountLkr = priceFor(accountEmail);
+
   let slipFile: string | null = null;
   try {
     if (slipBytes && slipKind) slipFile = await saveSlip(slipBytes, slipKind.ext);
@@ -89,6 +100,7 @@ export async function POST(request: NextRequest) {
       slipFile,
       slipMime: slipKind?.mime ?? null,
       ip,
+      amountLkr,
     });
 
     // Card bookings: nothing is emailed yet. The patient goes to PayHere now, and the emails
@@ -98,7 +110,7 @@ export async function POST(request: NextRequest) {
         {
           ok: true,
           booking: { ref: created.ref, date: value.date, time: value.time, paymentMethod: "card", slipUploaded: false },
-          payhere: buildCheckout({ ref: created.ref, full_name: value.fullName, email: value.email, phone: value.phone }, created.payToken),
+          payhere: buildCheckout({ ref: created.ref, full_name: value.fullName, email: value.email, phone: value.phone, amountLkr }, created.payToken),
         },
         { status: 201, headers: { "Cache-Control": "no-store" } }
       );
@@ -117,6 +129,7 @@ export async function POST(request: NextRequest) {
       paymentMethod: value.paymentMethod,
       hasSlip: !!slipFile,
       notes: value.notes,
+      amountLkr,
     });
 
     return NextResponse.json(

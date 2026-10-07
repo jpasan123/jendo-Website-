@@ -30,6 +30,23 @@ export const BOOKING = {
   slipTypes: ["image/jpeg", "image/png", "image/webp", "application/pdf"] as const,
 } as const;
 
+/**
+ * The fee for one test. Normally BOOKING.priceLkr. For live payment testing, accounts listed in
+ * BOOKING_TEST_PRICE_EMAILS pay BOOKING_TEST_PRICE_LKR instead (PayHere's minimum is LKR 20),
+ * so real patients never see or get the test price. Remove both env vars to switch it off.
+ */
+export function priceFor(accountEmail?: string | null): number {
+  const testPrice = Number(process.env.BOOKING_TEST_PRICE_LKR);
+  const allowed = (process.env.BOOKING_TEST_PRICE_EMAILS ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+  if (accountEmail && Number.isFinite(testPrice) && testPrice >= 20 && allowed.includes(accountEmail.trim().toLowerCase())) {
+    return Math.round(testPrice);
+  }
+  return BOOKING.priceLkr;
+}
+
 /** Sri Lanka has no daylight saving: always UTC+05:30 */
 export const COLOMBO_OFFSET_MINUTES = 330;
 

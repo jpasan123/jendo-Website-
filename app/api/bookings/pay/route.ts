@@ -56,6 +56,7 @@ export async function POST(request: NextRequest) {
         paymentMethod: "pay_at_venue",
         hasSlip: false,
         notes: row.notes ?? "",
+        amountLkr: row.amount_lkr,
       }).catch(() => undefined);
     }
     return json({ ok: true, switched: true });
@@ -63,5 +64,5 @@ export async function POST(request: NextRequest) {
 
   if (booking.payment_method !== "card") return json({ ok: false, message: "This booking is not set to pay by card." }, 409);
   if (!cardPaymentsEnabled()) return json({ ok: false, message: "Card payment is not available right now." }, 503);
-  return json({ ok: true, payhere: buildCheckout(booking, String(body.t)) });
+  return json({ ok: true, payhere: buildCheckout({ ...booking, amountLkr: booking.amount_lkr }, String(body.t)) });
 }

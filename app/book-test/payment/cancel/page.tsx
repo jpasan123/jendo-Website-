@@ -35,7 +35,7 @@ export default async function PaymentCancelPage({ searchParams }: { searchParams
           expired={booking.status === "cancelled" && booking.payment_status !== "paid"}
           venueName={BOOKING.venueName}
           venueAddress={BOOKING.venueAddress}
-          priceLkr={BOOKING.priceLkr}
+          priceLkr={booking.amount_lkr}
           slotMinutes={BOOKING.slotMinutes}
         />
       ) : (
