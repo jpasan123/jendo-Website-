@@ -52,7 +52,7 @@ export function PaymentStatus(props: Props) {
   const [switched, setSwitched] = useState(false);
   const [waiting, setWaiting] = useState(mode === "return" && !props.paid && !props.expired);
   const [timedOut, setTimedOut] = useState(false);
-  const [busy, setBusy] = useState<"" | "retry" | "venue" | "pdf">("");
+  const [busy, setBusy] = useState<"" | "retry" | "venue" | "pdf" | "release">("");
   const [error, setError] = useState("");
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -102,14 +102,34 @@ export function PaymentStatus(props: Props) {
     slotMinutes,
   };
 
-  async function post(action: "retry" | "pay_at_venue") {
+  // the browser remembers an unfinished card payment (so Back from PayHere lands here); forget it once it is settled
+  useEffect(() => {
+    if (paid || switched || expired) {
+      try {
+        sessionStorage.removeItem("jendo_pending_card");
+      } catch {
+        /* ignore */
+      }
+    }
+  }, [paid, switched, expired]);
+
+  async function post(action: "retry" | "pay_at_venue" | "release") {
     setError("");
-    setBusy(action === "retry" ? "retry" : "venue");
+    setBusy(action === "retry" ? "retry" : action === "release" ? "release" : "venue");
     try {
       const res = await fetch("/api/bookings/pay", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ref: bookingRef, t: token, action }) });
       const data = await res.json();
       if (res.ok && data.ok) {
         if (data.paid) return setPaid(true);
+        if (data.released) {
+          try {
+            sessionStorage.removeItem("jendo_pending_card");
+          } catch {
+            /* ignore */
+          }
+          window.location.href = "/book-test";
+          return;
+        }
         if (data.switched) return setSwitched(true);
         if (data.payhere) return submitToPayhere(data.payhere);
       }
@@ -118,7 +138,7 @@ export function PaymentStatus(props: Props) {
     } catch {
       setError("We could not reach the server. Please check your connection and try again.");
     } finally {
-      setBusy((b) => (b === "retry" ? "" : b === "venue" ? "" : b));
+      setBusy((b) => (b === "pdf" ? b : ""));
     }
   }
 
@@ -255,7 +275,9 @@ export function PaymentStatus(props: Props) {
         <button type="button" disabled={!!busy} onClick={() => post("pay_at_venue")} className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-gray-200 px-6 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-60" style={font}>
           {busy === "venue" ? <Loader2 className="h-4 w-4 animate-spin" /> : <MapPin className="h-4 w-4" />} Keep my booking and pay at TRACE
         </button>
-        <Link href="/book-test" className="block text-center text-sm font-semibold text-[#893A9F] underline">Choose a different time</Link>
+        <button type="button" disabled={!!busy} onClick={() => post("release")} className="mx-auto flex items-center gap-2 text-sm font-semibold text-[#893A9F] underline disabled:opacity-60">
+          {busy === "release" && <Loader2 className="h-3.5 w-3.5 animate-spin" />} Start over (choose another time or payment method)
+        </button>
       </div>
     </Shell>
   );

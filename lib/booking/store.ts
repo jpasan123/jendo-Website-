@@ -348,6 +348,18 @@ export async function switchToPayAtVenue(id: string): Promise<boolean> {
   return res.rowCount === 1;
 }
 
+/** Patient chose "start over": give the held slot back right away */
+export async function releaseCardBooking(id: string): Promise<boolean> {
+  const res = await query(
+    `UPDATE test_bookings
+        SET status = 'cancelled', updated_at = now(),
+            admin_notes = concat_ws(E'\n', admin_notes, 'Patient started over before paying by card: slot released.')
+      WHERE id = $1 AND payment_method = 'card' AND payment_status = 'unpaid' AND status = 'new'`,
+    [id]
+  );
+  return res.rowCount === 1;
+}
+
 export type PaidResult = { transitioned: boolean; slotLost: boolean };
 
 /**

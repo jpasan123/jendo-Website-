@@ -51,6 +51,7 @@ type Props = {
 };
 
 type Slot = { time: string; available: boolean };
+const PENDING_KEY = "jendo_pending_card";
 type TextKey = "fullName" | "phone" | "email" | "notes";
 type Done = { ref: string; date: string; time: string; paymentMethod: PaymentMethod; slipUploaded: boolean };
 
@@ -237,17 +238,55 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
     return () => window.removeEventListener("keydown", onKey);
   }, [conflict]);
 
-  // Back button from PayHere can restore this page from cache: drop the "redirecting" state
+  // Coming back from PayHere (Back button, or the page restored from cache) with an unfinished card payment:
+  // go to the "Payment not completed" page (with details and options) instead of showing an empty form.
+  const [checkingPending, setCheckingPending] = useState(false);
   useEffect(() => {
+    let cancelled = false;
+    async function checkPending() {
+      let pending: { ref?: string; t?: string; at?: number } | null = null;
+      try {
+        const raw = sessionStorage.getItem(PENDING_KEY);
+        pending = raw ? JSON.parse(raw) : null;
+      } catch {
+        pending = null;
+      }
+      if (!pending?.ref || !pending.t || !pending.at || Date.now() - pending.at > (cardHoldMinutes + 5) * 60_000) {
+        if (pending) sessionStorage.removeItem(PENDING_KEY);
+        return;
+      }
+      setCheckingPending(true);
+      const q = `ref=${encodeURIComponent(pending.ref)}&t=${encodeURIComponent(pending.t)}`;
+      try {
+        const res = await fetch(`/api/bookings/pay-status?${q}`, { cache: "no-store" });
+        const d = await res.json();
+        if (cancelled) return;
+        if (d.ok && d.paid) return window.location.replace(`/book-test/payment/return?${q}`);
+        if (d.ok && !d.expired) return window.location.replace(`/book-test/payment/cancel?${q}`);
+      } catch {
+        /* could not check: fall through to the normal form */
+      }
+      try {
+        sessionStorage.removeItem(PENDING_KEY);
+      } catch {
+        /* ignore */
+      }
+      if (!cancelled) setCheckingPending(false);
+    }
+    checkPending();
     const onShow = (e: PageTransitionEvent) => {
       if (e.persisted) {
         setRedirecting(false);
         setSubmitting(false);
+        checkPending();
       }
     };
     window.addEventListener("pageshow", onShow);
-    return () => window.removeEventListener("pageshow", onShow);
-  }, []);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("pageshow", onShow);
+    };
+  }, [cardHoldMinutes]);
 
   // slip preview URL lifecycle
   useEffect(() => {
@@ -456,6 +495,13 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
         // card booking saved (slot held): hand over to PayHere's secure checkout
         redirectingRef.current = true;
         setRedirecting(true);
+        try {
+          // so that the Back button from PayHere brings the patient to the "Payment not completed" page, not an empty form
+          const t = new URL(data.payhere.fields.return_url).searchParams.get("t");
+          sessionStorage.setItem(PENDING_KEY, JSON.stringify({ ref: data.booking.ref, t, at: Date.now() }));
+        } catch {
+          /* storage blocked: the Back button then simply shows the form again */
+        }
         submitToPayhere(data.payhere);
         return;
       }
@@ -637,6 +683,13 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
           A non-invasive, AI-powered screening at {venueName}. It takes about {testMinutes} minutes. Pick a time, tell us how to reach you, and our team will call to confirm.
         </p>
       </div>
+
+      {checkingPending && (
+        <div role="status" aria-live="polite" className="fixed inset-0 z-[80] flex flex-col items-center justify-center gap-3 bg-white/95 px-6 text-center backdrop-blur-sm">
+          <Loader2 className="h-9 w-9 animate-spin text-[#893A9F]" />
+          <p className="!text-lg font-bold text-[#2d0a3e]" style={font}>Checking your payment…</p>
+        </div>
+      )}
 
       {redirecting && (
         <div role="status" aria-live="polite" className="fixed inset-0 z-[80] flex flex-col items-center justify-center gap-3 bg-white/95 px-6 text-center backdrop-blur-sm">

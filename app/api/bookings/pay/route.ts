@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildCheckout, cardPaymentsEnabled } from "@/lib/booking/payhere";
-import { getBooking, getBookingForPayment, switchToPayAtVenue } from "@/lib/booking/store";
+import { getBooking, getBookingForPayment, releaseCardBooking, switchToPayAtVenue } from "@/lib/booking/store";
 import { sendBookingEmail } from "@/lib/booking/mailer";
 import { notifyTeam } from "@/lib/booking/notify";
 import { clientIp, rateLimit, sameOrigin } from "@/lib/booking/security";
@@ -15,6 +15,7 @@ const json = (body: Record<string, unknown>, status = 200) => NextResponse.json(
  * POST { ref, t, action }  (t = the secret pay token returned when the booking was created)
  *   action "retry"        -> a fresh PayHere payload for a card booking that is still waiting for payment
  *   action "pay_at_venue" -> give up on paying by card and pay at TRACE instead
+ *   action "release"      -> start over: free the held slot so a new booking can be made
  */
 export async function POST(request: NextRequest) {
   if (!sameOrigin(request)) return json({ ok: false, message: "Request blocked." }, 403);
@@ -34,6 +35,11 @@ export async function POST(request: NextRequest) {
     return json({ ok: false, expired: true, message: "This booking was released because the payment was not completed in time. Please book again." }, 410);
   }
   if (booking.status !== "new") return json({ ok: false, message: "This booking can no longer be changed online." }, 409);
+
+  if (body.action === "release") {
+    const released = await releaseCardBooking(booking.id);
+    return released ? json({ ok: true, released: true }) : json({ ok: false, message: "This booking cannot be released." }, 409);
+  }
 
   if (body.action === "pay_at_venue") {
     if (!(await switchToPayAtVenue(booking.id))) return json({ ok: false, message: "This booking cannot be switched." }, 409);
