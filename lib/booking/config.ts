@@ -4,7 +4,7 @@
  */
 
 export const BOOKING = {
-  priceLkr: 5000,
+  priceLkr: 9500,
   currency: "LKR",
   venueName: "TRACE, Sri Lanka",
   venueAddress: "Bay 09, Trace Expert City, Colombo 10, Sri Lanka",
