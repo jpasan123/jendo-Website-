@@ -18,8 +18,8 @@ export const BOOKING = {
   /** How many patients can be booked into one slot */
   capacityPerSlot: 1,
 
-  /** Earliest bookable moment, in hours from now (gives the team time to call back) */
-  minLeadHours: 12,
+  /** Earliest bookable moment, in hours from now (gives the team time to call back; 1 allows same-day bookings) */
+  minLeadHours: 1,
   maxDaysAhead: 60,
 
   /** A card booking holds its slot for this long while the patient pays; then the slot is released */

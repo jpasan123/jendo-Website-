@@ -41,6 +41,7 @@ export default async function BookTestPage() {
         slotMinutes={BOOKING.slotMinutes}
         cardEnabled={cardPaymentsEnabled()}
         cardHoldMinutes={BOOKING.cardHoldMinutes}
+        minLeadHours={BOOKING.minLeadHours}
         defaultFullName={session.user.name ?? ""}
         defaultEmail={session.user.email ?? ""}
       />

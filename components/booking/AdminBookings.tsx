@@ -621,7 +621,7 @@ function NewBookingForm({
         </button>
         <button type="button" onClick={onClose} className="rounded-full border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-700">Cancel</button>
       </div>
-      <p className="text-xs text-gray-500">Saved as confirmed. Staff bookings ignore the 12-hour notice rule but cannot double-book a slot.</p>
+      <p className="text-xs text-gray-500">Saved as confirmed. Staff bookings ignore the advance-notice rule but cannot double-book a slot.</p>
     </form>
   );
 }

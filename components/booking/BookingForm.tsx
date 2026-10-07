@@ -45,6 +45,8 @@ type Props = {
   /** Card payments (PayHere) are offered only when the server has PayHere configured */
   cardEnabled?: boolean;
   cardHoldMinutes?: number;
+  /** how far ahead the earliest bookable time is (hours), shown in the helper text */
+  minLeadHours?: number;
   /** Prefilled from the signed-in user's account, if any - fields stay editable. */
   defaultFullName?: string;
   defaultEmail?: string;
@@ -115,7 +117,7 @@ const inputClass = (invalid?: boolean) =>
     invalid ? "border-red-400 focus:border-red-500 focus:ring-red-100" : "border-gray-200 focus:border-[#893A9F] focus:ring-[#893A9F]/15"
   }`;
 
-export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAhead, openWeekdays, slipMaxMb, testMinutes, slotMinutes, cardEnabled = false, cardHoldMinutes = 30, defaultFullName, defaultEmail }: Props) {
+export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAhead, openWeekdays, slipMaxMb, testMinutes, slotMinutes, cardEnabled = false, cardHoldMinutes = 30, minLeadHours = 1, defaultFullName, defaultEmail }: Props) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [done, setDone] = useState<Done | null>(null);
 
@@ -712,9 +714,9 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-50">
               <AlertCircle className="h-7 w-7 text-red-600" />
             </div>
-            <h2 id="taken-title" className="!text-xl !font-extrabold text-[#2d0a3e]" style={font}>That time is already booked</h2>
+            <h2 id="taken-title" className="!text-xl !font-extrabold text-[#2d0a3e]" style={font}>That time is no longer available</h2>
             <p id="taken-desc" className="mt-2 !text-sm text-gray-600" style={font}>
-              Someone else has just booked <strong>{formatDateLong(conflict.date)}</strong> at <strong>{formatTime12h(conflict.time)}</strong>.
+              <strong>{formatDateLong(conflict.date)}</strong> at <strong>{formatTime12h(conflict.time)}</strong> has just been taken by someone else, or is now too close to start.
               Please choose another time. Your details are kept, so you will not need to type them again.
             </p>
             <button
@@ -765,7 +767,7 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
           {step === 1 && (
             <section aria-labelledby="step1-title">
               <h2 id="step1-title" className="!text-xl !font-bold text-[#2d0a3e]" style={font}>Choose a date and time</h2>
-              <p className="mt-1 text-sm text-gray-500">Times are in Sri Lanka time. Bookings need at least 12 hours notice.</p>
+              <p className="mt-1 text-sm text-gray-500">Times are in Sri Lanka time. Bookings need at least {minLeadHours === 1 ? "1 hour's" : `${minLeadHours} hours'`} notice.</p>
 
               {availabilityError ? (
                 <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
