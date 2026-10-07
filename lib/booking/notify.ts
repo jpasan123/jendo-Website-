@@ -53,3 +53,32 @@ export async function notifyTeam(n: Notice): Promise<void> {
     console.error("[booking-notify] email failed:", err instanceof Error ? err.message : err);
   }
 }
+
+/** Tells the team that a card payment arrived (and flags the rare "paid but slot lost" case) */
+export async function notifyTeamPaid(b: { ref: string; full_name: string; phone: string; appointment_date: string; slot_time: string }, slotLost: boolean): Promise<void> {
+  const to = process.env.BOOKING_NOTIFY_EMAIL?.trim();
+  if (!to || !emailConfigured()) return;
+  try {
+    const when = `${formatDateLong(b.appointment_date)} at ${formatTime12h(b.slot_time)}`;
+    const subject = slotLost
+      ? `ACTION NEEDED: card payment received but slot lost (${b.ref})`
+      : `Card payment received (${b.ref}): ${b.full_name}, ${b.appointment_date} ${b.slot_time}`;
+    const warning = slotLost
+      ? "<p><b>This patient paid by card, but their time slot had expired and was booked by someone else. Please call them to rebook or refund.</b></p>"
+      : "<p>Please call the patient to confirm the appointment.</p>";
+    await sendMail(
+      to,
+      subject,
+      `<h2>Card payment received (${esc(b.ref)})</h2>${warning}
+        <table cellpadding="6">
+          <tr><td><b>Name</b></td><td>${esc(b.full_name)}</td></tr>
+          <tr><td><b>Phone</b></td><td>${esc(b.phone)}</td></tr>
+          <tr><td><b>Appointment</b></td><td>${esc(when)} at ${esc(BOOKING.venueName)}</td></tr>
+          <tr><td><b>Paid</b></td><td>LKR ${BOOKING.priceLkr.toLocaleString("en-US")} by card (PayHere)</td></tr>
+        </table>`,
+      `Card payment received for ${b.ref} from ${b.full_name} (${b.phone}) for ${when}.${slotLost ? " ACTION NEEDED: the slot was lost, please rebook or refund." : ""}`
+    );
+  } catch (err) {
+    console.error("[booking-notify] paid email failed:", err instanceof Error ? err.message : err);
+  }
+}

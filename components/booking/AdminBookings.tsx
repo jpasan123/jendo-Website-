@@ -34,7 +34,9 @@ type Booking = {
   amount_lkr: number;
   status: "new" | "confirmed" | "completed" | "no_show" | "cancelled";
   payment_status: "unpaid" | "slip_uploaded" | "paid";
-  payment_method: "pay_at_venue" | "bank_transfer";
+  payment_method: "pay_at_venue" | "bank_transfer" | "card";
+  payhere_payment_id: string | null;
+  paid_at: string | null;
   has_slip: boolean;
   slip_mime: string | null;
   slip_uploaded_at: string | null;
@@ -440,7 +442,9 @@ function BookingRowItem({
           <div className="grid gap-3 text-sm sm:grid-cols-2">
             <div><p className="text-xs text-gray-500">Phone</p><p className="font-semibold text-gray-900">{b.phone}</p></div>
             <div><p className="text-xs text-gray-500">Email</p><p className="break-all font-semibold text-gray-900">{b.email || "–"}</p></div>
-            <div><p className="text-xs text-gray-500">Payment</p><p className="font-semibold text-gray-900">{b.payment_method === "bank_transfer" ? "Online (bank transfer)" : "At TRACE"} · Rs. {b.amount_lkr.toLocaleString("en-US")}</p></div>
+            <div><p className="text-xs text-gray-500">Payment</p><p className="font-semibold text-gray-900">{b.payment_method === "card" ? "Card (PayHere)" : b.payment_method === "bank_transfer" ? "Online (bank transfer)" : "At TRACE"} · Rs. {b.amount_lkr.toLocaleString("en-US")}</p>
+              {b.payhere_payment_id && <p className="text-xs text-gray-500">PayHere payment {b.payhere_payment_id}{b.paid_at ? ` · ${new Date(b.paid_at).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}` : ""}</p>}
+              {b.payment_method === "card" && b.payment_status === "unpaid" && b.status === "new" && <p className="text-xs text-amber-700">Waiting for the card payment (slot held)</p>}</div>
             <div><p className="text-xs text-gray-500">Booked</p><p className="font-semibold text-gray-900">{new Date(b.created_at).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}</p></div>
             {b.notes && <div className="sm:col-span-2"><p className="text-xs text-gray-500">Patient notes</p><p className="whitespace-pre-wrap text-gray-800">{b.notes}</p></div>}
           </div>

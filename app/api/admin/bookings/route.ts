@@ -32,11 +32,11 @@ export async function GET(request: NextRequest) {
     });
 
     if (p.get("format") === "csv") {
-      const header = ["Ref", "Date", "Time", "Name", "Phone", "Email", "Status", "Payment status", "Payment method", "Amount LKR", "Notes", "Admin notes", "Follow-up on", "Booked at"];
+      const header = ["Ref", "Date", "Time", "Name", "Phone", "Email", "Status", "Payment status", "Payment method", "PayHere payment id", "Amount LKR", "Notes", "Admin notes", "Follow-up on", "Booked at"];
       const lines = [header.map(csvCell).join(",")];
       for (const b of items) {
         lines.push(
-          [b.ref, b.appointment_date, formatTime12h(b.slot_time), b.full_name, b.phone, b.email, b.status, b.payment_status, b.payment_method, b.amount_lkr, b.notes, b.admin_notes, b.follow_up_on, new Date(b.created_at).toISOString()]
+          [b.ref, b.appointment_date, formatTime12h(b.slot_time), b.full_name, b.phone, b.email, b.status, b.payment_status, b.payment_method, b.payhere_payment_id, b.amount_lkr, b.notes, b.admin_notes, b.follow_up_on, new Date(b.created_at).toISOString()]
             .map(csvCell)
             .join(",")
         );

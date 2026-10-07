@@ -74,6 +74,38 @@ CREATE TABLE IF NOT EXISTS booking_emails (
 );
 CREATE INDEX IF NOT EXISTS booking_emails_booking_idx ON booking_emails (booking_id, created_at DESC);
 ALTER TABLE booking_emails ADD COLUMN IF NOT EXISTS message_id text;
+
+-- Card payments (PayHere)
+ALTER TABLE test_bookings ADD COLUMN IF NOT EXISTS pay_token text;
+ALTER TABLE test_bookings ADD COLUMN IF NOT EXISTS payhere_payment_id text;
+ALTER TABLE test_bookings ADD COLUMN IF NOT EXISTS paid_at timestamptz;
+ALTER TABLE test_bookings ADD COLUMN IF NOT EXISTS expired_at timestamptz;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+     WHERE conname = 'test_bookings_payment_method_check' AND pg_get_constraintdef(oid) LIKE '%card%'
+  ) THEN
+    ALTER TABLE test_bookings DROP CONSTRAINT IF EXISTS test_bookings_payment_method_check;
+    ALTER TABLE test_bookings ADD CONSTRAINT test_bookings_payment_method_check
+      CHECK (payment_method IN ('pay_at_venue','bank_transfer','card'));
+  END IF;
+END $$;
+
+-- Every notification PayHere sends us (also the rejected ones), for auditing. No card data is stored.
+CREATE TABLE IF NOT EXISTS payment_events (
+  id                 bigserial PRIMARY KEY,
+  booking_id         uuid REFERENCES test_bookings(id) ON DELETE SET NULL,
+  order_id           text,
+  payhere_payment_id text,
+  status_code        text,
+  amount             text,
+  currency           text,
+  signature_ok       boolean NOT NULL,
+  outcome            text NOT NULL,
+  created_at         timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS payment_events_order_idx ON payment_events (order_id, created_at DESC);
 `;
 
 /** Creates the tables on first use. Safe to call on every request. */

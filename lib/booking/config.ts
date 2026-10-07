@@ -22,6 +22,9 @@ export const BOOKING = {
   minLeadHours: 12,
   maxDaysAhead: 60,
 
+  /** A card booking holds its slot for this long while the patient pays; then the slot is released */
+  cardHoldMinutes: 30,
+
   /** Slip upload limits */
   slipMaxBytes: 5 * 1024 * 1024,
   slipTypes: ["image/jpeg", "image/png", "image/webp", "application/pdf"] as const,
@@ -36,7 +39,7 @@ export type BookingStatus = (typeof BOOKING_STATUSES)[number];
 export const PAYMENT_STATUSES = ["unpaid", "slip_uploaded", "paid"] as const;
 export type PaymentStatus = (typeof PAYMENT_STATUSES)[number];
 
-export const PAYMENT_METHODS = ["pay_at_venue", "bank_transfer"] as const;
+export const PAYMENT_METHODS = ["pay_at_venue", "bank_transfer", "card"] as const;
 export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
 
 /** Statuses that hold a slot. Cancelled / no-show bookings free it up. */

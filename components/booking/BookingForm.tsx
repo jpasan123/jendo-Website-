@@ -18,6 +18,7 @@ import {
   Download,
   FileText,
   Loader2,
+  Lock,
   MapPin,
   Phone,
   ShieldCheck,
@@ -28,6 +29,7 @@ import {
 import { addDays, formatDate, formatDateLong, formatTime12h, todayInColombo, weekdayOf } from "@/lib/booking/time";
 import { formatPhoneInput, suggestEmailFix, validateBooking, type FieldErrors } from "@/lib/booking/validation";
 import { downloadCalendarFile, downloadReceiptPdf } from "@/lib/booking/receipt";
+import { submitToPayhere, type PayherePayload } from "./payhere-client";
 import type { BankDetails, PaymentMethod } from "@/lib/booking/config";
 
 type Props = {
@@ -40,6 +42,9 @@ type Props = {
   slipMaxMb: number;
   testMinutes: number;
   slotMinutes: number;
+  /** Card payments (PayHere) are offered only when the server has PayHere configured */
+  cardEnabled?: boolean;
+  cardHoldMinutes?: number;
   /** Prefilled from the signed-in user's account, if any - fields stay editable. */
   defaultFullName?: string;
   defaultEmail?: string;
@@ -109,7 +114,7 @@ const inputClass = (invalid?: boolean) =>
     invalid ? "border-red-400 focus:border-red-500 focus:ring-red-100" : "border-gray-200 focus:border-[#893A9F] focus:ring-[#893A9F]/15"
   }`;
 
-export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAhead, openWeekdays, slipMaxMb, testMinutes, slotMinutes, defaultFullName, defaultEmail }: Props) {
+export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAhead, openWeekdays, slipMaxMb, testMinutes, slotMinutes, cardEnabled = false, cardHoldMinutes = 30, defaultFullName, defaultEmail }: Props) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [done, setDone] = useState<Done | null>(null);
 
@@ -144,16 +149,19 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
   const [touched, setTouched] = useState<Partial<Record<TextKey, boolean>>>({});
   const [serverError, setServerError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
   const dialogBtnRef = useRef<HTMLButtonElement>(null);
   const timeRef = useRef("");
+  const redirectingRef = useRef(false);
   const [conflict, setConflict] = useState<{ date: string; time: string } | null>(null);
   const [checking, setChecking] = useState(false);
   const [pdfBusy, setPdfBusy] = useState(false);
   const [pdfError, setPdfError] = useState("");
   timeRef.current = time;
+  redirectingRef.current = redirecting;
 
   const scrollToTop = () => topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
@@ -228,6 +236,18 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [conflict]);
+
+  // Back button from PayHere can restore this page from cache: drop the "redirecting" state
+  useEffect(() => {
+    const onShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        setRedirecting(false);
+        setSubmitting(false);
+      }
+    };
+    window.addEventListener("pageshow", onShow);
+    return () => window.removeEventListener("pageshow", onShow);
+  }, []);
 
   // slip preview URL lifecycle
   useEffect(() => {
@@ -425,13 +445,20 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
     const timer = setTimeout(() => controller.abort(), 60_000);
     try {
       const res = await fetch("/api/bookings", { method: "POST", body, signal: controller.signal });
-      let data: { ok?: boolean; message?: string; errors?: FieldErrors; booking?: Done } = {};
+      let data: { ok?: boolean; message?: string; errors?: FieldErrors; booking?: Done; payhere?: PayherePayload } = {};
       try {
         data = await res.json();
       } catch {
         /* non-JSON (e.g. proxy error page) handled below */
       }
 
+      if (res.ok && data.ok && data.booking && data.payhere) {
+        // card booking saved (slot held): hand over to PayHere's secure checkout
+        redirectingRef.current = true;
+        setRedirecting(true);
+        submitToPayhere(data.payhere);
+        return;
+      }
       if (res.ok && data.ok && data.booking) {
         setDone({ ...data.booking, date, time, paymentMethod });
         scrollToTop();
@@ -463,7 +490,7 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
       );
     } finally {
       clearTimeout(timer);
-      setSubmitting(false);
+      setSubmitting((cur) => (redirectingRef.current ? cur : false));
     }
   }
 
@@ -610,6 +637,14 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
           A non-invasive, AI-powered screening at {venueName}. It takes about {testMinutes} minutes. Pick a time, tell us how to reach you, and our team will call to confirm.
         </p>
       </div>
+
+      {redirecting && (
+        <div role="status" aria-live="polite" className="fixed inset-0 z-[80] flex flex-col items-center justify-center gap-3 bg-white/95 px-6 text-center backdrop-blur-sm">
+          <Loader2 className="h-9 w-9 animate-spin text-[#893A9F]" />
+          <p className="!text-lg font-bold text-[#2d0a3e]" style={font}>Taking you to PayHere&apos;s secure payment page…</p>
+          <p className="max-w-sm !text-sm text-gray-500" style={font}>Please do not close this window. Your time slot is held for {cardHoldMinutes} minutes.</p>
+        </div>
+      )}
 
       {conflict && (
         <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm" onClick={() => setConflict(null)}>
@@ -858,11 +893,12 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
                 <p className="mt-1 text-sm text-gray-500">The test fee is {money(priceLkr)}. Pay online now or at {venueName} on the day.</p>
               </div>
 
-              <div role="radiogroup" aria-label="Payment option" className="grid gap-3 sm:grid-cols-2">
+              <div role="radiogroup" aria-label="Payment option" className={`grid gap-3 ${cardEnabled ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
                 {([
-                  { id: "bank_transfer", title: "Pay online now", desc: "Bank transfer, then upload your slip", icon: Upload },
-                  { id: "pay_at_venue", title: `Pay at ${venueName.split(",")[0]}`, desc: "Pay when you arrive for the test", icon: CreditCard },
-                ] as const).map((o) => {
+                  ...(cardEnabled ? [{ id: "card", title: "Pay by card", desc: "Visa or Mastercard, secure PayHere checkout", icon: CreditCard }] : []),
+                  { id: "bank_transfer", title: "Bank transfer", desc: "Transfer, then upload your slip", icon: Upload },
+                  { id: "pay_at_venue", title: `Pay at ${venueName.split(",")[0]}`, desc: "Pay when you arrive for the test", icon: MapPin },
+                ] as { id: PaymentMethod; title: string; desc: string; icon: typeof CreditCard }[]).map((o) => {
                   const selected = paymentMethod === o.id;
                   return (
                     <button
@@ -879,6 +915,18 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
                   );
                 })}
               </div>
+
+              {paymentMethod === "card" && (
+                <div className="space-y-2 rounded-2xl border border-[#ede8f5] bg-[#fbf9fd] p-5 text-sm text-gray-700">
+                  <p className="flex items-center gap-2 font-bold text-gray-900" style={font}><Lock className="h-4 w-4 text-[#893A9F]" /> Secure card payment with PayHere</p>
+                  <ul className="list-disc space-y-1 pl-5 text-gray-600">
+                    <li>You will be taken to PayHere to pay {money(priceLkr)} by Visa or Mastercard.</li>
+                    <li>Your time slot is held for {cardHoldMinutes} minutes while you pay.</li>
+                    <li>Jendo never sees or stores your card details.</li>
+                    <li>You get a confirmation email as soon as the payment is received.</li>
+                  </ul>
+                </div>
+              )}
 
               {paymentMethod === "bank_transfer" && (
                 <div className="space-y-5 rounded-2xl border border-[#ede8f5] bg-[#fbf9fd] p-5">
@@ -989,7 +1037,7 @@ export function BookingForm({ priceLkr, venueName, venueAddress, bank, maxDaysAh
               </button>
             ) : (
               <button type="button" onClick={submit} disabled={submitting} className="inline-flex min-w-[170px] items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-bold text-white shadow-md transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-70" style={{ background: "linear-gradient(135deg,#893A9F,#4a1260)", ...font }}>
-                {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Booking…</> : <>Confirm booking <Check className="h-4 w-4" /></>}
+                {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> {paymentMethod === "card" ? "Opening PayHere…" : "Booking…"}</> : paymentMethod === "card" ? <>Continue to payment <Lock className="h-4 w-4" /></> : <>Confirm booking <Check className="h-4 w-4" /></>}
               </button>
             )}
           </div>

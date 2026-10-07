@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { AccountBar } from "@/components/auth/AccountBar";
 import { BookingForm } from "@/components/booking/BookingForm";
 import { BOOKING, getBankDetails } from "@/lib/booking/config";
+import { cardPaymentsEnabled } from "@/lib/booking/payhere";
 
 export const metadata: Metadata = {
   title: "Book a Jendo Test at TRACE | Jendo",
@@ -32,6 +33,8 @@ export default async function BookTestPage() {
         slipMaxMb={BOOKING.slipMaxBytes / 1024 / 1024}
         testMinutes={BOOKING.testDurationMinutes}
         slotMinutes={BOOKING.slotMinutes}
+        cardEnabled={cardPaymentsEnabled()}
+        cardHoldMinutes={BOOKING.cardHoldMinutes}
         defaultFullName={session.user.name ?? ""}
         defaultEmail={session.user.email ?? ""}
       />
