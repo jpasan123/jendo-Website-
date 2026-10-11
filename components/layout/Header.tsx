@@ -21,6 +21,7 @@ export function Header() {
     { name: 'Recognition', href: '#recognition' },
     { name: 'Gallery', href: '#emma-gallery' },
     { name: 'News', href: '#blog' },
+    { name: 'Blogs', href: '/blog' },
     { name: 'Research', href: '#research' },
     { name: 'Our Team', href: '#team' },
     { name: 'Contact', href: '#contact' },
@@ -78,6 +79,9 @@ export function Header() {
   }, [isOpen]);
 
   const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('/') && !href.startsWith('/#')) {
+      return;
+    }
     if (pathname !== '/') {
       e.preventDefault();
       window.location.href = `/${href}`;
