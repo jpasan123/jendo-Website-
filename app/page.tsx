@@ -2571,6 +2571,12 @@ export default function Home() {
 
           {(() => {
             const galleryImages = [
+              { src: "/news/heart-walk-2026-1.jpg", alt: "Walkers passing under the entrance arch of the Sri Lanka College of Cardiology Heart Walk 2026" },
+              { src: "/news/heart-walk-2026-2.jpg", alt: "Heart Walk 2026 participants gathering with the event banner and Don't Miss a Beat placards" },
+              { src: "/news/heart-walk-2026-3.jpg", alt: "Opening programme under the marquee at the Sri Lanka College of Cardiology Heart Walk 2026" },
+              { src: "/news/heart-walk-2026-4.jpg", alt: "A heart-shaped Heart Walk 2026 sign held up among the walkers" },
+              { src: "/news/heart-walk-2026-5.jpg", alt: "A drone flying the World Heart Day banner over the Heart Walk route" },
+              { src: "/news/heart-walk-2026-6.jpg", alt: "The World Heart Day banner carried past a city building by drone" },
               { src: "/news/national-ai-expo-2026-1.jpg", alt: "Presenting Jendo's vascular health technology at the National AI Expo 2026" },
               { src: "/news/national-ai-expo-2026-2.jpg", alt: "Explaining Jendo's technology to visitors at the National AI Expo 2026" },
               { src: "/news/world-bank-cio-visit-1.jpg", alt: "World Bank Group CIO visit to Jendo Innovations: introducing the Jendo device" },
