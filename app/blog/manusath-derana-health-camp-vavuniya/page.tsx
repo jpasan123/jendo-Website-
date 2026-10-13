@@ -7,8 +7,8 @@ import ImageSlider, { type SliderImage } from "@/components/news/ImageSlider";
 
 const HERO_IMAGES: SliderImage[] = [
   { src: "/news/vavuniya-health-camp-cover.jpg", alt: "Jendo Innovations at TV Derana's 88th Manusath Derana Health Camp in Vavuniya", fit: "cover", position: "center 40%" },
-  { src: "/news/vavuniya-health-camp-2.jpg", alt: "Jendo Innovations speaking with TV Derana at the Manusath Derana Health Camp, Vavuniya", fit: "cover", position: "center 30%" },
-  { src: "/news/vavuniya-health-camp-3.jpg", alt: "Jendo Innovations meeting residents at the Manusath Derana Health Camp, Vavuniya", fit: "cover", position: "center 45%" },
+  { src: "/news/vavuniya-health-camp-2.jpg", alt: "Jendo Innovations speaking with TV Derana at the Manusath Derana Health Camp, Vavuniya", fit: "blur" },
+  { src: "/news/vavuniya-health-camp-3.jpg", alt: "Jendo Innovations meeting residents at the Manusath Derana Health Camp, Vavuniya", fit: "blur" },
 ];
 
 const BODY_PHOTOS = {

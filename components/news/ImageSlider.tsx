@@ -6,7 +6,8 @@ import Image from "next/image";
 export type SliderImage = {
   src: string;
   alt: string;
-  fit?: "cover" | "contain";
+  /** "blur" shows the whole picture (contain) over a blurred copy of itself, ideal for portrait images. */
+  fit?: "cover" | "contain" | "blur";
   position?: string;
 };
 
@@ -42,20 +43,35 @@ export default function ImageSlider({
       onMouseLeave={() => setPaused(false)}
     >
       {images.map((img, i) => (
-        <Image
+        <div
           key={img.src}
-          src={img.src}
-          alt={img.alt}
-          fill
-          sizes={sizes}
-          quality={90}
-          priority={priority && i === 0}
-          className={`transition-opacity duration-1000 ease-in-out ${
-            img.fit === "cover" ? "object-cover" : "object-contain"
-          } ${i === active ? "opacity-100" : "opacity-0"}`}
-          style={img.position ? { objectPosition: img.position } : undefined}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            i === active ? "opacity-100" : "opacity-0"
+          }`}
           aria-hidden={i !== active}
-        />
+        >
+          {img.fit === "blur" && (
+            <Image
+              src={img.src}
+              alt=""
+              fill
+              sizes="(max-width:768px) 50vw, 400px"
+              quality={40}
+              className="object-cover scale-125 blur-2xl opacity-70"
+              aria-hidden
+            />
+          )}
+          <Image
+            src={img.src}
+            alt={img.alt}
+            fill
+            sizes={sizes}
+            quality={90}
+            priority={priority && i === 0}
+            className={img.fit === "cover" ? "object-cover" : "object-contain"}
+            style={img.position ? { objectPosition: img.position } : undefined}
+          />
+        </div>
       ))}
       {images.length > 1 && (
         <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2 z-10">
@@ -70,7 +86,7 @@ export default function ImageSlider({
                 setActive(i);
               }}
               className={`h-2 rounded-full transition-all ${
-                i === active ? "w-6 bg-[#893A9F]" : "w-2 bg-[#893A9F]/30"
+                i === active ? "w-6 bg-[#893A9F] ring-1 ring-white/70" : "w-2 bg-[#893A9F]/40 ring-1 ring-white/60"
               }`}
             />
           ))}

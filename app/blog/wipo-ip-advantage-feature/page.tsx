@@ -3,34 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink } from "lucide-react";
-import ImageSlider, { type SliderImage } from "@/components/news/ImageSlider";
 
-const HERO_IMAGES: SliderImage[] = [
-  { src: "/news/wipo-ip-advantage-jendo.jpg", alt: "Jendo featured in WIPO's IP Advantage collection: predicting heart disease with machine learning", fit: "cover", position: "center 20%" },
-  { src: "/news/wipo-ip-advantage-cover.jpg", alt: "WIPO IP Advantage: case studies and stories showing how intellectual property contributes to business success", fit: "cover", position: "center 30%" },
+const POSTERS = [
+  { src: "/news/wipo-ip-advantage-jendo.jpg", alt: "Jendo featured in WIPO's IP Advantage collection: predicting heart disease with machine learning", width: 958, height: 1200 },
+  { src: "/news/wipo-ip-advantage-cover.jpg", alt: "WIPO IP Advantage: case studies and stories showing how intellectual property contributes to business success", width: 967, height: 1200 },
 ];
-
-const BODY_PHOTOS = {
-  card: { src: "/news/wipo-ip-advantage-jendo.jpg", alt: "Jendo's entry in WIPO's IP Advantage collection", caption: "Jendo\u2019s entry in the WIPO IP Advantage collection.", width: 958, height: 1200, narrow: true },
-};
-
-function BodyPhoto({ photo }: { photo: { src: string; alt: string; caption: string; width: number; height: number; narrow?: boolean } }) {
-  return (
-    <figure className={`not-prose my-8 ${photo.narrow ? "max-w-sm mx-auto" : ""}`}>
-      <div className="rounded-2xl overflow-hidden shadow-lg bg-white">
-        <Image
-          src={photo.src}
-          alt={photo.alt}
-          width={photo.width}
-          height={photo.height}
-          sizes="(max-width:768px) 100vw, 768px"
-          className="w-full h-auto"
-        />
-      </div>
-      <figcaption className="mt-2 text-center text-sm text-gray-500">{photo.caption}</figcaption>
-    </figure>
-  );
-}
 
 const LINKS = [
   { label: "WIPO IP Advantage", href: "https://www.wipo.int/ipadvantage" },
@@ -48,8 +25,22 @@ export default function WipoIpAdvantageArticle() {
         Back to News
       </Link>
 
-      <div className="relative mb-8 rounded-2xl overflow-hidden shadow-xl bg-white aspect-video">
-        <ImageSlider images={HERO_IMAGES} intervalMs={6500} sizes="(max-width:768px) 100vw, 768px" priority />
+      <div className="mb-8 rounded-2xl bg-gradient-to-br from-[#f4effa] to-[#e6d9f3] p-5 sm:p-8 shadow-xl">
+        <div className="grid grid-cols-2 gap-4 sm:gap-8 items-start">
+          {POSTERS.map((poster) => (
+            <div key={poster.src} className="overflow-hidden rounded-xl bg-white shadow-lg">
+              <Image
+                src={poster.src}
+                alt={poster.alt}
+                width={poster.width}
+                height={poster.height}
+                sizes="(max-width:768px) 45vw, 340px"
+                className="w-full h-auto"
+                priority
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="text-center mb-8">
@@ -70,7 +61,6 @@ export default function WipoIpAdvantageArticle() {
         <p>
           Jendo&rsquo;s work in <b>AI-powered cardiac risk prediction</b> has been featured in <b>WIPO&rsquo;s IP Advantage</b> collection, a database of case studies and stories showing how intellectual property contributes to business success. The feature recognises the role of innovation and intellectual property in advancing healthcare.
         </p>
-        <BodyPhoto photo={BODY_PHOTOS.card} />
         <p>
           Jendo is proud to be part of Sri Lanka&rsquo;s growing HealthTech landscape.
         </p>
